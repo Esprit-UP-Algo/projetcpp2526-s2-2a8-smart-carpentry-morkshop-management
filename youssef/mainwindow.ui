@@ -1,0 +1,872 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+<class>MainWindow</class>
+<widget class="QMainWindow" name="MainWindow">
+ <property name="geometry">
+  <rect>
+   <x>0</x>
+   <y>0</y>
+   <width>1200</width>
+   <height>750</height>
+  </rect>
+ </property>
+ <property name="windowTitle">
+  <string>Smart Carpentry - Gestion des Commandes</string>
+ </property>
+ <property name="styleSheet">
+  <string notr="true">
+    QMainWindow { background-color: #F5EBE0; }
+    QWidget { background-color: #F5EBE0; color: #3D2817; font-family: 'Segoe UI', Arial, sans-serif; }
+    QTabWidget::pane { border: 2px solid #8B5A2B; background-color: #F5EBE0; border-radius: 5px; }
+    QTabBar::tab { background-color: #C9B59A; color: #3D2817; padding: 10px 20px; margin-right: 2px; border-top-left-radius: 5px; border-top-right-radius: 5px; font-weight: bold; }
+    QTabBar::tab:selected { background-color: #8B5A2B; color: #F5EBE0; }
+    QTabBar::tab:hover { background-color: #9B8068; }
+    QGroupBox { background-color: #FFFFFF; border: 2px solid #8B5A2B; border-radius: 8px; margin-top: 15px; padding-top: 15px; font-weight: bold; }
+    QGroupBox::title { color: #5D4037; subcontrol-origin: margin; left: 10px; padding: 0 5px; font-size: 10pt; }
+    QLineEdit, QTextEdit, QDateEdit, QComboBox, QSpinBox, QDoubleSpinBox { background-color: #FFFFFF; border: 2px solid #C9B59A; border-radius: 5px; padding: 8px; color: #3D2817; font-size: 10pt; }
+    QLineEdit:focus, QTextEdit:focus, QDateEdit:focus, QComboBox:focus, QSpinBox:focus, QDoubleSpinBox:focus { border: 2px solid #8B5A2B; }
+    QComboBox { font-size: 10pt; min-height: 28px; }
+    QComboBox::drop-down { border: none; width: 20px; }
+    QComboBox::down-arrow { image: none; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 4px solid #8B5A2B; margin-right: 6px; }
+    QPushButton { background-color: #8B5A2B; color: #F5EBE0; border: none; border-radius: 5px; padding: 10px 20px; font-weight: bold; font-size: 10pt; }
+    QPushButton:hover { background-color: #9B8068; }
+    QPushButton:pressed { background-color: #5D4037; }
+    QPushButton#btnAjouter { background-color: #8B9B6A; }
+    QPushButton#btnAjouter:hover { background-color: #9BAB7A; }
+    QPushButton#btnModifier { background-color: #8B5A2B; }
+    QPushButton#btnModifier:hover { background-color: #9B8068; }
+    QPushButton#btnSupprimer { background-color: #5D4037; }
+    QPushButton#btnSupprimer:hover { background-color: #6D4C41; }
+    QPushButton#btnVider, QPushButton#btnRechercher, QPushButton#btnResetRecherche, QPushButton#btnTriPrixCroissant, QPushButton#btnTriPrixDecroissant { background-color: #C9B59A; color: #3D2817; }
+    QPushButton#btnVider:hover, QPushButton#btnRechercher:hover, QPushButton#btnResetRecherche:hover, QPushButton#btnTriPrixCroissant:hover, QPushButton#btnTriPrixDecroissant:hover { background-color: #D9C5AA; }
+    QTableWidget { background-color: #FFFFFF; alternate-background-color: #F5EBE0; border: 2px solid #C9B59A; border-radius: 5px; gridline-color: #C9B59A; color: #3D2817; }
+    QTableWidget::item:selected { background-color: #8B5A2B; color: #F5EBE0; }
+    QHeaderView::section { background-color: #8B5A2B; color: #F5EBE0; padding: 6px; border: none; font-weight: bold; font-size: 10pt; }
+    QLabel#headerTitle { font-size: 22px; font-weight: bold; color: #3D2817; padding: 15px; background-color: #C9B59A; border-radius: 8px; margin: 10px; border: 2px solid #8B5A2B; }
+    QFrame#statCard { background-color: #FFFFFF; border: 2px solid #8B5A2B; border-radius: 8px; padding: 15px; }
+    QLabel#statValue { font-size: 28px; font-weight: bold; color: #5D4037; }
+    QLabel#statText { font-size: 14px; color: #8B5A2B; font-weight: 500; }
+    QLabel#alerteLabel { background-color: #FFF3CD; color: #856404; padding: 10px; border-radius: 5px; border: 1px solid #FFEAA7; font-weight: bold; }
+    QProgressBar { border: 2px solid #C9B59A; border-radius: 5px; text-align: center; background-color: #FFFFFF; color: #3D2817; }
+    QProgressBar::chunk { background-color: #8B9B6A; border-radius: 3px; }
+    QPushButton#btnGenererPDF, QPushButton#btnApercuPDF, QPushButton#btnEnvoyerEmail { background-color: #8B9B6A; }
+    QPushButton#btnGenererPDF:hover, QPushButton#btnApercuPDF:hover, QPushButton#btnEnvoyerEmail:hover { background-color: #9BAB7A; }
+    QPushButton#btnGenererStats, QPushButton#btnExporterStats { background-color: #C9B59A; color: #3D2817; }
+    QPushButton#btnGenererStats:hover, QPushButton#btnExporterStats:hover { background-color: #D9C5AA; }
+  </string>
+ </property>
+ <widget class="QWidget" name="centralwidget">
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QLabel" name="labelHeader">
+     <property name="text">
+      <string>📦 GESTION DES COMMANDES - SMART CARPENTRY WORKSHOP</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayoutStats">
+     <item>
+      <widget class="QFrame" name="frameStats1">
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QLabel" name="labelStat1">
+          <property name="text">
+           <string>📊 Commandes ce mois</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="valueStat1">
+          <property name="text">
+           <string>42</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QFrame" name="frameStats2">
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QLabel" name="labelStat2">
+          <property name="text">
+           <string>💰 Chiffre d'affaires</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="valueStat2">
+          <property name="text">
+           <string>€ 12,450</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QFrame" name="frameStats3">
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="QLabel" name="labelStat3">
+          <property name="text">
+           <string>⏱️ Délai moyen</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="valueStat3">
+          <property name="text">
+           <string>5.2 jours</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QFrame" name="frameStats4">
+       <layout class="QVBoxLayout" name="verticalLayout_5">
+        <item>
+         <widget class="QLabel" name="labelStat4">
+          <property name="text">
+           <string>⚠️ Retards</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="valueStat4">
+          <property name="text">
+           <string>3</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="labelAlerte">
+     <property name="text">
+      <string>⚠️ ALERTE: 2 commandes en retard de livraison</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tabGestion">
+      <attribute name="title">
+       <string>📋 Gestion de Commande</string>
+      </attribute>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QGroupBox" name="groupBoxForm">
+         <property name="title">
+          <string>Informations Commande</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_ID">
+            <property name="text">
+             <string>ID Commande:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="txtID">
+            <property name="placeholderText">
+             <string>CMD-001</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_Date">
+            <property name="text">
+             <string>Date:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QDateEdit" name="dateCommande">
+            <property name="calendarPopup">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_Details">
+            <property name="text">
+             <string>Détails:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QTextEdit" name="txtDetails">
+            <property name="placeholderText">
+             <string>Description détaillée de la commande...</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_Dimensions">
+            <property name="text">
+             <string>Dimensions (L×l×H):</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QSpinBox" name="spinLongueur">
+              <property name="suffix">
+               <string> cm</string>
+              </property>
+              <property name="maximum">
+               <number>1000</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_x1">
+              <property name="text">
+               <string>×</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="spinLargeur">
+              <property name="suffix">
+               <string> cm</string>
+              </property>
+              <property name="maximum">
+               <number>1000</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_x2">
+              <property name="text">
+               <string>×</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="spinHauteur">
+              <property name="suffix">
+               <string> cm</string>
+              </property>
+              <property name="maximum">
+               <number>1000</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_Prix">
+            <property name="text">
+             <string>Prix (€):</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QDoubleSpinBox" name="spinPrix">
+            <property name="prefix">
+             <string>€ </string>
+            </property>
+            <property name="maximum">
+             <double>100000.0</double>
+            </property>
+            <property name="singleStep">
+             <double>50.0</double>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="label_Etat">
+            <property name="text">
+             <string>État:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QComboBox" name="comboEtat">
+            <item>
+             <property name="text">
+              <string>🟡 En cours</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>🟢 Terminée</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>🔵 Livrée</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QLabel" name="label_Responsable">
+            <property name="text">
+             <string>Responsable:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="1">
+           <widget class="QComboBox" name="comboResponsable">
+            <item>
+             <property name="text">
+              <string>Jean Martin</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Marie Dubois</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Pierre Lambert</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="7" column="0" colspan="2">
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <item>
+             <widget class="QPushButton" name="btnAjouter">
+              <property name="text">
+               <string>➕ Ajouter</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btnModifier">
+              <property name="text">
+               <string>✏️ Modifier</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btnSupprimer">
+              <property name="text">
+               <string>🗑️ Supprimer</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btnVider">
+              <property name="text">
+               <string>🧹 Vider</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBoxListe">
+         <property name="title">
+          <string>Liste des Commandes</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_6">
+          <item>
+           <widget class="QTableWidget" name="tableCommandes">
+            <column>
+             <property name="text">
+              <string>ID</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Date</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Détails</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Dimensions</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Prix</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>État</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Responsable</string>
+             </property>
+            </column>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <item>
+             <widget class="QPushButton" name="btnTriPrixCroissant">
+              <property name="text">
+               <string>💰 Tri Prix Croissant</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btnTriPrixDecroissant">
+              <property name="text">
+               <string>💰 Tri Prix Décroissant</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QLabel" name="labelTotal">
+              <property name="text">
+               <string>Total: € 0.00</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabRecherche">
+      <attribute name="title">
+       <string>🔍 Recherche &amp; Statistiques</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_7">
+       <item>
+        <widget class="QGroupBox" name="groupBoxRecherche">
+         <property name="title">
+          <string>Recherche Avancée</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_RecherchePar">
+            <property name="text">
+             <string>Rechercher par:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QComboBox" name="comboCritere">
+            <item>
+             <property name="text">
+              <string>Date</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>État</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_Valeur">
+            <property name="text">
+             <string>Valeur:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="txtRecherche">
+            <property name="placeholderText">
+             <string>Saisir la valeur de recherche...</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0" colspan="2">
+           <layout class="QHBoxLayout" name="horizontalLayout_5">
+            <item>
+             <widget class="QPushButton" name="btnRechercher">
+              <property name="text">
+               <string>🔍 Rechercher</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btnResetRecherche">
+              <property name="text">
+               <string>🔄 Réinitialiser</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <item>
+          <widget class="QGroupBox" name="groupBoxMetiers">
+           <property name="title">
+            <string>🚀 Métiers Innovants</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_8">
+            <item>
+             <widget class="QLabel" name="label_Delai">
+              <property name="text">
+               <string>Estimation intelligente du délai:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="valueDelai">
+              <property name="text">
+               <string>⏱️ 5-7 jours (selon charge actuelle)</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QProgressBar" name="progressCharge">
+              <property name="value">
+               <number>75</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_Charge">
+              <property name="text">
+               <string>Charge actuelle: 75%</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_Alertes">
+              <property name="text">
+               <string>Alertes intelligentes sur les retards:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="valueAlertes">
+              <property name="text">
+               <string>🔴 2 commandes en retard</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupBoxStats">
+           <property name="title">
+            <string>📈 Statistiques Avancées</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_9">
+            <item>
+             <widget class="QLabel" name="label_CommandesVendues">
+              <property name="text">
+               <string>Commandes plus vendues:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QTableWidget" name="tableTopCommandes">
+              <column>
+               <property name="text">
+                <string>Produit</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Quantité</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>CA Total</string>
+               </property>
+              </column>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_7">
+              <item>
+               <widget class="QPushButton" name="btnGenererStats">
+                <property name="text">
+                 <string>📊 Générer Statistiques</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btnExporterStats">
+                <property name="text">
+                 <string>📤 Exporter CSV</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBoxResultats">
+         <property name="title">
+          <string>Résultats de Recherche</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_10">
+          <item>
+           <widget class="QTableWidget" name="tableResultats">
+            <column>
+             <property name="text">
+              <string>ID</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Date</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Détails</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Prix</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>État</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Responsable</string>
+             </property>
+            </column>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabFacture">
+      <attribute name="title">
+       <string>🧾 Génération Facture</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_11">
+       <item>
+        <widget class="QGroupBox" name="groupBoxFacture">
+         <property name="title">
+          <string>Génération automatique de facture PDF</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_SelectCommande">
+            <property name="text">
+             <string>Sélectionner une commande:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QComboBox" name="comboFactureCommande">
+            <item>
+             <property name="text">
+              <string>CMD-001 - Table en chêne</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>CMD-002 - Bibliothèque</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>CMD-003 - Chaise design</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_ClientInfo">
+            <property name="text">
+             <string>Informations client:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QTextEdit" name="txtClientInfo">
+            <property name="placeholderText">
+             <string>Nom, adresse, téléphone, email...</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_DetailsFacture">
+            <property name="text">
+             <string>Détails facture:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QTextEdit" name="txtDetailsFacture">
+            <property name="plainText">
+             <string>• Table en chêne massif - 180×90×75 cm
+• Finition vernis mat
+• Livraison incluse
+• Garantie 2 ans</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0" colspan="2">
+           <layout class="QHBoxLayout" name="horizontalLayout_8">
+            <item>
+             <widget class="QPushButton" name="btnGenererPDF">
+              <property name="text">
+               <string>📄 Générer Facture PDF</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btnApercuPDF">
+              <property name="text">
+               <string>👁️ Aperçu Facture</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btnEnvoyerEmail">
+              <property name="text">
+               <string>📧 Envoyer au Client</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_PDFStatus">
+              <property name="text">
+               <string>🟢 Prêt à générer</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBoxPreview">
+         <property name="title">
+          <string>Aperçu Facture</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_12">
+          <item>
+           <widget class="QLabel" name="labelPreview">
+            <property name="text">
+             <string>Votre facture PDF sera générée ici...</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+</widget>
+<resources/>
+<connections/>
+</ui>
