@@ -41,6 +41,10 @@ public:
     QLabel *labelLogo;
     QSpacerItem *spacerLogoToButton;
     QPushButton *btnEmployes;
+    QPushButton *btnClients;
+    QPushButton *btnCommandes;
+    QPushButton *btnStock;
+    QPushButton *btnAtelier;
     QSpacerItem *verticalSpacerSidebar;
     QTabWidget *tabWidget;
     QWidget *tabConsulter;
@@ -138,11 +142,11 @@ public:
 "    QTableWidget { background-color: #FFFFFF; alternate-background-color: #F5EBE0; border: 2px solid #C9B59A; border-radius: 5px; gridline-color: #C9B59A; color: #3D2817; }\n"
 "    QTableWidget::item:selected { background-color: #8B5A2B; color: #F5EBE0; }\n"
 "    QHeaderView::section { background-color: #8B5A2B; color: #F5EBE0; padding: 6px; border: none; font-weight: bold; font-size: 10pt; }\n"
-"    QPushButton#btnEmployes { background-color: #C9B59A; color: #3D2817; border: none; border-left: 0px solid #8B5A2B; border-radius: 0; padding: 20px 15px; font-size: 15pt; font-weight: bold; text-align: left; }\n"
-"    QPushButt"
-                        "on#btnEmployes:hover { background-color: #9B8068; color: white; }\n"
-"    QPushButton#btnEmployes:checked { background-color: #8B5A2B; color: #F5EBE0; border-left: 6px solid #5D4037; }\n"
-"    QPushButton#btnEmployes:pressed { background-color: #5D4037; color: white; }\n"
+"    QPushButton#btnEmployes, QPushButton#btnClients, QPushButton#btnCommandes, QPushButton#btnStock, QPushButton#btnAtelier { background-color: #C9B59A; color: #3D2817; border: none; border-left: 0px solid #8B5A2B; border-radius: "
+                        "0; padding: 20px 15px; font-size: 15pt; font-weight: bold; text-align: left; }\n"
+"    QPushButton#btnEmployes:hover, QPushButton#btnClients:hover, QPushButton#btnCommandes:hover, QPushButton#btnStock:hover, QPushButton#btnAtelier:hover { background-color: #9B8068; color: white; }\n"
+"    QPushButton#btnEmployes:checked, QPushButton#btnClients:checked, QPushButton#btnCommandes:checked, QPushButton#btnStock:checked, QPushButton#btnAtelier:checked { background-color: #8B5A2B; color: #F5EBE0; border-left: 6px solid #5D4037; }\n"
+"    QPushButton#btnEmployes:pressed, QPushButton#btnClients:pressed, QPushButton#btnCommandes:pressed, QPushButton#btnStock:pressed, QPushButton#btnAtelier:pressed { background-color: #5D4037; color: white; }\n"
 "   "));
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
@@ -177,6 +181,34 @@ public:
         btnEmployes->setChecked(true);
 
         verticalLayoutSidebar->addWidget(btnEmployes);
+
+        btnClients = new QPushButton(sidebar);
+        btnClients->setObjectName("btnClients");
+        btnClients->setCheckable(true);
+        btnClients->setChecked(false);
+
+        verticalLayoutSidebar->addWidget(btnClients);
+
+        btnCommandes = new QPushButton(sidebar);
+        btnCommandes->setObjectName("btnCommandes");
+        btnCommandes->setCheckable(true);
+        btnCommandes->setChecked(false);
+
+        verticalLayoutSidebar->addWidget(btnCommandes);
+
+        btnStock = new QPushButton(sidebar);
+        btnStock->setObjectName("btnStock");
+        btnStock->setCheckable(true);
+        btnStock->setChecked(false);
+
+        verticalLayoutSidebar->addWidget(btnStock);
+
+        btnAtelier = new QPushButton(sidebar);
+        btnAtelier->setObjectName("btnAtelier");
+        btnAtelier->setCheckable(true);
+        btnAtelier->setChecked(false);
+
+        verticalLayoutSidebar->addWidget(btnAtelier);
 
         verticalSpacerSidebar = new QSpacerItem(20, 40, QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Expanding);
 
@@ -536,6 +568,10 @@ public:
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "Gestion des Employ\303\251s", nullptr));
         labelLogo->setText(QString());
         btnEmployes->setText(QCoreApplication::translate("MainWindow", "Employ\303\251s", nullptr));
+        btnClients->setText(QCoreApplication::translate("MainWindow", "Clients", nullptr));
+        btnCommandes->setText(QCoreApplication::translate("MainWindow", "Commandes", nullptr));
+        btnStock->setText(QCoreApplication::translate("MainWindow", "Stock", nullptr));
+        btnAtelier->setText(QCoreApplication::translate("MainWindow", "Atelier", nullptr));
         groupRechercheEtTri->setTitle(QCoreApplication::translate("MainWindow", "Recherche et Tri", nullptr));
         labelRechercher->setText(QCoreApplication::translate("MainWindow", "Rechercher :", nullptr));
         lineEditRecherche->setPlaceholderText(QCoreApplication::translate("MainWindow", "CIN ou poste...", nullptr));

@@ -16,6 +16,10 @@ HEADERS += \
     mainwindow.h
 
 FORMS += \
+    AtelierWidget.ui \
+    ClientsWidget.ui \
+    CommandesWidget.ui \
+    StockWidget.ui \
     mainwindow.ui
 
 # Default rules for deployment.
