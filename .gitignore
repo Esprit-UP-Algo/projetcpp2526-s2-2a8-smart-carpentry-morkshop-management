@@ -1,0 +1,21 @@
+# Qt build files
+build/
+*.pro.user
+*.autosave
+
+# Compiled files
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Qt generated files
+moc_*.cpp
+ui_*.h
+qrc_*.cpp
+
+# IDE files
+.qtcreator/
+*.user

@@ -1,0 +1,1334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1400</width>
+    <height>903</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Système de Gestion d'Atelier - Production Menuiserie</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QMainWindow {
+    background-color: #F5F0E8;
+}
+
+QPushButton {
+    background-color: #6B4423;
+    color: #FAF8F3;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 10pt;
+    min-height: 35px;
+}
+
+QPushButton:hover {
+    background-color: #8B6F47;
+    border: 1px solid #6B4423;
+}
+
+QPushButton:pressed {
+    background-color: #5A3820;
+}
+
+QPushButton:disabled {
+    background-color: #C9B896;
+    color: #9B8B5B;
+}
+
+QPushButton#btnRechercher,
+QPushButton#btnReinitialiser,
+QPushButton#btnExporter {
+    background-color: #9B8B5B;
+    color: #FAF8F3;
+}
+
+QPushButton#btnRechercher:hover,
+QPushButton#btnReinitialiser:hover,
+QPushButton#btnExporter:hover {
+    background-color: #B5A572;
+    border: 1px solid #8B6F47;
+}
+
+QPushButton#btnSupprimer {
+    background-color: #A0522D;
+    color: #FAF8F3;
+}
+
+QPushButton#btnSupprimer:hover {
+    background-color: #C86432;
+}
+
+QPushButton#btnEnregistrer,
+QPushButton#btnValider {
+    background-color: #6B7B3E;
+}
+
+QPushButton#btnEnregistrer:hover,
+QPushButton#btnValider:hover {
+    background-color: #7E9147;
+}
+
+QGroupBox {
+    background-color: #FAF8F3;
+    border: 2px solid #C9B896;
+    border-radius: 10px;
+    margin-top: 20px;
+    padding-top: 20px;
+    font-weight: 600;
+    font-size: 11pt;
+    color: #6B4423;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    padding: 8px 16px;
+    background-color: #6B4423;
+    color: #FAF8F3;
+    border-radius: 5px;
+    left: 10px;
+}
+
+QLabel {
+    color: #5A3820;
+    font-size: 10pt;
+    font-weight: 500;
+}
+
+QLabel#lblLogo {
+    background-color: transparent;
+    padding: 10px;
+}
+
+QLabel#lblTitre {
+    font-size: 24pt;
+    font-weight: 700;
+    color: #6B4423;
+    padding: 15px;
+    background-color: transparent;
+}
+
+QLabel#lblSousTitre {
+    font-size: 12pt;
+    color: #8B6F47;
+    font-weight: 600;
+}
+
+QLabel#lblTotalMachines,
+QLabel#lblMachinesDisponibles,
+QLabel#lblMachinesMaintenance,
+QLabel#lblMachinesHS {
+    font-size: 11pt;
+    font-weight: 600;
+    padding: 10px;
+    background-color: #E8DCC4;
+    border-left: 4px solid #6B4423;
+    border-radius: 5px;
+    margin: 5px;
+}
+
+QLineEdit, QComboBox, QSpinBox, QDateEdit, QTextEdit {
+    background-color: #FFFFFF;
+    border: 2px solid #C9B896;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 10pt;
+    color: #5A3820;
+    selection-background-color: #9B8B5B;
+    selection-color: #FAF8F3;
+}
+
+QLineEdit:focus, QComboBox:focus, QSpinBox:focus, QDateEdit:focus, QTextEdit:focus {
+    border: 2px solid #8B6F47;
+    background-color: #FAF8F3;
+}
+
+QLineEdit:disabled, QComboBox:disabled, QSpinBox:disabled, QDateEdit:disabled {
+    background-color: #E8DCC4;
+    color: #9B8B5B;
+}
+
+QComboBox::drop-down {
+    border: none;
+    width: 30px;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #FAF8F3;
+    border: 2px solid #8B6F47;
+    selection-background-color: #9B8B5B;
+    selection-color: #FAF8F3;
+    padding: 5px;
+}
+
+QTableWidget {
+    background-color: #FFFFFF;
+    alternate-background-color: #FAF8F3;
+    border: 2px solid #C9B896;
+    gridline-color: #E8DCC4;
+    font-size: 10pt;
+    border-radius: 8px;
+}
+
+QTableWidget::item {
+    padding: 10px;
+    border-bottom: 1px solid #E8DCC4;
+}
+
+QTableWidget::item:selected {
+    background-color: #9B8B5B;
+    color: #FAF8F3;
+}
+
+QTableWidget::item:hover {
+    background-color: #E8DCC4;
+}
+
+QHeaderView::section {
+    background-color: #6B4423;
+    color: #FAF8F3;
+    padding: 12px 8px;
+    border: none;
+    font-weight: 700;
+    font-size: 10pt;
+}
+
+QHeaderView::section:hover {
+    background-color: #8B6F47;
+}
+
+QTabWidget::pane {
+    border: 2px solid #C9B896;
+    background-color: #F5F0E8;
+    border-radius: 8px;
+    top: -2px;
+}
+
+QTabBar::tab {
+    background-color: #E8DCC4;
+    color: #5A3820;
+    padding: 12px 25px;
+    margin-right: 3px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    font-weight: 600;
+    font-size: 10pt;
+    min-width: 120px;
+}
+
+QTabBar::tab:selected {
+    background-color: #6B4423;
+    color: #FAF8F3;
+}
+
+QTabBar::tab:hover:!selected {
+    background-color: #C9B896;
+}
+
+QScrollBar:vertical {
+    border: none;
+    background-color: #E8DCC4;
+    width: 12px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical {
+    background-color: #9B8B5B;
+    border-radius: 6px;
+    min-height: 20px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background-color: #8B6F47;
+}
+
+QScrollBar:horizontal {
+    border: none;
+    background-color: #E8DCC4;
+    height: 12px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:horizontal {
+    background-color: #9B8B5B;
+    border-radius: 6px;
+    min-width: 20px;
+}
+
+QStatusBar {
+    background-color: #6B4423;
+    color: #FAF8F3;
+    font-weight: 500;
+    padding: 5px;
+}
+
+QStatusBar::item {
+    border: none;
+}
+
+QMenuBar {
+    background-color: #8B6F47;
+    color: #FAF8F3;
+    padding: 5px;
+    font-weight: 600;
+}
+
+QMenuBar::item {
+    background-color: transparent;
+    padding: 8px 15px;
+}
+
+QMenuBar::item:selected {
+    background-color: #6B4423;
+    border-radius: 4px;
+}
+
+QMenu {
+    background-color: #FAF8F3;
+    border: 2px solid #8B6F47;
+    padding: 5px;
+}
+
+QMenu::item {
+    padding: 8px 30px;
+    color: #5A3820;
+}
+
+QMenu::item:selected {
+    background-color: #9B8B5B;
+    color: #FAF8F3;
+}
+
+QSpinBox::up-button, QSpinBox::down-button {
+    background-color: #C9B896;
+    border: none;
+    width: 20px;
+}
+
+QSpinBox::up-button:hover, QSpinBox::down-button:hover {
+    background-color: #9B8B5B;
+}
+
+QCheckBox, QRadioButton {
+    color: #5A3820;
+    font-weight: 500;
+    spacing: 8px;
+}
+
+QCheckBox::indicator, QRadioButton::indicator {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #8B6F47;
+    border-radius: 3px;
+    background-color: #FFFFFF;
+}
+
+QCheckBox::indicator:checked, QRadioButton::indicator:checked {
+    background-color: #6B4423;
+    border: 2px solid #6B4423;
+}
+</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QFrame" name="frameHeader">
+      <property name="styleSheet">
+       <string notr="true">QFrame#frameHeader {
+    background-color: #6B4423;
+    border-bottom: 3px solid #8B6F47;
+}</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Shape::StyledPanel</enum>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_header">
+       <property name="spacing">
+        <number>15</number>
+       </property>
+       <property name="leftMargin">
+        <number>20</number>
+       </property>
+       <property name="topMargin">
+        <number>10</number>
+       </property>
+       <property name="rightMargin">
+        <number>20</number>
+       </property>
+       <property name="bottomMargin">
+        <number>10</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="lblLogo">
+         <property name="minimumSize">
+          <size>
+           <width>80</width>
+           <height>80</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>80</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="scaledContents">
+          <bool>true</bool>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_9">
+         <property name="spacing">
+          <number>5</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="lblTitre">
+           <property name="styleSheet">
+            <string notr="true">color: #FAF8F3;</string>
+           </property>
+           <property name="text">
+            <string>SYSTÈME DE GESTION D'ATELIER</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="lblSousTitre">
+           <property name="styleSheet">
+            <string notr="true">color: #E8DCC4; font-size: 11pt;</string>
+           </property>
+           <property name="text">
+            <string>Production Menuiserie - Gestion des Machines et Maintenance</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_header">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="tabMachines">
+       <attribute name="title">
+        <string>  Gestion des Machines  </string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <property name="spacing">
+         <number>15</number>
+        </property>
+        <property name="leftMargin">
+         <number>15</number>
+        </property>
+        <property name="topMargin">
+         <number>15</number>
+        </property>
+        <property name="rightMargin">
+         <number>15</number>
+        </property>
+        <property name="bottomMargin">
+         <number>15</number>
+        </property>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <property name="spacing">
+           <number>15</number>
+          </property>
+          <item>
+           <widget class="QGroupBox" name="groupRecherche">
+            <property name="title">
+             <string> Filtres de Recherche</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout">
+             <property name="leftMargin">
+              <number>20</number>
+             </property>
+             <property name="topMargin">
+              <number>25</number>
+             </property>
+             <property name="rightMargin">
+              <number>20</number>
+             </property>
+             <property name="bottomMargin">
+              <number>20</number>
+             </property>
+             <property name="horizontalSpacing">
+              <number>15</number>
+             </property>
+             <property name="verticalSpacing">
+              <number>12</number>
+             </property>
+             <item row="0" column="1">
+              <widget class="QComboBox" name="comboRechercheType">
+               <item>
+                <property name="text">
+                 <string>-- Tous les types --</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Scie</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Perceuse</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Raboteuse</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Ponceuse</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Défonceuse</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Tour à bois</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string>Type de Machine :</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_11">
+               <property name="text">
+                <string>Recherche :</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0" colspan="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_2">
+               <property name="spacing">
+                <number>10</number>
+               </property>
+               <item>
+                <widget class="QPushButton" name="btnRechercher">
+                 <property name="text">
+                  <string>Rechercher</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="btnReinitialiser">
+                 <property name="text">
+                  <string>Réinitialiser</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="1" column="1">
+              <widget class="QComboBox" name="comboRechercheEtat">
+               <item>
+                <property name="text">
+                 <string>-- Tous les états --</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Disponible</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>En maintenance</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Hors service</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_2">
+               <property name="text">
+                <string>État :</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QLineEdit" name="lineEditRecherche">
+               <property name="placeholderText">
+                <string>Nom de la machine...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="groupActions">
+            <property name="title">
+             <string> Actions</string>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_3">
+             <property name="spacing">
+              <number>12</number>
+             </property>
+             <property name="leftMargin">
+              <number>20</number>
+             </property>
+             <property name="topMargin">
+              <number>25</number>
+             </property>
+             <property name="rightMargin">
+              <number>20</number>
+             </property>
+             <property name="bottomMargin">
+              <number>20</number>
+             </property>
+             <item>
+              <widget class="QPushButton" name="btnAjouter">
+               <property name="text">
+                <string>+ Ajouter</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnModifier">
+               <property name="text">
+                <string>Modifier</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnSupprimer">
+               <property name="text">
+                <string>Supprimer</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnExporter">
+               <property name="text">
+                <string>Exporter</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer">
+               <property name="orientation">
+                <enum>Qt::Orientation::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="tableMachines">
+          <property name="alternatingRowColors">
+           <bool>true</bool>
+          </property>
+          <property name="selectionMode">
+           <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
+          </property>
+          <property name="selectionBehavior">
+           <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+          </property>
+          <property name="sortingEnabled">
+           <bool>true</bool>
+          </property>
+          <column>
+           <property name="text">
+            <string>ID</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>NOM</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>TYPE</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>ÉTAT</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>MAINTENANCE</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>HEURES</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>RESP. MAINTENANCE</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>RESP. ATELIER</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tabFormulaire">
+       <attribute name="title">
+        <string>  Formulaire  </string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <property name="spacing">
+         <number>15</number>
+        </property>
+        <property name="leftMargin">
+         <number>15</number>
+        </property>
+        <property name="topMargin">
+         <number>15</number>
+        </property>
+        <property name="rightMargin">
+         <number>15</number>
+        </property>
+        <property name="bottomMargin">
+         <number>15</number>
+        </property>
+        <item>
+         <widget class="QGroupBox" name="groupFormulaire">
+          <property name="title">
+           <string> Informations Machine</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_2">
+           <property name="leftMargin">
+            <number>30</number>
+           </property>
+           <property name="topMargin">
+            <number>30</number>
+           </property>
+           <property name="rightMargin">
+            <number>30</number>
+           </property>
+           <property name="bottomMargin">
+            <number>30</number>
+           </property>
+           <property name="horizontalSpacing">
+            <number>20</number>
+           </property>
+           <property name="verticalSpacing">
+            <number>18</number>
+           </property>
+           <item row="5" column="0">
+            <widget class="QLabel" name="label_8">
+             <property name="text">
+              <string>Heures Cumulées :</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_6">
+             <property name="text">
+              <string>État :</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_3">
+             <property name="text">
+              <string>ID Machine :</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_5">
+             <property name="text">
+              <string>Type :</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLabel" name="label_10">
+             <property name="text">
+              <string>Resp. Atelier :</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="lineEditID">
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+             <property name="placeholderText">
+              <string>Auto-généré</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="1">
+            <widget class="QLineEdit" name="lineEditRespAtelier">
+             <property name="placeholderText">
+              <string>Nom du responsable</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="0" colspan="2">
+            <layout class="QHBoxLayout" name="horizontalLayout_3">
+             <property name="spacing">
+              <number>15</number>
+             </property>
+             <item>
+              <spacer name="horizontalSpacer">
+               <property name="orientation">
+                <enum>Qt::Orientation::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnEnregistrer">
+               <property name="minimumSize">
+                <size>
+                 <width>150</width>
+                 <height>59</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Enregistrer</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnAnnuler">
+               <property name="minimumSize">
+                <size>
+                 <width>150</width>
+                 <height>59</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Annuler</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_7">
+             <property name="text">
+              <string>Date Maintenance :</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="label_9">
+             <property name="text">
+              <string>Resp. Maintenance :</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="lineEditNom">
+             <property name="placeholderText">
+              <string>Ex: Scie circulaire principale</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_4">
+             <property name="text">
+              <string>Nom :</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="QLineEdit" name="lineEditRespMaintenance">
+             <property name="placeholderText">
+              <string>Nom du responsable</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QComboBox" name="comboBoxEtat">
+             <item>
+              <property name="text">
+               <string>Disponible</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>En maintenance</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Hors service</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QDateEdit" name="dateEditMaintenance">
+             <property name="calendarPopup">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QSpinBox" name="spinBoxHeures">
+             <property name="suffix">
+              <string> h</string>
+             </property>
+             <property name="maximum">
+              <number>999999</number>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QComboBox" name="comboBoxType">
+             <item>
+              <property name="text">
+               <string>Scie</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Perceuse</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Raboteuse</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Ponceuse</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Défonceuse</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Tour à bois</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Orientation::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tabStatistiques">
+       <attribute name="title">
+        <string>  Statistiques  </string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_5">
+        <property name="spacing">
+         <number>15</number>
+        </property>
+        <property name="leftMargin">
+         <number>15</number>
+        </property>
+        <property name="topMargin">
+         <number>15</number>
+        </property>
+        <property name="rightMargin">
+         <number>15</number>
+        </property>
+        <property name="bottomMargin">
+         <number>15</number>
+        </property>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <property name="spacing">
+           <number>15</number>
+          </property>
+          <item>
+           <widget class="QGroupBox" name="groupStats">
+            <property name="title">
+             <string> Vue d'Ensemble</string>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_6">
+             <property name="spacing">
+              <number>12</number>
+             </property>
+             <property name="leftMargin">
+              <number>20</number>
+             </property>
+             <property name="topMargin">
+              <number>25</number>
+             </property>
+             <property name="rightMargin">
+              <number>20</number>
+             </property>
+             <property name="bottomMargin">
+              <number>20</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="lblTotalMachines">
+               <property name="text">
+                <string>Total : 0</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lblMachinesDisponibles">
+               <property name="text">
+                <string>Disponibles : 0</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lblMachinesMaintenance">
+               <property name="text">
+                <string>En Maintenance : 0</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lblMachinesHS">
+               <property name="text">
+                <string>Hors Service : 0</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer_3">
+               <property name="orientation">
+                <enum>Qt::Orientation::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="groupMaintenance">
+            <property name="title">
+             <string> Planification</string>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_7">
+             <property name="spacing">
+              <number>12</number>
+             </property>
+             <property name="leftMargin">
+              <number>20</number>
+             </property>
+             <property name="topMargin">
+              <number>25</number>
+             </property>
+             <property name="rightMargin">
+              <number>20</number>
+             </property>
+             <property name="bottomMargin">
+              <number>20</number>
+             </property>
+             <item>
+              <widget class="QPushButton" name="btnPlanifierMaintenance">
+               <property name="text">
+                <string>Planifier Auto</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnMachinesSollicitees">
+               <property name="text">
+                <string>Plus Sollicitées</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnSlotsDisponibles">
+               <property name="text">
+                <string>Slots Disponibles</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer_4">
+               <property name="orientation">
+                <enum>Qt::Orientation::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupRapport">
+          <property name="title">
+           <string> Rapport Détaillé</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_8">
+           <property name="spacing">
+            <number>15</number>
+           </property>
+           <property name="leftMargin">
+            <number>20</number>
+           </property>
+           <property name="topMargin">
+            <number>25</number>
+           </property>
+           <property name="rightMargin">
+            <number>20</number>
+           </property>
+           <property name="bottomMargin">
+            <number>20</number>
+           </property>
+           <item>
+            <widget class="QTableWidget" name="tableStatistiques">
+             <property name="alternatingRowColors">
+              <bool>true</bool>
+             </property>
+             <column>
+              <property name="text">
+               <string>MACHINE</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>TYPE</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>HEURES</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>PROCHAINE MAINTENANCE</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>TAUX</string>
+              </property>
+             </column>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1400</width>
+     <height>42</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFichier">
+    <property name="title">
+     <string>Fichier</string>
+    </property>
+    <addaction name="actionNouveau"/>
+    <addaction name="actionOuvrir"/>
+    <addaction name="actionEnregistrer"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuitter"/>
+   </widget>
+   <widget class="QMenu" name="menuEdition">
+    <property name="title">
+     <string>Édition</string>
+    </property>
+    <addaction name="actionAjouter"/>
+    <addaction name="actionModifier"/>
+    <addaction name="actionSupprimer"/>
+   </widget>
+   <widget class="QMenu" name="menuOutils">
+    <property name="title">
+     <string>Outils</string>
+    </property>
+    <addaction name="actionStatistiques"/>
+    <addaction name="actionMaintenance"/>
+   </widget>
+   <widget class="QMenu" name="menuAide">
+    <property name="title">
+     <string>Aide</string>
+    </property>
+    <addaction name="actionDocumentation"/>
+    <addaction name="actionAPropos"/>
+   </widget>
+   <addaction name="menuFichier"/>
+   <addaction name="menuEdition"/>
+   <addaction name="menuOutils"/>
+   <addaction name="menuAide"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionNouveau">
+   <property name="text">
+    <string>Nouveau</string>
+   </property>
+  </action>
+  <action name="actionOuvrir">
+   <property name="text">
+    <string>Ouvrir</string>
+   </property>
+  </action>
+  <action name="actionEnregistrer">
+   <property name="text">
+    <string>Enregistrer</string>
+   </property>
+  </action>
+  <action name="actionQuitter">
+   <property name="text">
+    <string>Quitter</string>
+   </property>
+  </action>
+  <action name="actionAjouter">
+   <property name="text">
+    <string>Ajouter</string>
+   </property>
+  </action>
+  <action name="actionModifier">
+   <property name="text">
+    <string>Modifier</string>
+   </property>
+  </action>
+  <action name="actionSupprimer">
+   <property name="text">
+    <string>Supprimer</string>
+   </property>
+  </action>
+  <action name="actionStatistiques">
+   <property name="text">
+    <string>Statistiques</string>
+   </property>
+  </action>
+  <action name="actionMaintenance">
+   <property name="text">
+    <string>Maintenance</string>
+   </property>
+  </action>
+  <action name="actionDocumentation">
+   <property name="text">
+    <string>Documentation</string>
+   </property>
+  </action>
+  <action name="actionAPropos">
+   <property name="text">
+    <string>À propos</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
