@@ -6,7 +6,11 @@
    <rect>
     <x>0</x>
     <y>0</y>
+<<<<<<< HEAD
     <width>1225</width>
+=======
+    <width>1200</width>
+>>>>>>> e303fc50f5cb6035c40509c672af40e2e0aa50fd
     <height>808</height>
    </rect>
   </property>
@@ -58,7 +62,11 @@
        <string>📦 GESTION DES COMMANDES - SMART CARPENTRY WORKSHOP</string>
       </property>
       <property name="alignment">
+<<<<<<< HEAD
        <set>Qt::AlignmentFlag::AlignCenter</set>
+=======
+       <set>Qt::AlignCenter</set>
+>>>>>>> e303fc50f5cb6035c40509c672af40e2e0aa50fd
       </property>
      </widget>
     </item>
@@ -68,7 +76,11 @@
        <string>⚠️ ALERTE: 2 commandes en retard de livraison</string>
       </property>
       <property name="alignment">
+<<<<<<< HEAD
        <set>Qt::AlignmentFlag::AlignCenter</set>
+=======
+       <set>Qt::AlignCenter</set>
+>>>>>>> e303fc50f5cb6035c40509c672af40e2e0aa50fd
       </property>
      </widget>
     </item>
@@ -111,9 +123,12 @@
            </item>
            <item row="1" column="1">
             <widget class="QDateEdit" name="dateCommande">
+<<<<<<< HEAD
              <property name="calendarPopup">
               <bool>true</bool>
              </property>
+=======
+>>>>>>> e303fc50f5cb6035c40509c672af40e2e0aa50fd
              <property name="date">
               <date>
                <year>2025</year>
@@ -121,6 +136,12 @@
                <day>16</day>
               </date>
              </property>
+<<<<<<< HEAD
+=======
+             <property name="calendarPopup">
+              <bool>true</bool>
+             </property>
+>>>>>>> e303fc50f5cb6035c40509c672af40e2e0aa50fd
             </widget>
            </item>
            <item row="2" column="0">
@@ -319,6 +340,7 @@
           <layout class="QVBoxLayout" name="verticalLayout_6">
            <item>
             <widget class="QTableWidget" name="tableCommandes">
+<<<<<<< HEAD
              <property name="editTriggers">
               <set>QAbstractItemView::EditTrigger::DoubleClicked|QAbstractItemView::EditTrigger::EditKeyPressed|QAbstractItemView::EditTrigger::SelectedClicked</set>
              </property>
@@ -328,18 +350,33 @@
              <property name="selectionBehavior">
               <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
              </property>
+=======
+>>>>>>> e303fc50f5cb6035c40509c672af40e2e0aa50fd
              <property name="rowCount">
               <number>4</number>
              </property>
              <property name="columnCount">
               <number>7</number>
              </property>
+<<<<<<< HEAD
+=======
+             <property name="alternatingRowColors">
+              <bool>true</bool>
+             </property>
+             <property name="selectionBehavior">
+              <enum>QAbstractItemView::SelectRows</enum>
+             </property>
+             <property name="editTriggers">
+              <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
+             </property>
+>>>>>>> e303fc50f5cb6035c40509c672af40e2e0aa50fd
              <attribute name="horizontalHeaderVisible">
               <bool>true</bool>
              </attribute>
              <attribute name="horizontalHeaderStretchLastSection">
               <bool>true</bool>
              </attribute>
+<<<<<<< HEAD
              <row>
               <property name="text">
                <string>Jean Martin</string>
@@ -360,6 +397,8 @@
                <string>Jean Martin</string>
               </property>
              </row>
+=======
+>>>>>>> e303fc50f5cb6035c40509c672af40e2e0aa50fd
              <column>
               <property name="text">
                <string>ID</string>
@@ -395,6 +434,101 @@
                <string>Responsable</string>
               </property>
              </column>
+<<<<<<< HEAD
+=======
+             <row>
+              <property name="text">
+               <string>CMD-001</string>
+              </property>
+              <property name="text">
+               <string>15/01/2025</string>
+              </property>
+              <property name="text">
+               <string>Table en chêne massif</string>
+              </property>
+              <property name="text">
+               <string>180×90×75</string>
+              </property>
+              <property name="text">
+               <string>€ 450</string>
+              </property>
+              <property name="text">
+               <string>🟢 Terminée</string>
+              </property>
+              <property name="text">
+               <string>Jean Martin</string>
+              </property>
+             </row>
+             <row>
+              <property name="text">
+               <string>CMD-002</string>
+              </property>
+              <property name="text">
+               <string>18/01/2025</string>
+              </property>
+              <property name="text">
+               <string>Bibliothèque 3 portes</string>
+              </property>
+              <property name="text">
+               <string>200×40×180</string>
+              </property>
+              <property name="text">
+               <string>€ 850</string>
+              </property>
+              <property name="text">
+               <string>🟡 En cours</string>
+              </property>
+              <property name="text">
+               <string>Marie Dubois</string>
+              </property>
+             </row>
+             <row>
+              <property name="text">
+               <string>CMD-003</string>
+              </property>
+              <property name="text">
+               <string>20/01/2025</string>
+              </property>
+              <property name="text">
+               <string>Chaise design</string>
+              </property>
+              <property name="text">
+               <string>45×45×85</string>
+              </property>
+              <property name="text">
+               <string>€ 120</string>
+              </property>
+              <property name="text">
+               <string>🟡 En cours</string>
+              </property>
+              <property name="text">
+               <string>Pierre Lambert</string>
+              </property>
+             </row>
+             <row>
+              <property name="text">
+               <string>CMD-004</string>
+              </property>
+              <property name="text">
+               <string>16/02/2025</string>
+              </property>
+              <property name="text">
+               <string>Table de chevet en chêne</string>
+              </property>
+              <property name="text">
+               <string>60×40×55</string>
+              </property>
+              <property name="text">
+               <string>€ 180</string>
+              </property>
+              <property name="text">
+               <string>🟡 En cours</string>
+              </property>
+              <property name="text">
+               <string>Jean Martin</string>
+              </property>
+             </row>
+>>>>>>> e303fc50f5cb6035c40509c672af40e2e0aa50fd
             </widget>
            </item>
            <item>
@@ -416,7 +550,11 @@
              <item>
               <spacer name="horizontalSpacer">
                <property name="orientation">
+<<<<<<< HEAD
                 <enum>Qt::Orientation::Horizontal</enum>
+=======
+                <enum>Qt::Horizontal</enum>
+>>>>>>> e303fc50f5cb6035c40509c672af40e2e0aa50fd
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -432,7 +570,11 @@
                 <string>Total: € 1,600.00</string>
                </property>
                <property name="alignment">
+<<<<<<< HEAD
                 <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+=======
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+>>>>>>> e303fc50f5cb6035c40509c672af40e2e0aa50fd
                </property>
               </widget>
              </item>
@@ -619,21 +761,43 @@
           <layout class="QVBoxLayout" name="verticalLayout_9">
            <item>
             <widget class="QTableWidget" name="tableStatsMois">
+<<<<<<< HEAD
              <property name="alternatingRowColors">
               <bool>true</bool>
              </property>
+=======
+>>>>>>> e303fc50f5cb6035c40509c672af40e2e0aa50fd
              <property name="rowCount">
               <number>12</number>
              </property>
              <property name="columnCount">
               <number>2</number>
              </property>
+<<<<<<< HEAD
+=======
+             <property name="alternatingRowColors">
+              <bool>true</bool>
+             </property>
+>>>>>>> e303fc50f5cb6035c40509c672af40e2e0aa50fd
              <attribute name="horizontalHeaderVisible">
               <bool>true</bool>
              </attribute>
              <attribute name="horizontalHeaderStretchLastSection">
               <bool>true</bool>
              </attribute>
+<<<<<<< HEAD
+=======
+             <column>
+              <property name="text">
+               <string>Nombre de commandes</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Chiffre d'affaires (€)</string>
+              </property>
+             </column>
+>>>>>>> e303fc50f5cb6035c40509c672af40e2e0aa50fd
              <row>
               <property name="text">
                <string>Janvier</string>
@@ -694,6 +858,7 @@
                <string>Décembre</string>
               </property>
              </row>
+<<<<<<< HEAD
              <column>
               <property name="text">
                <string>Nombre de commandes</string>
@@ -704,6 +869,8 @@
                <string>Chiffre d'affaires (€)</string>
               </property>
              </column>
+=======
+>>>>>>> e303fc50f5cb6035c40509c672af40e2e0aa50fd
             </widget>
            </item>
            <item>
@@ -797,7 +964,11 @@
              <item>
               <spacer name="horizontalSpacer_3">
                <property name="orientation">
+<<<<<<< HEAD
                 <enum>Qt::Orientation::Horizontal</enum>
+=======
+                <enum>Qt::Horizontal</enum>
+>>>>>>> e303fc50f5cb6035c40509c672af40e2e0aa50fd
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -824,7 +995,11 @@
               <string>Votre facture PDF sera générée ici...</string>
              </property>
              <property name="alignment">
+<<<<<<< HEAD
               <set>Qt::AlignmentFlag::AlignCenter</set>
+=======
+              <set>Qt::AlignCenter</set>
+>>>>>>> e303fc50f5cb6035c40509c672af40e2e0aa50fd
              </property>
             </widget>
            </item>
