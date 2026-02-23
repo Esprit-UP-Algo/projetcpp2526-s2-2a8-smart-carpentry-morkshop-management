@@ -6,6 +6,8 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QTextStream>
+#include <QSqlQuery>
+#include <QSqlError>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -70,64 +72,53 @@ void MainWindow::initialiserTableau()
 
 void MainWindow::chargerDonnees()
 {
-    // Exemple de données pour démonstration (CRUD seulement)
-    ui->tableMachines->setRowCount(5);
+    // Charger les données depuis Oracle
+    QSqlQuery query;
+    query.prepare("SELECT * FROM MACHINES ORDER BY ID");
     
-    // Machine 1
-    ui->tableMachines->setItem(0, 0, new QTableWidgetItem("001"));
-    ui->tableMachines->setItem(0, 1, new QTableWidgetItem("Scie Circulaire A"));
-    ui->tableMachines->setItem(0, 2, new QTableWidgetItem("Scie"));
-    ui->tableMachines->setItem(0, 3, new QTableWidgetItem("Disponible"));
-    ui->tableMachines->setItem(0, 4, new QTableWidgetItem("15/01/2026"));
-    ui->tableMachines->setItem(0, 5, new QTableWidgetItem("520"));
-    ui->tableMachines->setItem(0, 6, new QTableWidgetItem("Ahmed Ben Ali"));
-    ui->tableMachines->setItem(0, 7, new QTableWidgetItem("Mohamed Salah"));
+    if (!query.exec()) {
+        qDebug() << "Erreur SQL:" << query.lastError().text();
+        QMessageBox::warning(this, "Erreur", "Impossible de charger les données: " + query.lastError().text());
+        return;
+    }
     
-    // Machine 2
-    ui->tableMachines->setItem(1, 0, new QTableWidgetItem("002"));
-    ui->tableMachines->setItem(1, 1, new QTableWidgetItem("Perceuse B"));
-    ui->tableMachines->setItem(1, 2, new QTableWidgetItem("Perceuse"));
-    ui->tableMachines->setItem(1, 3, new QTableWidgetItem("Disponible"));
-    ui->tableMachines->setItem(1, 4, new QTableWidgetItem("10/02/2026"));
-    ui->tableMachines->setItem(1, 5, new QTableWidgetItem("180"));
-    ui->tableMachines->setItem(1, 6, new QTableWidgetItem("Fatma Trabelsi"));
-    ui->tableMachines->setItem(1, 7, new QTableWidgetItem("Mohamed Salah"));
+    // Vider le tableau
+    ui->tableMachines->setRowCount(0);
     
-    // Machine 3
-    ui->tableMachines->setItem(2, 0, new QTableWidgetItem("003"));
-    ui->tableMachines->setItem(2, 1, new QTableWidgetItem("Raboteuse C"));
-    ui->tableMachines->setItem(2, 2, new QTableWidgetItem("Raboteuse"));
-    ui->tableMachines->setItem(2, 3, new QTableWidgetItem("En maintenance"));
-    ui->tableMachines->setItem(2, 4, new QTableWidgetItem("05/02/2026"));
-    ui->tableMachines->setItem(2, 5, new QTableWidgetItem("380"));
-    ui->tableMachines->setItem(2, 6, new QTableWidgetItem("Ahmed Ben Ali"));
-    ui->tableMachines->setItem(2, 7, new QTableWidgetItem("Karim Mansour"));
+    int row = 0;
+    int totalMachines = 0;
+    int disponibles = 0;
+    int enMaintenance = 0;
+    int horsService = 0;
     
-    // Machine 4
-    ui->tableMachines->setItem(3, 0, new QTableWidgetItem("004"));
-    ui->tableMachines->setItem(3, 1, new QTableWidgetItem("Ponceuse D"));
-    ui->tableMachines->setItem(3, 2, new QTableWidgetItem("Ponceuse"));
-    ui->tableMachines->setItem(3, 3, new QTableWidgetItem("Disponible"));
-    ui->tableMachines->setItem(3, 4, new QTableWidgetItem("20/01/2026"));
-    ui->tableMachines->setItem(3, 5, new QTableWidgetItem("450"));
-    ui->tableMachines->setItem(3, 6, new QTableWidgetItem("Fatma Trabelsi"));
-    ui->tableMachines->setItem(3, 7, new QTableWidgetItem("Karim Mansour"));
-    
-    // Machine 5
-    ui->tableMachines->setItem(4, 0, new QTableWidgetItem("005"));
-    ui->tableMachines->setItem(4, 1, new QTableWidgetItem("Tour à bois E"));
-    ui->tableMachines->setItem(4, 2, new QTableWidgetItem("Tour à bois"));
-    ui->tableMachines->setItem(4, 3, new QTableWidgetItem("Hors service"));
-    ui->tableMachines->setItem(4, 4, new QTableWidgetItem("01/02/2026"));
-    ui->tableMachines->setItem(4, 5, new QTableWidgetItem("650"));
-    ui->tableMachines->setItem(4, 6, new QTableWidgetItem("Ahmed Ben Ali"));
-    ui->tableMachines->setItem(4, 7, new QTableWidgetItem("Mohamed Salah"));
+    while (query.next()) {
+        ui->tableMachines->insertRow(row);
+        
+        // Remplir les colonnes
+        ui->tableMachines->setItem(row, 0, new QTableWidgetItem(query.value("ID").toString()));
+        ui->tableMachines->setItem(row, 1, new QTableWidgetItem(query.value("NOM").toString()));
+        ui->tableMachines->setItem(row, 2, new QTableWidgetItem(query.value("TYPE").toString()));
+        ui->tableMachines->setItem(row, 3, new QTableWidgetItem(query.value("ETAT").toString()));
+        ui->tableMachines->setItem(row, 4, new QTableWidgetItem(query.value("DATE_MAINTENANCE").toString()));
+        ui->tableMachines->setItem(row, 5, new QTableWidgetItem(query.value("HEURES_CUMULEES").toString()));
+        ui->tableMachines->setItem(row, 6, new QTableWidgetItem(query.value("RESP_MAINTENANCE").toString()));
+        ui->tableMachines->setItem(row, 7, new QTableWidgetItem(query.value("RESP_ATELIER").toString()));
+        
+        // Compter les statistiques
+        totalMachines++;
+        QString etat = query.value("ETAT").toString();
+        if (etat == "Disponible") disponibles++;
+        else if (etat == "En maintenance") enMaintenance++;
+        else if (etat == "Hors service") horsService++;
+        
+        row++;
+    }
     
     // Mettre à jour les statistiques
-    ui->lblTotalMachines->setText("Total Machines: 5");
-    ui->lblMachinesDisponibles->setText("Disponibles: 3");
-    ui->lblMachinesMaintenance->setText("En Maintenance: 1");
-    ui->lblMachinesHS->setText("Hors Service: 1");
+    ui->lblTotalMachines->setText("Total Machines: " + QString::number(totalMachines));
+    ui->lblMachinesDisponibles->setText("Disponibles: " + QString::number(disponibles));
+    ui->lblMachinesMaintenance->setText("En Maintenance: " + QString::number(enMaintenance));
+    ui->lblMachinesHS->setText("Hors Service: " + QString::number(horsService));
     
     // Charger les données des métiers innovants
     chargerMachinesCritiques();
@@ -341,6 +332,13 @@ void MainWindow::chargerMachinesCritiques()
     // Charger le tableau des machines critiques (Métiers Innovants)
     ui->tableMachinesCritiques->setRowCount(3);
     
+    // Configurer les largeurs de colonnes
+    ui->tableMachinesCritiques->setColumnWidth(0, 120);  // PRIORITÉ
+    ui->tableMachinesCritiques->setColumnWidth(1, 200);  // MACHINE
+    ui->tableMachinesCritiques->setColumnWidth(2, 180);  // TYPE ALERTE
+    ui->tableMachinesCritiques->setColumnWidth(3, 150);  // NIVEAU RISQUE
+    ui->tableMachinesCritiques->setColumnWidth(4, 200);  // ACTION REQUISE
+    
     // Machine critique 1
     ui->tableMachinesCritiques->setItem(0, 0, new QTableWidgetItem("🔴 URGENT"));
     ui->tableMachinesCritiques->setItem(0, 1, new QTableWidgetItem("Scie Circulaire A"));
@@ -367,6 +365,13 @@ void MainWindow::chargerMachinesSollicitees()
 {
     // Charger le tableau des machines les plus sollicitées (Métiers Innovants)
     ui->tableMachinesSollicitees->setRowCount(5);
+    
+    // Configurer les largeurs de colonnes
+    ui->tableMachinesSollicitees->setColumnWidth(0, 80);   // RANG
+    ui->tableMachinesSollicitees->setColumnWidth(1, 200);  // MACHINE
+    ui->tableMachinesSollicitees->setColumnWidth(2, 150);  // HEURES TOTALES
+    ui->tableMachinesSollicitees->setColumnWidth(3, 180);  // PANNES FRÉQUENTES
+    ui->tableMachinesSollicitees->setColumnWidth(4, 200);  // PROCHAINE MAINTENANCE
     
     // Rang 1
     ui->tableMachinesSollicitees->setItem(0, 0, new QTableWidgetItem("1"));
