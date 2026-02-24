@@ -1,0 +1,941 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>StockWidget</class>
+ <widget class="QWidget" name="StockWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1400</width>
+    <height>900</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Gestion du Stock de Matériaux</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget {
+    background-color: #FAF3E0;
+}
+
+QPushButton {
+    background-color: #8B6F47;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background-color: #6B4423;
+}
+
+QPushButton:pressed {
+    background-color: #5A3A1F;
+}
+
+QPushButton#btnDelete {
+    background-color: #6B4423;
+}
+
+QPushButton#btnDelete:hover {
+    background-color: #5A3A1F;
+}
+
+QPushButton#btnNouveau {
+    background-color: #A4A964;
+}
+
+QPushButton#btnNouveau:hover {
+    background-color: #8B8B4F;
+}
+
+QPushButton#btnExportExcel {
+    background-color: #A4A964;
+    font-size: 14px;
+}
+
+QPushButton#btnExportExcel:hover {
+    background-color: #8B8B4F;
+}
+
+QPushButton#btnExportCSV {
+    background-color: #C4B69C;
+    color: #333;
+    font-size: 14px;
+}
+
+QPushButton#btnExportCSV:hover {
+    background-color: #B0A082;
+}
+
+QPushButton#btnExportPDF {
+    background-color: #8B6F47;
+    font-size: 14px;
+}
+
+QPushButton#btnExportPDF:hover {
+    background-color: #6B4423;
+}
+
+QGroupBox {
+    font-weight: bold;
+    border: 2px solid #8B6F47;
+    border-radius: 5px;
+    margin-top: 10px;
+    padding-top: 10px;
+    background-color: white;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 5px;
+    color: #6B4423;
+}
+
+QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox {
+    padding: 6px;
+    border: 2px solid #C4B69C;
+    border-radius: 4px;
+    background-color: white;
+}
+
+QLineEdit:focus, QSpinBox:focus, QDoubleSpinBox:focus, QComboBox:focus {
+    border: 2px solid #8B6F47;
+}
+
+QTableWidget {
+    border: 2px solid #C4B69C;
+    border-radius: 4px;
+    gridline-color: #C4B69C;
+    background-color: white;
+}
+
+QTableWidget::item:selected {
+    background-color: #8B6F47;
+    color: white;
+}
+
+QTableWidget::item:hover {
+    background-color: #F9E79F;
+}
+
+QHeaderView::section {
+    background-color: #8B6F47;
+    color: white;
+    padding: 8px;
+    border: none;
+    font-weight: bold;
+}
+
+QLabel#lblTitle {
+    font-size: 24px;
+    font-weight: bold;
+    color: #6B4423;
+    background-color: transparent;
+}
+
+QLabel#lblAlert {
+    font-size: 14px;
+    font-weight: bold;
+    color: #6B4423;
+    background-color: #F9E79F;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+QTabWidget::pane {
+    border: 2px solid #8B6F47;
+    border-radius: 4px;
+    background-color: white;
+}
+
+QTabBar::tab {
+    background-color: #C4B69C;
+    color: #333;
+    padding: 10px 20px;
+    margin-right: 2px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+QTabBar::tab:selected {
+    background-color: #8B6F47;
+    color: white;
+}
+
+QTabBar::tab:hover {
+    background-color: #A4A964;
+    color: white;
+}
+
+QLabel {
+    color: #333;
+}
+
+QSpinBox::up-button, QDoubleSpinBox::up-button {
+    background-color: #8B6F47;
+}
+
+QSpinBox::down-button, QDoubleSpinBox::down-button {
+    background-color: #8B6F47;
+}
+
+QComboBox::drop-down {
+    background-color: #8B6F47;
+}
+
+QComboBox QAbstractItemView {
+    background-color: white;
+    border: 2px solid #8B6F47;
+    selection-background-color: #8B6F47;
+}</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>10</number>
+   </property>
+   <property name="leftMargin">
+    <number>15</number>
+   </property>
+   <property name="topMargin">
+    <number>15</number>
+   </property>
+   <property name="rightMargin">
+    <number>15</number>
+   </property>
+   <property name="bottomMargin">
+    <number>15</number>
+   </property>
+   <item>
+    <widget class="QLabel" name="lblTitle">
+     <property name="text">
+      <string>🔧 Gestion du Stock de Matériaux - Atelier de Menuiserie</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tabGestion">
+      <attribute name="title">
+       <string>📦 Gestion des Matériaux</string>
+      </attribute>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QGroupBox" name="groupBoxForm">
+         <property name="title">
+          <string>Informations du Matériau</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>ID Matériau:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="txtIdMateriau">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="placeholderText">
+             <string>Auto-généré</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>Nom du Matériau: *</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="txtNom">
+            <property name="placeholderText">
+             <string>Ex: Planche de chêne</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>Type: *</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboType">
+            <item>
+             <property name="text">
+              <string>Bois</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Clou</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Vernis</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Colle</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Peinture</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Vis</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Charnière</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Autre</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>Quantité: *</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QDoubleSpinBox" name="spinQuantite">
+            <property name="suffix">
+             <string> unités</string>
+            </property>
+            <property name="maximum">
+             <double>999999.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_5">
+            <property name="text">
+             <string>Seuil d'Alerte: *</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QDoubleSpinBox" name="spinSeuilAlerte">
+            <property name="suffix">
+             <string> unités</string>
+            </property>
+            <property name="maximum">
+             <double>999999.000000000000000</double>
+            </property>
+            <property name="value">
+             <double>10.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_6">
+            <property name="text">
+             <string>Responsable du Stock:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="txtResponsable">
+            <property name="placeholderText">
+             <string>Nom du responsable</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer">
+            <property name="orientation">
+             <enum>Qt::Orientation::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnAjouter">
+            <property name="text">
+             <string>➕ Ajouter</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnModifier">
+            <property name="text">
+             <string>✏️ Modifier</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnDelete">
+            <property name="text">
+             <string>🗑️ Supprimer</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnNouveau">
+            <property name="text">
+             <string>🆕 Nouveau</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <widget class="QGroupBox" name="groupBoxRecherche">
+           <property name="title">
+            <string>Recherche et Filtres</string>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QLabel" name="label_7">
+              <property name="text">
+               <string>Rechercher:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="txtRecherche">
+              <property name="placeholderText">
+               <string>Nom du matériau...</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_8">
+              <property name="text">
+               <string>Type:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="comboFiltreType">
+              <item>
+               <property name="text">
+                <string>Tous les types</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Bois</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Clou</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Vernis</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Colle</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Peinture</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Vis</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Charnière</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Autre</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btnRechercher">
+              <property name="text">
+               <string>🔍 Rechercher</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="lblAlert">
+           <property name="text">
+            <string>⚠️ Alertes de Stock Bas: 0 matériau(x)</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QTableWidget" name="tableWidget">
+           <property name="editTriggers">
+            <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+           </property>
+           <property name="selectionMode">
+            <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
+           </property>
+           <property name="selectionBehavior">
+            <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+           </property>
+           <column>
+            <property name="text">
+             <string>ID</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Nom</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Type</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Quantité</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Seuil Alerte</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Responsable</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Statut</string>
+            </property>
+           </column>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabStatistiques">
+      <attribute name="title">
+       <string>📊 Statistiques &amp; Consommation</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <item>
+        <widget class="QGroupBox" name="groupBox">
+         <property name="title">
+          <string>Statistiques Générales</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_9">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Total Matériaux:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="lblTotalMateriaux">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>0</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_11">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Matériaux en Alerte:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLabel" name="lblMateriauxAlerte">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: #6B4423; font-weight: bold;</string>
+            </property>
+            <property name="text">
+             <string>0</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_13">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Types de Matériaux:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLabel" name="lblTypesMateriaux">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>0</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="title">
+          <string>Répartition par Type</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <widget class="QTableWidget" name="tableStats">
+            <property name="editTriggers">
+             <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+            </property>
+            <column>
+             <property name="text">
+              <string>Type</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Nombre d'articles</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Quantité Totale</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Pourcentage</string>
+             </property>
+            </column>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnActualiserStats">
+         <property name="text">
+          <string>🔄 Actualiser les Statistiques</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabInnovant">
+      <attribute name="title">
+       <string>🤖 Métiers Innovants</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_6">
+       <item>
+        <widget class="QGroupBox" name="groupBox_3">
+         <property name="title">
+          <string>1. Proposition Automatique de Réapprovisionnement</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_7">
+          <item>
+           <widget class="QLabel" name="label_14">
+            <property name="text">
+             <string>Le système analyse automatiquement le stock et propose les matériaux à réapprovisionner</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnGenererReappro">
+            <property name="text">
+             <string>🔮 Générer Propositions de Réapprovisionnement</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QTableWidget" name="tableReappro">
+            <property name="editTriggers">
+             <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+            </property>
+            <column>
+             <property name="text">
+              <string>Matériau</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Stock Actuel</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Seuil Alerte</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Quantité Recommandée</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Priorité</string>
+             </property>
+            </column>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_4">
+         <property name="title">
+          <string>2. Prévision de Consommation selon les Commandes</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_8">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <item>
+             <widget class="QLabel" name="label_15">
+              <property name="text">
+               <string>Nombre de commandes prévues:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="spinNbCommandes">
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>1000</number>
+              </property>
+              <property name="value">
+               <number>10</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_16">
+              <property name="text">
+               <string>Période (jours):</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="spinPeriode">
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>365</number>
+              </property>
+              <property name="value">
+               <number>30</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btnPrevision">
+              <property name="text">
+               <string>📈 Calculer Prévisions</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QTableWidget" name="tablePrevision">
+            <property name="editTriggers">
+             <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+            </property>
+            <column>
+             <property name="text">
+              <string>Matériau</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Consommation Moyenne</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Consommation Prévue</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Stock Actuel</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Stock Suffisant?</string>
+             </property>
+            </column>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabExport">
+      <attribute name="title">
+       <string>📄 Export &amp; Rapports</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_9">
+       <item>
+        <widget class="QGroupBox" name="groupBox_5">
+         <property name="title">
+          <string>Export des Données</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_10">
+          <item>
+           <widget class="QLabel" name="label_17">
+            <property name="text">
+             <string>Exportez vos données de stock au format Excel pour archivage ou analyse externe</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnExportExcel">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>📊 Exporter en Excel (.xlsx)</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnExportCSV">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>📋 Exporter en CSV</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnExportPDF">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>📄 Générer Rapport PDF</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Orientation::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
