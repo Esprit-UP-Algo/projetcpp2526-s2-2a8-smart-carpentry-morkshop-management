@@ -5,6 +5,7 @@
 #include "ui_CommandesWidget.h"
 #include "ui_StockWidget.h"
 #include "atelierwidget.h"
+#include "employewidget.h"
 #include <QStackedWidget>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -27,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
     homeUi = new Ui::HomeWidget();
     homeUi->setupUi(homeWidget);
 
-    QWidget *employesWidget = ui->tabWidget;
+    employesWidget = new EmployeWidget();
 
     clientsWidget = new QWidget();
     clientsUi = new Ui::ClientsWidget();
@@ -41,7 +42,6 @@ MainWindow::MainWindow(QWidget *parent)
     stockUi = new Ui::StockWidget();
     stockUi->setupUi(stockWidget);
 
-    // ✅ correct atelier widget
     atelierWidget = new AtelierWidget();
 
     stackedWidget->addWidget(homeWidget);      // 0
@@ -63,7 +63,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(homeUi->btnAccederModules, &QPushButton::clicked, this, [this](){
         stackedWidget->setCurrentIndex(1);
-        ui->tabWidget->setCurrentIndex(0);
         ui->btnEmployes->setChecked(true);
     });
 
@@ -85,5 +84,6 @@ MainWindow::~MainWindow()
     delete commandesUi;
     delete stockUi;
     delete atelierWidget;
+    delete employesWidget;
     delete ui;
 }

@@ -16,6 +16,7 @@ namespace Ui {
 QT_END_NAMESPACE
 
 class AtelierWidget;
+class EmployeWidget;
 
 class MainWindow : public QMainWindow
 {
@@ -32,6 +33,8 @@ private:
 
     QWidget *homeWidget;
     Ui::HomeWidget *homeUi;
+
+    EmployeWidget *employesWidget;
 
     QWidget *clientsWidget;
     QWidget *commandesWidget;

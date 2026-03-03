@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>EmployeWidget</class>
+ <widget class="QWidget" name="EmployeWidget">
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tabConsulter">
+      <attribute name="title">
+       <string>Consulter</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayoutConsulter">
+       <item>
+        <widget class="QGroupBox" name="groupRechercheEtTri">
+         <property name="title">
+          <string>Recherche et Tri</string>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalRechercheEtTri">
+          <item><widget class="QLabel" name="labelRechercher"><property name="text"><string>Rechercher :</string></property></widget></item>
+          <item><widget class="QLineEdit" name="lineEditRecherche"><property name="placeholderText"><string>CIN ou poste...</string></property></widget></item>
+          <item><widget class="QPushButton" name="btnRechercher"><property name="text"><string>Rechercher</string></property></widget></item>
+          <item><widget class="QLabel" name="labelTrierPar"><property name="text"><string>Trier par :</string></property></widget></item>
+          <item>
+           <widget class="QComboBox" name="comboBoxTri">
+            <item><property name="text"><string>Salaire (croissant)</string></property></item>
+            <item><property name="text"><string>Salaire (décroissant)</string></property></item>
+           </widget>
+          </item>
+          <item><widget class="QPushButton" name="btnTrier"><property name="text"><string>Trier</string></property></widget></item>
+          <item><widget class="QPushButton" name="btnAfficherTout"><property name="text"><string>Afficher tout</string></property></widget></item>
+         </layout>
+        </widget>
+       </item>
+
+       <item>
+        <widget class="QGroupBox" name="groupBoxInfoEmployes">
+         <property name="title">
+          <string>Informations des Employés</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayoutInfo">
+          <item><layout class="QHBoxLayout"><item><widget class="QLabel" name="labelID"><property name="text"><string>ID Employé :</string></property></widget></item><item><widget class="QLineEdit" name="lineEditID"/></item></layout></item>
+          <item><layout class="QHBoxLayout"><item><widget class="QLabel" name="labelCIN"><property name="text"><string>CIN :</string></property></widget></item><item><widget class="QLineEdit" name="lineEditCIN"/></item></layout></item>
+          <item><layout class="QHBoxLayout"><item><widget class="QLabel" name="labelNom"><property name="text"><string>Nom :</string></property></widget></item><item><widget class="QLineEdit" name="lineEditNom"/></item></layout></item>
+          <item><layout class="QHBoxLayout"><item><widget class="QLabel" name="labelPoste"><property name="text"><string>Poste :</string></property></widget></item><item><widget class="QLineEdit" name="lineEditPoste"/></item></layout></item>
+          <item><layout class="QHBoxLayout"><item><widget class="QLabel" name="labelSalaire"><property name="text"><string>Salaire :</string></property></widget></item><item><widget class="QDoubleSpinBox" name="doubleSpinBoxSalaire"/></item></layout></item>
+          <item><layout class="QHBoxLayout"><item><widget class="QLabel" name="labelDispo"><property name="text"><string>Disponibilité :</string></property></widget></item>
+            <item><widget class="QComboBox" name="comboBoxDispo">
+              <item><property name="text"><string>disponible</string></property></item>
+              <item><property name="text"><string>en congé</string></property></item>
+              <item><property name="text"><string>absent</string></property></item>
+            </widget></item></layout></item>
+          <item><layout class="QHBoxLayout"><item><widget class="QLabel" name="labelTelephone"><property name="text"><string>Téléphone :</string></property></widget></item><item><widget class="QLineEdit" name="lineEditTelephone"/></item></layout></item>
+          <item><layout class="QHBoxLayout"><item><widget class="QLabel" name="labelEmail"><property name="text"><string>Email :</string></property></widget></item><item><widget class="QLineEdit" name="lineEditEmail"/></item></layout></item>
+          <item><layout class="QHBoxLayout"><item><widget class="QLabel" name="labelDateEmbauche"><property name="text"><string>Date d’embauche :</string></property></widget></item><item><widget class="QDateEdit" name="dateEditEmbauche"/></item></layout></item>
+          <item><layout class="QHBoxLayout"><item><widget class="QLabel" name="labelAdresse"><property name="text"><string>Adresse :</string></property></widget></item><item><widget class="QTextEdit" name="textEditAdresse"/></item></layout></item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+
+     <widget class="QWidget" name="tabAffichage">
+      <attribute name="title"><string>Affichage</string></attribute>
+      <layout class="QVBoxLayout" name="verticalLayoutAffichage">
+       <item>
+        <widget class="QGroupBox" name="groupBoxActions">
+         <property name="title"><string>Actions</string></property>
+         <layout class="QHBoxLayout">
+          <item><widget class="QPushButton" name="btnAjouter"><property name="text"><string>+ Ajouter</string></property></widget></item>
+          <item><widget class="QPushButton" name="btnModifier"><property name="text"><string>Modifier</string></property></widget></item>
+          <item><widget class="QPushButton" name="btnSupprimer"><property name="text"><string>Supprimer</string></property></widget></item>
+          <item><widget class="QPushButton" name="btnAfficherTout"><property name="text"><string>Afficher Tout</string></property></widget></item>
+          <item><widget class="QPushButton" name="btnVider"><property name="text"><string>Vider</string></property></widget></item>
+         </layout>
+        </widget>
+       </item>
+
+       <item>
+        <widget class="QTableWidget" name="tableWidgetEmployes"/>
+       </item>
+
+       <item>
+        <widget class="QGroupBox" name="groupBoxExport">
+         <property name="title"><string>Emploi de travail</string></property>
+         <layout class="QVBoxLayout">
+          <item><widget class="QPushButton" name="btnExportPDF"><property name="text"><string>Exporter en PDF</string></property></widget></item>
+          <item>
+           <widget class="QGroupBox" name="groupBoxExportOptions">
+            <property name="title"><string>Options d'exportation</string></property>
+            <layout class="QVBoxLayout">
+             <item><widget class="QCheckBox" name="checkBoxInclureEntete"><property name="text"><string>Inclure l'en-tête</string></property><property name="checked"><bool>true</bool></property></widget></item>
+             <item><widget class="QCheckBox" name="checkBoxDateExport"><property name="text"><string>Inclure la date d'exportation</string></property><property name="checked"><bool>true</bool></property></widget></item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+
+     <widget class="QWidget" name="tabStatistiques">
+      <attribute name="title"><string>Statistiques</string></attribute>
+      <layout class="QVBoxLayout">
+       <item>
+        <widget class="QGroupBox" name="groupBoxStats">
+         <property name="title"><string>Statistiques : heures des travails des employés</string></property>
+         <layout class="QGridLayout">
+          <item row="0" column="0"><widget class="QLabel" name="labelTotalEmployes"><property name="text"><string>Heures de travail des employés :</string></property></widget></item>
+          <item row="0" column="1"><widget class="QLabel" name="labelTotalEmployesValeur"><property name="text"><string>0</string></property></widget></item>
+          <item row="1" column="0"><widget class="QPushButton" name="btnActualiserStats"><property name="text"><string>Actualiser les heures</string></property></widget></item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
