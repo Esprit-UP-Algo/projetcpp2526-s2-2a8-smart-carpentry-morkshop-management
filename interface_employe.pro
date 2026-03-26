@@ -27,7 +27,6 @@ FORMS += \
     CommandesWidget.ui \
     DialogMachine.ui \
     EmployeWidget.ui \
-    EmployeWidget.ui \
     HomeWidget.ui \
     StockWidget.ui \
     mainwindow.ui
