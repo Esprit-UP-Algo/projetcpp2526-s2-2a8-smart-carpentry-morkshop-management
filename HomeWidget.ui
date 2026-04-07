@@ -76,6 +76,39 @@
      </property>
     </widget>
    </item>
+
+   <!-- Login -->
+   <item alignment="Qt::AlignmentFlag::AlignHCenter">
+    <widget class="QLineEdit" name="lineEmail">
+     <property name="minimumSize">
+      <size>
+       <width>300</width>
+       <height>40</height>
+      </size>
+     </property>
+     <property name="placeholderText">
+      <string>Email</string>
+     </property>
+    </widget>
+   </item>
+
+   <item alignment="Qt::AlignmentFlag::AlignHCenter">
+    <widget class="QLineEdit" name="linePassword">
+     <property name="minimumSize">
+      <size>
+       <width>300</width>
+       <height>40</height>
+      </size>
+     </property>
+     <property name="placeholderText">
+      <string>Mot de passe </string>
+     </property>
+     <property name="echoMode">
+      <enum>QLineEdit::Password</enum>
+     </property>
+    </widget>
+   </item>
+
    <item alignment="Qt::AlignmentFlag::AlignHCenter">
     <widget class="QPushButton" name="btnAccederModules">
      <property name="minimumSize">
@@ -85,10 +118,11 @@
       </size>
      </property>
      <property name="text">
-      <string>Accéder aux modules</string>
+      <string>Se connecter</string>
      </property>
     </widget>
    </item>
+
    <item alignment="Qt::AlignmentFlag::AlignHCenter">
     <widget class="QLabel" name="labelFooter">
      <property name="font">
