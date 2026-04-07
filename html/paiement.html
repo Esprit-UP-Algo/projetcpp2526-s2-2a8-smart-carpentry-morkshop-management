@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paiement - Smart Carpentry</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #F5EBE0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 100%;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            background: #8B5A2B;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .info {
+            background: #F9F5F0;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #E8D9CC;
+        }
+        
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        
+        .label {
+            font-weight: bold;
+            color: #5D4037;
+        }
+        
+        .value {
+            color: #8B5A2B;
+            font-weight: 500;
+        }
+        
+        .amount {
+            background: #F5EBE0;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .amount .price {
+            font-size: 42px;
+            font-weight: bold;
+            color: #8B5A2B;
+        }
+        
+        .qr {
+            text-align: center;
+            padding: 20px;
+            border: 2px solid #E8D9CC;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .qr img {
+            max-width: 200px;
+            margin-bottom: 10px;
+        }
+        
+        .qr p {
+            color: #666;
+            font-size: 12px;
+        }
+        
+        .btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #219653;
+            transform: translateY(-2px);
+        }
+        
+        .footer {
+            background: #F5F5F5;
+            padding: 15px;
+            text-align: center;
+            font-size: 11px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="header">
+            <h1>🏠 SMART CARPENTRY</h1>
+            <p>Atelier de menuiserie artisanale</p>
+        </div>
+        <div class="content">
+            <div class="info">
+                <div class="info-row">
+                    <span class="label">📦 Commande N°</span>
+                    <span class="value" id="reference">CMD-001</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">👤 Client</span>
+                    <span class="value" id="client">Jean Martin</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">📅 Date</span>
+                    <span class="value" id="date">27/03/2025</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">📝 Produit</span>
+                    <span class="value" id="produit">Table en chêne massif</span>
+                </div>
+            </div>
+            
+            <div class="amount">
+                <div class="price" id="montant">450.00 €</div>
+            </div>
+            
+            <div class="qr">
+                <img id="qrImage" src="" alt="QR Code">
+                <p>🔍 Scannez ce code QR pour payer en ligne</p>
+            </div>
+            
+            <button class="btn" onclick="effectuerPaiement()">
+                💳 Payer en ligne
+            </button>
+        </div>
+        <div class="footer">
+            Smart Carpentry Workshop - Artisans du bois depuis 2020<br>
+            📞 +216 XX XXX XXX | 📧 contact@smartcarpentry.com
+        </div>
+    </div>
+
+    <script>
+        // Récupérer les paramètres de l'URL
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // Mettre à jour les informations
+        document.getElementById('reference').textContent = urlParams.get('ref') || 'CMD-001';
+        document.getElementById('client').textContent = urlParams.get('client') || 'Jean Martin';
+        document.getElementById('date').textContent = urlParams.get('date') || '27/03/2025';
+        document.getElementById('produit').textContent = urlParams.get('produit') || 'Table en chêne massif';
+        document.getElementById('montant').textContent = urlParams.get('montant') || '450.00 €';
+        
+        // QR Code (si fourni en paramètre)
+        const qrData = urlParams.get('qr');
+        if (qrData) {
+            document.getElementById('qrImage').src = qrData;
+        } else {
+            document.getElementById('qrImage').src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"%3E%3Crect width="200" height="200" fill="%23F5EBE0"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" fill="%238B5A2B"%3EQR Code%3C/text%3E%3C/svg%3E';
+        }
+        
+        function effectuerPaiement() {
+            const reference = document.getElementById('reference').textContent;
+            const montant = document.getElementById('montant').textContent;
+            alert('🔒 Paiement pour la commande ' + reference + '\nMontant: ' + montant + '\n\n(Fonction à implémenter avec un vrai service de paiement)');
+        }
+    </script>
+</body>
+</html>

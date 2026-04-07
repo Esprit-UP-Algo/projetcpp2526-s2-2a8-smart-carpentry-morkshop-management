@@ -9,13 +9,14 @@ QT_BEGIN_NAMESPACE
 namespace Ui {
     class MainWindow;
     class HomeWidget;
-    class ClientsWidget;
-    class CommandesWidget;
     class StockWidget;
 }
 QT_END_NAMESPACE
 
 class AtelierWidget;
+class EmployeWidget;
+class CommandesWidget;
+class ClientsWidget;
 
 class MainWindow : public QMainWindow
 {
@@ -33,13 +34,13 @@ private:
     QWidget *homeWidget;
     Ui::HomeWidget *homeUi;
 
-    QWidget *clientsWidget;
-    QWidget *commandesWidget;
+    EmployeWidget *employesWidget;
+    ClientsWidget *clientsWidget;
+    CommandesWidget *commandesWidget;
+
     QWidget *stockWidget;
     AtelierWidget *atelierWidget;
 
-    Ui::ClientsWidget *clientsUi;
-    Ui::CommandesWidget *commandesUi;
     Ui::StockWidget *stockUi;
 };
 

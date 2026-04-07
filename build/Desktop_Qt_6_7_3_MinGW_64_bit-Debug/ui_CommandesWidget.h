@@ -9,7 +9,6 @@
 #ifndef UI_COMMANDESWIDGET_H
 #define UI_COMMANDESWIDGET_H
 
-#include <QtCore/QDate>
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QComboBox>
@@ -44,8 +43,6 @@ public:
     QHBoxLayout *horizontalLayout;
     QGroupBox *groupBoxForm;
     QGridLayout *gridLayout;
-    QLabel *label_ID;
-    QLineEdit *txtID;
     QLabel *label_Date;
     QDateEdit *dateCommande;
     QLabel *label_Details;
@@ -187,49 +184,37 @@ public:
         groupBoxForm->setObjectName("groupBoxForm");
         gridLayout = new QGridLayout(groupBoxForm);
         gridLayout->setObjectName("gridLayout");
-        label_ID = new QLabel(groupBoxForm);
-        label_ID->setObjectName("label_ID");
-
-        gridLayout->addWidget(label_ID, 0, 0, 1, 1);
-
-        txtID = new QLineEdit(groupBoxForm);
-        txtID->setObjectName("txtID");
-
-        gridLayout->addWidget(txtID, 0, 1, 1, 1);
-
         label_Date = new QLabel(groupBoxForm);
         label_Date->setObjectName("label_Date");
 
-        gridLayout->addWidget(label_Date, 1, 0, 1, 1);
+        gridLayout->addWidget(label_Date, 0, 0, 1, 1);
 
         dateCommande = new QDateEdit(groupBoxForm);
         dateCommande->setObjectName("dateCommande");
         dateCommande->setCalendarPopup(true);
-        dateCommande->setDate(QDate(2025, 2, 16));
 
-        gridLayout->addWidget(dateCommande, 1, 1, 1, 1);
+        gridLayout->addWidget(dateCommande, 0, 1, 1, 1);
 
         label_Details = new QLabel(groupBoxForm);
         label_Details->setObjectName("label_Details");
 
-        gridLayout->addWidget(label_Details, 2, 0, 1, 1);
+        gridLayout->addWidget(label_Details, 1, 0, 1, 1);
 
         txtDetails = new QTextEdit(groupBoxForm);
         txtDetails->setObjectName("txtDetails");
 
-        gridLayout->addWidget(txtDetails, 2, 1, 1, 1);
+        gridLayout->addWidget(txtDetails, 1, 1, 1, 1);
 
         label_Dimensions = new QLabel(groupBoxForm);
         label_Dimensions->setObjectName("label_Dimensions");
 
-        gridLayout->addWidget(label_Dimensions, 3, 0, 1, 1);
+        gridLayout->addWidget(label_Dimensions, 2, 0, 1, 1);
 
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setObjectName("horizontalLayout_2");
         spinLongueur = new QSpinBox(groupBoxForm);
         spinLongueur->setObjectName("spinLongueur");
         spinLongueur->setMaximum(1000);
-        spinLongueur->setValue(60);
 
         horizontalLayout_2->addWidget(spinLongueur);
 
@@ -241,7 +226,6 @@ public:
         spinLargeur = new QSpinBox(groupBoxForm);
         spinLargeur->setObjectName("spinLargeur");
         spinLargeur->setMaximum(1000);
-        spinLargeur->setValue(40);
 
         horizontalLayout_2->addWidget(spinLargeur);
 
@@ -253,30 +237,28 @@ public:
         spinHauteur = new QSpinBox(groupBoxForm);
         spinHauteur->setObjectName("spinHauteur");
         spinHauteur->setMaximum(1000);
-        spinHauteur->setValue(55);
 
         horizontalLayout_2->addWidget(spinHauteur);
 
 
-        gridLayout->addLayout(horizontalLayout_2, 3, 1, 1, 1);
+        gridLayout->addLayout(horizontalLayout_2, 2, 1, 1, 1);
 
         label_Prix = new QLabel(groupBoxForm);
         label_Prix->setObjectName("label_Prix");
 
-        gridLayout->addWidget(label_Prix, 4, 0, 1, 1);
+        gridLayout->addWidget(label_Prix, 3, 0, 1, 1);
 
         spinPrix = new QDoubleSpinBox(groupBoxForm);
         spinPrix->setObjectName("spinPrix");
         spinPrix->setMaximum(100000.000000000000000);
         spinPrix->setSingleStep(50.000000000000000);
-        spinPrix->setValue(180.000000000000000);
 
-        gridLayout->addWidget(spinPrix, 4, 1, 1, 1);
+        gridLayout->addWidget(spinPrix, 3, 1, 1, 1);
 
         label_Etat = new QLabel(groupBoxForm);
         label_Etat->setObjectName("label_Etat");
 
-        gridLayout->addWidget(label_Etat, 5, 0, 1, 1);
+        gridLayout->addWidget(label_Etat, 4, 0, 1, 1);
 
         comboEtat = new QComboBox(groupBoxForm);
         comboEtat->addItem(QString());
@@ -284,20 +266,17 @@ public:
         comboEtat->addItem(QString());
         comboEtat->setObjectName("comboEtat");
 
-        gridLayout->addWidget(comboEtat, 5, 1, 1, 1);
+        gridLayout->addWidget(comboEtat, 4, 1, 1, 1);
 
         label_Responsable = new QLabel(groupBoxForm);
         label_Responsable->setObjectName("label_Responsable");
 
-        gridLayout->addWidget(label_Responsable, 6, 0, 1, 1);
+        gridLayout->addWidget(label_Responsable, 5, 0, 1, 1);
 
         comboResponsable = new QComboBox(groupBoxForm);
-        comboResponsable->addItem(QString());
-        comboResponsable->addItem(QString());
-        comboResponsable->addItem(QString());
         comboResponsable->setObjectName("comboResponsable");
 
-        gridLayout->addWidget(comboResponsable, 6, 1, 1, 1);
+        gridLayout->addWidget(comboResponsable, 5, 1, 1, 1);
 
         horizontalLayout_3 = new QHBoxLayout();
         horizontalLayout_3->setObjectName("horizontalLayout_3");
@@ -322,7 +301,7 @@ public:
         horizontalLayout_3->addWidget(btnVider);
 
 
-        gridLayout->addLayout(horizontalLayout_3, 7, 0, 1, 2);
+        gridLayout->addLayout(horizontalLayout_3, 6, 0, 1, 2);
 
 
         horizontalLayout->addWidget(groupBoxForm);
@@ -551,10 +530,6 @@ public:
         gridLayout_4->addWidget(label_SelectCommande, 0, 0, 1, 1);
 
         comboFactureCommande = new QComboBox(groupBoxFacture);
-        comboFactureCommande->addItem(QString());
-        comboFactureCommande->addItem(QString());
-        comboFactureCommande->addItem(QString());
-        comboFactureCommande->addItem(QString());
         comboFactureCommande->setObjectName("comboFactureCommande");
 
         gridLayout_4->addWidget(comboFactureCommande, 0, 1, 1, 1);
@@ -620,13 +595,11 @@ public:
     void retranslateUi(QWidget *CommandesWidget)
     {
         labelHeader->setText(QCoreApplication::translate("CommandesWidget", "\360\237\223\246 GESTION DES COMMANDES - SMART CARPENTRY WORKSHOP", nullptr));
-        labelAlerte->setText(QCoreApplication::translate("CommandesWidget", "\342\232\240\357\270\217 ALERTE: 2 commandes en retard de livraison", nullptr));
+        labelAlerte->setText(QCoreApplication::translate("CommandesWidget", "\342\232\240\357\270\217 ALERTE: 0 commandes en retard de livraison", nullptr));
         groupBoxForm->setTitle(QCoreApplication::translate("CommandesWidget", "Informations Commande", nullptr));
-        label_ID->setText(QCoreApplication::translate("CommandesWidget", "ID Commande:", nullptr));
-        txtID->setText(QCoreApplication::translate("CommandesWidget", "CMD-004", nullptr));
         label_Date->setText(QCoreApplication::translate("CommandesWidget", "Date:", nullptr));
         label_Details->setText(QCoreApplication::translate("CommandesWidget", "D\303\251tails:", nullptr));
-        txtDetails->setPlainText(QCoreApplication::translate("CommandesWidget", "Table de chevet en ch\303\252ne", nullptr));
+        txtDetails->setPlaceholderText(QCoreApplication::translate("CommandesWidget", "Description de la commande...", nullptr));
         label_Dimensions->setText(QCoreApplication::translate("CommandesWidget", "Dimensions (L\303\227l\303\227H):", nullptr));
         spinLongueur->setSuffix(QCoreApplication::translate("CommandesWidget", " cm", nullptr));
         label_x1->setText(QCoreApplication::translate("CommandesWidget", "\303\227", nullptr));
@@ -641,10 +614,6 @@ public:
         comboEtat->setItemText(2, QCoreApplication::translate("CommandesWidget", "\360\237\224\265 Livr\303\251e", nullptr));
 
         label_Responsable->setText(QCoreApplication::translate("CommandesWidget", "Responsable:", nullptr));
-        comboResponsable->setItemText(0, QCoreApplication::translate("CommandesWidget", "Jean Martin", nullptr));
-        comboResponsable->setItemText(1, QCoreApplication::translate("CommandesWidget", "Marie Dubois", nullptr));
-        comboResponsable->setItemText(2, QCoreApplication::translate("CommandesWidget", "Pierre Lambert", nullptr));
-
         btnAjouter->setText(QCoreApplication::translate("CommandesWidget", "\342\236\225 Ajouter", nullptr));
         btnModifier->setText(QCoreApplication::translate("CommandesWidget", "\342\234\217\357\270\217 Modifier", nullptr));
         btnSupprimer->setText(QCoreApplication::translate("CommandesWidget", "\360\237\227\221\357\270\217 Supprimer", nullptr));
@@ -666,7 +635,7 @@ public:
         ___qtablewidgetitem6->setText(QCoreApplication::translate("CommandesWidget", "Responsable", nullptr));
         btnTriPrixCroissant->setText(QCoreApplication::translate("CommandesWidget", "\360\237\222\260 Tri Prix Croissant", nullptr));
         btnTriPrixDecroissant->setText(QCoreApplication::translate("CommandesWidget", "\360\237\222\260 Tri Prix D\303\251croissant", nullptr));
-        labelTotal->setText(QCoreApplication::translate("CommandesWidget", "Total: \342\202\254 1,600.00", nullptr));
+        labelTotal->setText(QCoreApplication::translate("CommandesWidget", "Total: \342\202\254 0.00", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tabGestion), QCoreApplication::translate("CommandesWidget", "\360\237\223\213 Gestion de Commande", nullptr));
         groupBoxRecherche->setTitle(QCoreApplication::translate("CommandesWidget", "Recherche Avanc\303\251e", nullptr));
         label_RecherchePar->setText(QCoreApplication::translate("CommandesWidget", "Rechercher par:", nullptr));
@@ -706,11 +675,6 @@ public:
         tabWidget->setTabText(tabWidget->indexOf(tabStats), QCoreApplication::translate("CommandesWidget", "\360\237\223\212 Statistiques", nullptr));
         groupBoxFacture->setTitle(QCoreApplication::translate("CommandesWidget", "G\303\251n\303\251ration automatique de facture PDF", nullptr));
         label_SelectCommande->setText(QCoreApplication::translate("CommandesWidget", "S\303\251lectionner une commande:", nullptr));
-        comboFactureCommande->setItemText(0, QCoreApplication::translate("CommandesWidget", "CMD-001 - Table en ch\303\252ne", nullptr));
-        comboFactureCommande->setItemText(1, QCoreApplication::translate("CommandesWidget", "CMD-002 - Biblioth\303\250que", nullptr));
-        comboFactureCommande->setItemText(2, QCoreApplication::translate("CommandesWidget", "CMD-003 - Chaise design", nullptr));
-        comboFactureCommande->setItemText(3, QCoreApplication::translate("CommandesWidget", "CMD-004 - Table de chevet", nullptr));
-
         label_ClientInfo->setText(QCoreApplication::translate("CommandesWidget", "Informations client:", nullptr));
         txtClientInfo->setPlaceholderText(QCoreApplication::translate("CommandesWidget", "Nom, adresse, t\303\251l\303\251phone, email...", nullptr));
         btnGenererPDF->setText(QCoreApplication::translate("CommandesWidget", "\360\237\223\204 G\303\251n\303\251rer Facture PDF", nullptr));

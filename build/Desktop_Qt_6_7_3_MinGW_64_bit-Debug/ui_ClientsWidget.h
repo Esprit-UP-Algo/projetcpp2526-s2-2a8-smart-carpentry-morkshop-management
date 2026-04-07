@@ -11,7 +11,6 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
-#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QGridLayout>
@@ -49,6 +48,8 @@ public:
     QPushButton *btnAfficherTout;
     QGroupBox *groupBoxInfo;
     QFormLayout *formLayout;
+    QLabel *labelID;
+    QLineEdit *lineEditID;
     QLabel *labelNom;
     QLineEdit *lineEditNom;
     QLabel *labelPrenom;
@@ -59,6 +60,15 @@ public:
     QLineEdit *lineEditEmail;
     QLabel *labelAdresse;
     QTextEdit *textEditAdresse;
+    QLabel *labelSociete;
+    QLineEdit *lineEditSociete;
+    QLabel *labelMatricule;
+    QLineEdit *lineEditMatricule;
+    QLabel *labelCIN;
+    QLineEdit *lineEditCIN;
+    QLabel *labelSiteWeb;
+    QLineEdit *lineEditSiteWeb;
+    QPushButton *btnValider;
     QWidget *tabAffichage;
     QVBoxLayout *verticalLayout_4;
     QGroupBox *groupBoxActions;
@@ -75,10 +85,6 @@ public:
     QLabel *labelExportInfo;
     QHBoxLayout *horizontalLayout_2;
     QPushButton *btnExportPDF;
-    QGroupBox *groupBoxOptions;
-    QVBoxLayout *verticalLayout_6;
-    QCheckBox *checkBoxInclureEntete;
-    QCheckBox *checkBoxDateExport;
     QWidget *tabStatistiques;
     QVBoxLayout *verticalLayout_7;
     QGroupBox *groupBoxStats;
@@ -86,13 +92,42 @@ public:
     QLabel *labelTotalClients;
     QLabel *labelTotalClientsValeur;
     QPushButton *btnActualiserStats;
-    QSpacerItem *verticalSpacerStats;
 
     void setupUi(QWidget *ClientsWidget)
     {
         if (ClientsWidget->objectName().isEmpty())
             ClientsWidget->setObjectName("ClientsWidget");
-        ClientsWidget->resize(920, 750);
+        ClientsWidget->resize(1100, 750);
+        ClientsWidget->setStyleSheet(QString::fromUtf8("\n"
+"    QMainWindow { background-color: #F5EBE0; }\n"
+"    QWidget { background-color: #F5EBE0; color: #3D2817; font-family: 'Segoe UI', Arial, sans-serif; }\n"
+"    QTabWidget::pane { border: 2px solid #8B5A2B; background-color: #F5EBE0; border-radius: 5px; }\n"
+"    QTabBar::tab { background-color: #C9B59A; color: #3D2817; padding: 10px 20px; margin-right: 2px; border-top-left-radius: 5px; border-top-right-radius: 5px; font-weight: bold; }\n"
+"    QTabBar::tab:selected { background-color: #8B5A2B; color: #F5EBE0; }\n"
+"    QTabBar::tab:hover { background-color: #9B8068; }\n"
+"    QGroupBox { background-color: #FFFFFF; border: 2px solid #8B5A2B; border-radius: 8px; margin-top: 10px; padding-top: 15px; font-weight: bold; }\n"
+"    QGroupBox::title { color: #5D4037; subcontrol-origin: margin; left: 10px; padding: 0 5px; }\n"
+"    QLineEdit, QTextEdit { background-color: #FFFFFF; border: 2px solid #C9B59A; border-radius: 5px; padding: 8px; color: #3D2817; }\n"
+"    QLineEdit:focus, QTextEdit:focus { border: 2px"
+                        " solid #8B5A2B; }\n"
+"    QComboBox { background-color: #FFFFFF; border: 2px solid #C9B59A; border-radius: 5px; padding: 8px; color: #3D2817; }\n"
+"    QComboBox:hover { border: 2px solid #8B5A2B; }\n"
+"    QComboBox::drop-down { border: none; width: 30px; }\n"
+"    QComboBox::down-arrow { image: none; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid #8B5A2B; margin-right: 10px; }\n"
+"    QPushButton { background-color: #8B5A2B; color: #F5EBE0; border: none; border-radius: 5px; padding: 10px 20px; font-weight: bold; font-size: 11pt; }\n"
+"    QPushButton:hover { background-color: #9B8068; }\n"
+"    QPushButton:pressed { background-color: #5D4037; }\n"
+"    QPushButton#btnSupprimer { background-color: #5D4037; }\n"
+"    QPushButton#btnSupprimer:hover { background-color: #6D4C41; }\n"
+"    QPushButton#btnAjouter { background-color: #8B9B6A; }\n"
+"    QPushButton#btnAjouter:hover { background-color: #9BAB7A; }\n"
+"    QPushButton#btnVider { background-color: #C9B59A; "
+                        "color: #3D2817; }\n"
+"    QPushButton#btnVider:hover { background-color: #D9C5AA; }\n"
+"    QTableWidget { background-color: #FFFFFF; alternate-background-color: #F5EBE0; border: 2px solid #C9B59A; border-radius: 5px; gridline-color: #C9B59A; color: #3D2817; }\n"
+"    QTableWidget::item:selected { background-color: #8B5A2B; color: #F5EBE0; }\n"
+"    QHeaderView::section { background-color: #8B5A2B; color: #F5EBE0; padding: 8px; border: none; font-weight: bold; }\n"
+"   "));
         verticalLayout = new QVBoxLayout(ClientsWidget);
         verticalLayout->setSpacing(0);
         verticalLayout->setObjectName("verticalLayout");
@@ -155,55 +190,112 @@ public:
         groupBoxInfo->setObjectName("groupBoxInfo");
         formLayout = new QFormLayout(groupBoxInfo);
         formLayout->setObjectName("formLayout");
+        labelID = new QLabel(groupBoxInfo);
+        labelID->setObjectName("labelID");
+
+        formLayout->setWidget(0, QFormLayout::LabelRole, labelID);
+
+        lineEditID = new QLineEdit(groupBoxInfo);
+        lineEditID->setObjectName("lineEditID");
+
+        formLayout->setWidget(0, QFormLayout::FieldRole, lineEditID);
+
         labelNom = new QLabel(groupBoxInfo);
         labelNom->setObjectName("labelNom");
 
-        formLayout->setWidget(0, QFormLayout::LabelRole, labelNom);
+        formLayout->setWidget(1, QFormLayout::LabelRole, labelNom);
 
         lineEditNom = new QLineEdit(groupBoxInfo);
         lineEditNom->setObjectName("lineEditNom");
 
-        formLayout->setWidget(0, QFormLayout::FieldRole, lineEditNom);
+        formLayout->setWidget(1, QFormLayout::FieldRole, lineEditNom);
 
         labelPrenom = new QLabel(groupBoxInfo);
         labelPrenom->setObjectName("labelPrenom");
 
-        formLayout->setWidget(1, QFormLayout::LabelRole, labelPrenom);
+        formLayout->setWidget(2, QFormLayout::LabelRole, labelPrenom);
 
         lineEditPrenom = new QLineEdit(groupBoxInfo);
         lineEditPrenom->setObjectName("lineEditPrenom");
 
-        formLayout->setWidget(1, QFormLayout::FieldRole, lineEditPrenom);
+        formLayout->setWidget(2, QFormLayout::FieldRole, lineEditPrenom);
 
         labelTelephone = new QLabel(groupBoxInfo);
         labelTelephone->setObjectName("labelTelephone");
 
-        formLayout->setWidget(2, QFormLayout::LabelRole, labelTelephone);
+        formLayout->setWidget(3, QFormLayout::LabelRole, labelTelephone);
 
         lineEditTelephone = new QLineEdit(groupBoxInfo);
         lineEditTelephone->setObjectName("lineEditTelephone");
 
-        formLayout->setWidget(2, QFormLayout::FieldRole, lineEditTelephone);
+        formLayout->setWidget(3, QFormLayout::FieldRole, lineEditTelephone);
 
         labelEmail = new QLabel(groupBoxInfo);
         labelEmail->setObjectName("labelEmail");
 
-        formLayout->setWidget(3, QFormLayout::LabelRole, labelEmail);
+        formLayout->setWidget(4, QFormLayout::LabelRole, labelEmail);
 
         lineEditEmail = new QLineEdit(groupBoxInfo);
         lineEditEmail->setObjectName("lineEditEmail");
 
-        formLayout->setWidget(3, QFormLayout::FieldRole, lineEditEmail);
+        formLayout->setWidget(4, QFormLayout::FieldRole, lineEditEmail);
 
         labelAdresse = new QLabel(groupBoxInfo);
         labelAdresse->setObjectName("labelAdresse");
 
-        formLayout->setWidget(4, QFormLayout::LabelRole, labelAdresse);
+        formLayout->setWidget(5, QFormLayout::LabelRole, labelAdresse);
 
         textEditAdresse = new QTextEdit(groupBoxInfo);
         textEditAdresse->setObjectName("textEditAdresse");
 
-        formLayout->setWidget(4, QFormLayout::FieldRole, textEditAdresse);
+        formLayout->setWidget(5, QFormLayout::FieldRole, textEditAdresse);
+
+        labelSociete = new QLabel(groupBoxInfo);
+        labelSociete->setObjectName("labelSociete");
+
+        formLayout->setWidget(6, QFormLayout::LabelRole, labelSociete);
+
+        lineEditSociete = new QLineEdit(groupBoxInfo);
+        lineEditSociete->setObjectName("lineEditSociete");
+
+        formLayout->setWidget(6, QFormLayout::FieldRole, lineEditSociete);
+
+        labelMatricule = new QLabel(groupBoxInfo);
+        labelMatricule->setObjectName("labelMatricule");
+
+        formLayout->setWidget(7, QFormLayout::LabelRole, labelMatricule);
+
+        lineEditMatricule = new QLineEdit(groupBoxInfo);
+        lineEditMatricule->setObjectName("lineEditMatricule");
+
+        formLayout->setWidget(7, QFormLayout::FieldRole, lineEditMatricule);
+
+        labelCIN = new QLabel(groupBoxInfo);
+        labelCIN->setObjectName("labelCIN");
+
+        formLayout->setWidget(8, QFormLayout::LabelRole, labelCIN);
+
+        lineEditCIN = new QLineEdit(groupBoxInfo);
+        lineEditCIN->setObjectName("lineEditCIN");
+
+        formLayout->setWidget(8, QFormLayout::FieldRole, lineEditCIN);
+
+        labelSiteWeb = new QLabel(groupBoxInfo);
+        labelSiteWeb->setObjectName("labelSiteWeb");
+
+        formLayout->setWidget(9, QFormLayout::LabelRole, labelSiteWeb);
+
+        lineEditSiteWeb = new QLineEdit(groupBoxInfo);
+        lineEditSiteWeb->setObjectName("lineEditSiteWeb");
+
+        formLayout->setWidget(9, QFormLayout::FieldRole, lineEditSiteWeb);
+
+        btnValider = new QPushButton(groupBoxInfo);
+        btnValider->setObjectName("btnValider");
+        btnValider->setMinimumHeight(45);
+        btnValider->setStyleSheet(QString::fromUtf8("background-color: #4CAF50; color: white; font-weight: bold;"));
+
+        formLayout->setWidget(10, QFormLayout::FieldRole, btnValider);
 
 
         verticalLayoutConsulter->addWidget(groupBoxInfo);
@@ -291,25 +383,6 @@ public:
 
         verticalLayout_5->addLayout(horizontalLayout_2);
 
-        groupBoxOptions = new QGroupBox(groupBoxExport);
-        groupBoxOptions->setObjectName("groupBoxOptions");
-        verticalLayout_6 = new QVBoxLayout(groupBoxOptions);
-        verticalLayout_6->setObjectName("verticalLayout_6");
-        checkBoxInclureEntete = new QCheckBox(groupBoxOptions);
-        checkBoxInclureEntete->setObjectName("checkBoxInclureEntete");
-        checkBoxInclureEntete->setChecked(true);
-
-        verticalLayout_6->addWidget(checkBoxInclureEntete);
-
-        checkBoxDateExport = new QCheckBox(groupBoxOptions);
-        checkBoxDateExport->setObjectName("checkBoxDateExport");
-        checkBoxDateExport->setChecked(true);
-
-        verticalLayout_6->addWidget(checkBoxDateExport);
-
-
-        verticalLayout_5->addWidget(groupBoxOptions);
-
 
         verticalLayout_4->addWidget(groupBoxExport);
 
@@ -324,19 +397,11 @@ public:
         gridLayout_2->setObjectName("gridLayout_2");
         labelTotalClients = new QLabel(groupBoxStats);
         labelTotalClients->setObjectName("labelTotalClients");
-        QFont font;
-        font.setFamilies({QString::fromUtf8("Segoe UI")});
-        font.setBold(true);
-        labelTotalClients->setFont(font);
 
         gridLayout_2->addWidget(labelTotalClients, 0, 0, 1, 1);
 
         labelTotalClientsValeur = new QLabel(groupBoxStats);
         labelTotalClientsValeur->setObjectName("labelTotalClientsValeur");
-        QFont font1;
-        font1.setFamilies({QString::fromUtf8("Segoe UI")});
-        font1.setPointSize(12);
-        labelTotalClientsValeur->setFont(font1);
 
         gridLayout_2->addWidget(labelTotalClientsValeur, 0, 1, 1, 1);
 
@@ -347,10 +412,6 @@ public:
 
 
         verticalLayout_7->addWidget(groupBoxStats);
-
-        verticalSpacerStats = new QSpacerItem(20, 40, QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Expanding);
-
-        verticalLayout_7->addItem(verticalSpacerStats);
 
         tabWidget->addTab(tabStatistiques, QString());
 
@@ -379,6 +440,8 @@ public:
         btnTrier->setText(QCoreApplication::translate("ClientsWidget", "Trier", nullptr));
         btnAfficherTout->setText(QCoreApplication::translate("ClientsWidget", "Afficher tout", nullptr));
         groupBoxInfo->setTitle(QCoreApplication::translate("ClientsWidget", "Informations Client", nullptr));
+        labelID->setText(QCoreApplication::translate("ClientsWidget", "ID Client :", nullptr));
+        lineEditID->setPlaceholderText(QCoreApplication::translate("ClientsWidget", "Ex: 1001", nullptr));
         labelNom->setText(QCoreApplication::translate("ClientsWidget", "Nom :", nullptr));
         lineEditNom->setPlaceholderText(QCoreApplication::translate("ClientsWidget", "Entrez le nom", nullptr));
         labelPrenom->setText(QCoreApplication::translate("ClientsWidget", "Pr\303\251nom :", nullptr));
@@ -389,6 +452,15 @@ public:
         lineEditEmail->setPlaceholderText(QCoreApplication::translate("ClientsWidget", "Entrez l'email", nullptr));
         labelAdresse->setText(QCoreApplication::translate("ClientsWidget", "Adresse :", nullptr));
         textEditAdresse->setPlaceholderText(QCoreApplication::translate("ClientsWidget", "Entrez l'adresse compl\303\250te", nullptr));
+        labelSociete->setText(QCoreApplication::translate("ClientsWidget", "Soci\303\251t\303\251 :", nullptr));
+        lineEditSociete->setPlaceholderText(QCoreApplication::translate("ClientsWidget", "Nom de l'entreprise / Raison sociale", nullptr));
+        labelMatricule->setText(QCoreApplication::translate("ClientsWidget", "Matricule Fiscale :", nullptr));
+        lineEditMatricule->setPlaceholderText(QCoreApplication::translate("ClientsWidget", "0000000A / 123456789 / A", nullptr));
+        labelCIN->setText(QCoreApplication::translate("ClientsWidget", "N\302\260 CIN :", nullptr));
+        lineEditCIN->setPlaceholderText(QCoreApplication::translate("ClientsWidget", "01234567", nullptr));
+        labelSiteWeb->setText(QCoreApplication::translate("ClientsWidget", "Site web / FB :", nullptr));
+        lineEditSiteWeb->setPlaceholderText(QCoreApplication::translate("ClientsWidget", "https:// ou www. ou facebook.com/", nullptr));
+        btnValider->setText(QCoreApplication::translate("ClientsWidget", "Valider", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tabConsulter), QCoreApplication::translate("ClientsWidget", "Consulter", nullptr));
         groupBoxActions->setTitle(QCoreApplication::translate("ClientsWidget", "Actions", nullptr));
         btnAjouter->setText(QCoreApplication::translate("ClientsWidget", "Ajouter", nullptr));
@@ -411,9 +483,6 @@ public:
         groupBoxExport->setTitle(QCoreApplication::translate("ClientsWidget", "Exporter la Liste des Clients", nullptr));
         labelExportInfo->setText(QCoreApplication::translate("ClientsWidget", "Choisissez le format d'exportation de la liste des clients :", nullptr));
         btnExportPDF->setText(QCoreApplication::translate("ClientsWidget", "Exporter en PDF", nullptr));
-        groupBoxOptions->setTitle(QCoreApplication::translate("ClientsWidget", "Options d'exportation", nullptr));
-        checkBoxInclureEntete->setText(QCoreApplication::translate("ClientsWidget", "Inclure l'en-t\303\252te", nullptr));
-        checkBoxDateExport->setText(QCoreApplication::translate("ClientsWidget", "Inclure la date d'exportation", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tabAffichage), QCoreApplication::translate("ClientsWidget", "Affichage", nullptr));
         groupBoxStats->setTitle(QCoreApplication::translate("ClientsWidget", "Statistiques G\303\251n\303\251rales", nullptr));
         labelTotalClients->setText(QCoreApplication::translate("ClientsWidget", "Nombre total de clients :", nullptr));
