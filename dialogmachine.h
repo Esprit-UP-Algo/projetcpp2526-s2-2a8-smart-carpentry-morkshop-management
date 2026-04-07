@@ -26,6 +26,7 @@ public:
     int getQuantite() const;
     QString getResponsableMaintenance() const;
     QString getResponsableAtelier() const;
+    int getIdEmploye() const;
 
     void setID(const QString &id);
     void setReference(const QString &ref);
@@ -37,6 +38,7 @@ public:
     void setQuantite(int quantite);
     void setResponsableMaintenance(const QString &resp);
     void setResponsableAtelier(const QString &resp);
+    void setIdEmploye(int id);
 
 private:
     Ui::DialogMachine *ui;

@@ -8,6 +8,7 @@
 #include <QTextStream>
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QDate>
 
 AtelierWidget::AtelierWidget(QWidget *parent)
     : QWidget(parent)
@@ -86,7 +87,7 @@ void AtelierWidget::chargerDonnees()
         ui->tableMachines->setItem(row, 1, new QTableWidgetItem(query.value("REFERENCE").toString()));
         ui->tableMachines->setItem(row, 2, new QTableWidgetItem(query.value("TYPE").toString()));
         ui->tableMachines->setItem(row, 3, new QTableWidgetItem(query.value("ETAT").toString()));
-        ui->tableMachines->setItem(row, 4, new QTableWidgetItem(query.value("DATE_DERNIERE_MAINTENANCE").toString()));
+        ui->tableMachines->setItem(row, 4, new QTableWidgetItem(query.value("DATE_DERNIERE_MAINTNANCE").toString()));
         ui->tableMachines->setItem(row, 5, new QTableWidgetItem(query.value("HEURES_UTILISATION").toString()));
         ui->tableMachines->setItem(row, 6, new QTableWidgetItem(query.value("QUANTITE").toString()));
         ui->tableMachines->setItem(row, 7, new QTableWidgetItem(""));
@@ -115,21 +116,34 @@ void AtelierWidget::onBtnAjouterClicked()
     dialog.setWindowTitle("Ajouter une Machine");
 
     if (dialog.exec() == QDialog::Accepted) {
-        int row = ui->tableMachines->rowCount();
-        ui->tableMachines->insertRow(row);
+        bool refOk;
+        int ref = dialog.getReference().toInt(&refOk);
+        if (!refOk || ref <= 0) {
+            QMessageBox::warning(this, "Erreur", "La référence doit être un nombre entier positif.");
+            return;
+        }
 
-        ui->tableMachines->setItem(row, 0, new QTableWidgetItem(dialog.getID()));
-        ui->tableMachines->setItem(row, 1, new QTableWidgetItem(dialog.getReference()));
-        ui->tableMachines->setItem(row, 2, new QTableWidgetItem(dialog.getType()));
-        ui->tableMachines->setItem(row, 3, new QTableWidgetItem(dialog.getEtat()));
-        ui->tableMachines->setItem(row, 4, new QTableWidgetItem(dialog.getDateMaintenance()));
-        ui->tableMachines->setItem(row, 5, new QTableWidgetItem(QString::number(dialog.getHeuresCumulees())));
-        ui->tableMachines->setItem(row, 6, new QTableWidgetItem(QString::number(dialog.getQuantite())));
-        ui->tableMachines->setItem(row, 7, new QTableWidgetItem(""));
+        QSqlQuery query;
+        query.prepare(
+            "INSERT INTO ATELIER.MACHINE "
+            "(REFERENCE, TYPE, ETAT, DATE_DERNIERE_MAINTNANCE, HEURES_UTILISATION, QUANTITE, ID_EMPLOYE) "
+            "VALUES (:ref, :type, :etat, :date, :heures, :qte, :idEmp)"
+        );
+        query.bindValue(":ref", ref);
+        query.bindValue(":type", dialog.getType());
+        query.bindValue(":etat", dialog.getEtat());
+        query.bindValue(":date", QDate::fromString(dialog.getDateMaintenance(), "dd/MM/yyyy"));
+        query.bindValue(":heures", dialog.getHeuresCumulees());
+        query.bindValue(":qte", dialog.getQuantite());
+        query.bindValue(":idEmp", dialog.getIdEmploye());
+
+        if (!query.exec()) {
+            QMessageBox::warning(this, "Erreur SQL", query.lastError().text());
+            return;
+        }
 
         QMessageBox::information(this, "Succès", "Machine ajoutée avec succès !");
-        chargerMachinesCritiques();
-        chargerMachinesSollicitees();
+        chargerDonnees();
     }
 }
 
@@ -141,10 +155,11 @@ void AtelierWidget::onBtnModifierClicked()
         return;
     }
 
+    const QString idMachine = ui->tableMachines->item(currentRow, 0)->text();
+
     DialogMachine dialog(this);
     dialog.setWindowTitle("Modifier la Machine");
-
-    dialog.setID(ui->tableMachines->item(currentRow, 0)->text());
+    dialog.setID(idMachine);
     dialog.setReference(ui->tableMachines->item(currentRow, 1)->text());
     dialog.setType(ui->tableMachines->item(currentRow, 2)->text());
     dialog.setEtat(ui->tableMachines->item(currentRow, 3)->text());
@@ -153,16 +168,37 @@ void AtelierWidget::onBtnModifierClicked()
     dialog.setQuantite(ui->tableMachines->item(currentRow, 6)->text().toInt());
 
     if (dialog.exec() == QDialog::Accepted) {
-        ui->tableMachines->item(currentRow, 0)->setText(dialog.getID());
-        ui->tableMachines->item(currentRow, 1)->setText(dialog.getReference());
-        ui->tableMachines->item(currentRow, 2)->setText(dialog.getType());
-        ui->tableMachines->item(currentRow, 3)->setText(dialog.getEtat());
-        ui->tableMachines->item(currentRow, 4)->setText(dialog.getDateMaintenance());
-        ui->tableMachines->item(currentRow, 5)->setText(QString::number(dialog.getHeuresCumulees()));
-        ui->tableMachines->item(currentRow, 6)->setText(QString::number(dialog.getQuantite()));
-        ui->tableMachines->item(currentRow, 7)->setText("");
+        bool refOk;
+        int ref = dialog.getReference().toInt(&refOk);
+        if (!refOk || ref <= 0) {
+            QMessageBox::warning(this, "Erreur", "La référence doit être un nombre entier positif.");
+            return;
+        }
+
+        QSqlQuery query;
+        query.prepare(
+            "UPDATE ATELIER.MACHINE SET "
+            "REFERENCE=:ref, TYPE=:type, ETAT=:etat, "
+            "DATE_DERNIERE_MAINTNANCE=:date, HEURES_UTILISATION=:heures, "
+            "QUANTITE=:qte, ID_EMPLOYE=:idEmp "
+            "WHERE ID_MACHINE=:id"
+        );
+        query.bindValue(":id", idMachine.toInt());
+        query.bindValue(":ref", ref);
+        query.bindValue(":type", dialog.getType());
+        query.bindValue(":etat", dialog.getEtat());
+        query.bindValue(":date", QDate::fromString(dialog.getDateMaintenance(), "dd/MM/yyyy"));
+        query.bindValue(":heures", dialog.getHeuresCumulees());
+        query.bindValue(":qte", dialog.getQuantite());
+        query.bindValue(":idEmp", dialog.getIdEmploye());
+
+        if (!query.exec()) {
+            QMessageBox::warning(this, "Erreur SQL", query.lastError().text());
+            return;
+        }
 
         QMessageBox::information(this, "Succès", "Machine modifiée avec succès !");
+        chargerDonnees();
     }
 }
 
@@ -174,11 +210,22 @@ void AtelierWidget::onBtnSupprimerClicked()
         return;
     }
 
+    const QString idMachine = ui->tableMachines->item(currentRow, 0)->text();
+
     if (QMessageBox::question(this, "Confirmation",
                               "Êtes-vous sûr de vouloir supprimer cette machine ?",
                               QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
-        ui->tableMachines->removeRow(currentRow);
+        QSqlQuery query;
+        query.prepare("DELETE FROM ATELIER.MACHINE WHERE ID_MACHINE = :id");
+        query.bindValue(":id", idMachine.toInt());
+
+        if (!query.exec()) {
+            QMessageBox::warning(this, "Erreur SQL", query.lastError().text());
+            return;
+        }
+
         QMessageBox::information(this, "Succès", "Machine supprimée avec succès !");
+        chargerDonnees();
     }
 }
 
@@ -233,62 +280,173 @@ void AtelierWidget::onBtnReinitialiserClicked()
     chargerDonnees();
 }
 
+// Calcule le niveau de risque d'une machine selon ses données
+static QString calculerNiveauRisque(const QString &etat, double heures, const QDate &dateMaintenance)
+{
+    if (etat == "Hors service") return "ÉLEVÉ";
+    if (heures > 500) return "ÉLEVÉ";
+    int joursDepuisMaintenance = dateMaintenance.isValid()
+        ? dateMaintenance.daysTo(QDate::currentDate()) : 9999;
+    if (heures > 300 || joursDepuisMaintenance > 90) return "MOYEN";
+    return "FAIBLE";
+}
+
 void AtelierWidget::onBtnPlanifierMaintenanceClicked()
 {
-    QMessageBox::information(this, "Planification Automatique",
-                             "• Scie Circulaire A : Maintenance urgente\n"
-                             "• Ponceuse D : Maintenance dans 50h\n"
-                             "• Tour à bois E : Réparation immédiate");
+    QSqlQuery query;
+    query.prepare(
+        "SELECT TYPE, ETAT, HEURES_UTILISATION, DATE_DERNIERE_MAINTNANCE "
+        "FROM ATELIER.MACHINE "
+        "WHERE ETAT != 'Hors service' "
+        "ORDER BY HEURES_UTILISATION DESC"
+    );
+    if (!query.exec()) {
+        QMessageBox::warning(this, "Erreur", query.lastError().text());
+        return;
+    }
+
+    QString plan = "Plan de maintenance automatique :\n\n";
+    bool found = false;
+    while (query.next()) {
+        double heures = query.value("HEURES_UTILISATION").toDouble();
+        QString type = query.value("TYPE").toString();
+        QString etat = query.value("ETAT").toString();
+        QDate date = query.value("DATE_DERNIERE_MAINTNANCE").toDate();
+        QString risque = calculerNiveauRisque(etat, heures, date);
+
+        if (risque == "ÉLEVÉ") {
+            plan += "🔴 " + type + " (" + QString::number(heures) + "h) : Maintenance urgente\n";
+            found = true;
+        } else if (risque == "MOYEN") {
+            plan += "🟠 " + type + " (" + QString::number(heures) + "h) : Planifier maintenance\n";
+            found = true;
+        }
+    }
+    if (!found) plan += "✅ Aucune machine ne nécessite de maintenance urgente.";
+    QMessageBox::information(this, "Planification Automatique", plan);
 }
 
 void AtelierWidget::onBtnDetecterCritiquesClicked()
 {
+    chargerMachinesCritiques();
+    QSqlQuery query;
+    query.prepare(
+        "SELECT COUNT(*) FROM ATELIER.MACHINE "
+        "WHERE ETAT = 'Hors service' OR HEURES_UTILISATION > 500"
+    );
+    query.exec();
+    int count = 0;
+    if (query.next()) count = query.value(0).toInt();
     QMessageBox::warning(this, "Machines Critiques",
-                         "⚠️ 3 machines critiques détectées.");
+        QString("⚠️ %1 machine(s) critique(s) détectée(s).\nTableau mis à jour.").arg(count));
 }
 
 void AtelierWidget::onBtnAnalyserRisquesClicked()
 {
+    QSqlQuery query;
+    query.prepare("SELECT ETAT, HEURES_UTILISATION, DATE_DERNIERE_MAINTNANCE FROM ATELIER.MACHINE");
+    if (!query.exec()) {
+        QMessageBox::warning(this, "Erreur", query.lastError().text());
+        return;
+    }
+
+    int eleve = 0, moyen = 0, faible = 0;
+    while (query.next()) {
+        QString risque = calculerNiveauRisque(
+            query.value("ETAT").toString(),
+            query.value("HEURES_UTILISATION").toDouble(),
+            query.value("DATE_DERNIERE_MAINTNANCE").toDate()
+        );
+        if (risque == "ÉLEVÉ") eleve++;
+        else if (risque == "MOYEN") moyen++;
+        else faible++;
+    }
+
     QMessageBox::information(this, "Analyse des Risques",
-                             "🔴 RISQUE ÉLEVÉ : 3 machines\n🟠 RISQUE MOYEN : 1 machine\n🟢 RISQUE FAIBLE : 1 machine");
+        QString("🔴 RISQUE ÉLEVÉ  : %1 machine(s)\n"
+                "🟠 RISQUE MOYEN  : %2 machine(s)\n"
+                "🟢 RISQUE FAIBLE : %3 machine(s)").arg(eleve).arg(moyen).arg(faible));
 }
 
 void AtelierWidget::chargerMachinesCritiques()
 {
-    ui->tableMachinesCritiques->setRowCount(3);
+    ui->tableMachinesCritiques->setRowCount(0);
 
-    ui->tableMachinesCritiques->setItem(0, 0, new QTableWidgetItem("🔴 URGENT"));
-    ui->tableMachinesCritiques->setItem(0, 1, new QTableWidgetItem("Scie Circulaire A"));
-    ui->tableMachinesCritiques->setItem(0, 2, new QTableWidgetItem("Surcharge continue"));
-    ui->tableMachinesCritiques->setItem(0, 3, new QTableWidgetItem("🔴 ÉLEVÉ"));
-    ui->tableMachinesCritiques->setItem(0, 4, new QTableWidgetItem("Maintenance immédiate"));
+    QSqlQuery query;
+    query.prepare(
+        "SELECT TYPE, ETAT, HEURES_UTILISATION, DATE_DERNIERE_MAINTNANCE "
+        "FROM ATELIER.MACHINE "
+        "WHERE ETAT = 'Hors service' OR HEURES_UTILISATION > 300 "
+        "ORDER BY HEURES_UTILISATION DESC"
+    );
+    if (!query.exec()) return;
 
-    ui->tableMachinesCritiques->setItem(1, 0, new QTableWidgetItem("🔴 URGENT"));
-    ui->tableMachinesCritiques->setItem(1, 1, new QTableWidgetItem("Ponceuse D"));
-    ui->tableMachinesCritiques->setItem(1, 2, new QTableWidgetItem("Heures excessives"));
-    ui->tableMachinesCritiques->setItem(1, 3, new QTableWidgetItem("🔴 ÉLEVÉ"));
-    ui->tableMachinesCritiques->setItem(1, 4, new QTableWidgetItem("Planifier maintenance"));
+    int row = 0;
+    while (query.next()) {
+        QString etat   = query.value("ETAT").toString();
+        double heures  = query.value("HEURES_UTILISATION").toDouble();
+        QString type   = query.value("TYPE").toString();
+        QDate date     = query.value("DATE_DERNIERE_MAINTNANCE").toDate();
+        QString risque = calculerNiveauRisque(etat, heures, date);
 
-    ui->tableMachinesCritiques->setItem(2, 0, new QTableWidgetItem("🔴 CRITIQUE"));
-    ui->tableMachinesCritiques->setItem(2, 1, new QTableWidgetItem("Tour à bois E"));
-    ui->tableMachinesCritiques->setItem(2, 2, new QTableWidgetItem("Hors service"));
-    ui->tableMachinesCritiques->setItem(2, 3, new QTableWidgetItem("❌ PANNE"));
-    ui->tableMachinesCritiques->setItem(2, 4, new QTableWidgetItem("Réparation urgente"));
+        QString priorite, typeAlerte, action, risqueLabel;
+        if (risque == "ÉLEVÉ") {
+            priorite   = "🔴 URGENT";
+            typeAlerte = etat == "Hors service" ? "Hors service" : "Heures excessives";
+            risqueLabel = "🔴 ÉLEVÉ";
+            action     = etat == "Hors service" ? "Réparation urgente" : "Maintenance immédiate";
+        } else {
+            priorite   = "🟠 ATTENTION";
+            typeAlerte = "Surveillance requise";
+            risqueLabel = "🟠 MOYEN";
+            action     = "Planifier maintenance";
+        }
+
+        ui->tableMachinesCritiques->insertRow(row);
+        ui->tableMachinesCritiques->setItem(row, 0, new QTableWidgetItem(priorite));
+        ui->tableMachinesCritiques->setItem(row, 1, new QTableWidgetItem(type));
+        ui->tableMachinesCritiques->setItem(row, 2, new QTableWidgetItem(typeAlerte));
+        ui->tableMachinesCritiques->setItem(row, 3, new QTableWidgetItem(risqueLabel));
+        ui->tableMachinesCritiques->setItem(row, 4, new QTableWidgetItem(action));
+        row++;
+    }
 }
 
 void AtelierWidget::chargerMachinesSollicitees()
 {
-    ui->tableMachinesSollicitees->setRowCount(5);
+    ui->tableMachinesSollicitees->setRowCount(0);
 
-    ui->tableMachinesSollicitees->setItem(0, 0, new QTableWidgetItem("1"));
-    ui->tableMachinesSollicitees->setItem(0, 1, new QTableWidgetItem("Tour à bois E"));
-    ui->tableMachinesSollicitees->setItem(0, 2, new QTableWidgetItem("650h"));
-    ui->tableMachinesSollicitees->setItem(0, 3, new QTableWidgetItem("3 pannes"));
-    ui->tableMachinesSollicitees->setItem(0, 4, new QTableWidgetItem("Immédiate"));
+    QSqlQuery query;
+    query.prepare(
+        "SELECT TYPE, ETAT, HEURES_UTILISATION, DATE_DERNIERE_MAINTNANCE "
+        "FROM ATELIER.MACHINE "
+        "ORDER BY HEURES_UTILISATION DESC"
+    );
+    if (!query.exec()) return;
 
-    ui->tableMachinesSollicitees->setItem(1, 0, new QTableWidgetItem("2"));
-    ui->tableMachinesSollicitees->setItem(1, 1, new QTableWidgetItem("Scie Circulaire A"));
-    ui->tableMachinesSollicitees->setItem(1, 2, new QTableWidgetItem("520h"));
-    ui->tableMachinesSollicitees->setItem(1, 3, new QTableWidgetItem("1 panne"));
-    ui->tableMachinesSollicitees->setItem(1, 4, new QTableWidgetItem("Dans 20h"));
+    int rang = 1;
+    while (query.next() && rang <= 5) {
+        QString type  = query.value("TYPE").toString();
+        double heures = query.value("HEURES_UTILISATION").toDouble();
+        QString etat  = query.value("ETAT").toString();
+        QDate date    = query.value("DATE_DERNIERE_MAINTNANCE").toDate();
+
+        // Prochaine maintenance estimée selon le type
+        int seuilMaintenance = 500;
+        if (type == "Perceuse") seuilMaintenance = 300;
+        else if (type == "Raboteuse") seuilMaintenance = 400;
+        double heuresRestantes = seuilMaintenance - heures;
+        QString prochaine = heuresRestantes <= 0
+            ? "Immédiate"
+            : QString("Dans %1h").arg((int)heuresRestantes);
+
+        int row = ui->tableMachinesSollicitees->rowCount();
+        ui->tableMachinesSollicitees->insertRow(row);
+        ui->tableMachinesSollicitees->setItem(row, 0, new QTableWidgetItem(QString::number(rang)));
+        ui->tableMachinesSollicitees->setItem(row, 1, new QTableWidgetItem(type));
+        ui->tableMachinesSollicitees->setItem(row, 2, new QTableWidgetItem(QString::number(heures) + "h"));
+        ui->tableMachinesSollicitees->setItem(row, 3, new QTableWidgetItem(etat));
+        ui->tableMachinesSollicitees->setItem(row, 4, new QTableWidgetItem(prochaine));
+        rang++;
+    }
 }

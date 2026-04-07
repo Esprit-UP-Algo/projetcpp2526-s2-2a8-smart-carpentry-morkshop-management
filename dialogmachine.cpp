@@ -43,3 +43,5 @@ void DialogMachine::setHeuresCumulees(int heures) { ui->spinBoxHeures->setValue(
 void DialogMachine::setQuantite(int quantite) { ui->spinBoxQuantite->setValue(quantite); }
 void DialogMachine::setResponsableMaintenance(const QString &resp) { ui->lineEditRespMaintenance->setText(resp); }
 void DialogMachine::setResponsableAtelier(const QString &resp) { ui->lineEditRespAtelier->setText(resp); }
+int DialogMachine::getIdEmploye() const { return ui->spinBoxIdEmploye->value(); }
+void DialogMachine::setIdEmploye(int id) { ui->spinBoxIdEmploye->setValue(id); }

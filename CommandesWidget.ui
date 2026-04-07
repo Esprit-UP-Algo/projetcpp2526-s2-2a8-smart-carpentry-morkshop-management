@@ -60,7 +60,7 @@
    <item>
     <widget class="QLabel" name="labelAlerte">
      <property name="text">
-      <string>⚠️ ALERTE: 2 commandes en retard de livraison</string>
+      <string>⚠️ ALERTE: 0 commandes en retard de livraison</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -83,29 +83,33 @@
           <string>Informations Commande</string>
          </property>
          <layout class="QGridLayout" name="gridLayout">
-          <item row="0" column="0"><widget class="QLabel" name="label_ID"><property name="text"><string>ID Commande:</string></property></widget></item>
-          <item row="0" column="1"><widget class="QLineEdit" name="txtID"><property name="text"><string>CMD-004</string></property></widget></item>
-          <item row="1" column="0"><widget class="QLabel" name="label_Date"><property name="text"><string>Date:</string></property></widget></item>
-          <item row="1" column="1"><widget class="QDateEdit" name="dateCommande"><property name="calendarPopup"><bool>true</bool></property><property name="date"><date><year>2025</year><month>2</month><day>16</day></date></property></widget></item>
-          <item row="2" column="0"><widget class="QLabel" name="label_Details"><property name="text"><string>Détails:</string></property></widget></item>
-          <item row="2" column="1"><widget class="QTextEdit" name="txtDetails"><property name="plainText"><string>Table de chevet en chêne</string></property></widget></item>
-          <item row="3" column="0"><widget class="QLabel" name="label_Dimensions"><property name="text"><string>Dimensions (L×l×H):</string></property></widget></item>
-          <item row="3" column="1">
+          <item row="0" column="0"><widget class="QLabel" name="label_Date"><property name="text"><string>Date:</string></property></widget></item>
+          <item row="0" column="1"><widget class="QDateEdit" name="dateCommande"><property name="calendarPopup"><bool>true</bool></property></widget></item>
+
+          <item row="1" column="0"><widget class="QLabel" name="label_Details"><property name="text"><string>Détails:</string></property></widget></item>
+          <item row="1" column="1"><widget class="QTextEdit" name="txtDetails"><property name="placeholderText"><string>Description de la commande...</string></property></widget></item>
+
+          <item row="2" column="0"><widget class="QLabel" name="label_Dimensions"><property name="text"><string>Dimensions (L×l×H):</string></property></widget></item>
+          <item row="2" column="1">
            <layout class="QHBoxLayout" name="horizontalLayout_2">
-            <item><widget class="QSpinBox" name="spinLongueur"><property name="suffix"><string> cm</string></property><property name="maximum"><number>1000</number></property><property name="value"><number>60</number></property></widget></item>
+            <item><widget class="QSpinBox" name="spinLongueur"><property name="suffix"><string> cm</string></property><property name="maximum"><number>1000</number></property></widget></item>
             <item><widget class="QLabel" name="label_x1"><property name="text"><string>×</string></property></widget></item>
-            <item><widget class="QSpinBox" name="spinLargeur"><property name="suffix"><string> cm</string></property><property name="maximum"><number>1000</number></property><property name="value"><number>40</number></property></widget></item>
+            <item><widget class="QSpinBox" name="spinLargeur"><property name="suffix"><string> cm</string></property><property name="maximum"><number>1000</number></property></widget></item>
             <item><widget class="QLabel" name="label_x2"><property name="text"><string>×</string></property></widget></item>
-            <item><widget class="QSpinBox" name="spinHauteur"><property name="suffix"><string> cm</string></property><property name="maximum"><number>1000</number></property><property name="value"><number>55</number></property></widget></item>
+            <item><widget class="QSpinBox" name="spinHauteur"><property name="suffix"><string> cm</string></property><property name="maximum"><number>1000</number></property></widget></item>
            </layout>
           </item>
-          <item row="4" column="0"><widget class="QLabel" name="label_Prix"><property name="text"><string>Prix (€):</string></property></widget></item>
-          <item row="4" column="1"><widget class="QDoubleSpinBox" name="spinPrix"><property name="prefix"><string>€ </string></property><property name="maximum"><double>100000.0</double></property><property name="singleStep"><double>50.0</double></property><property name="value"><double>180.0</double></property></widget></item>
-          <item row="5" column="0"><widget class="QLabel" name="label_Etat"><property name="text"><string>État:</string></property></widget></item>
-          <item row="5" column="1"><widget class="QComboBox" name="comboEtat"><item><property name="text"><string>🟡 En cours</string></property></item><item><property name="text"><string>🟢 Terminée</string></property></item><item><property name="text"><string>🔵 Livrée</string></property></item></widget></item>
-          <item row="6" column="0"><widget class="QLabel" name="label_Responsable"><property name="text"><string>Responsable:</string></property></widget></item>
-          <item row="6" column="1"><widget class="QComboBox" name="comboResponsable"><item><property name="text"><string>Jean Martin</string></property></item><item><property name="text"><string>Marie Dubois</string></property></item><item><property name="text"><string>Pierre Lambert</string></property></item></widget></item>
-          <item row="7" column="0" colspan="2">
+
+          <item row="3" column="0"><widget class="QLabel" name="label_Prix"><property name="text"><string>Prix (€):</string></property></widget></item>
+          <item row="3" column="1"><widget class="QDoubleSpinBox" name="spinPrix"><property name="prefix"><string>€ </string></property><property name="maximum"><double>100000.0</double></property><property name="singleStep"><double>50.0</double></property></widget></item>
+
+          <item row="4" column="0"><widget class="QLabel" name="label_Etat"><property name="text"><string>État:</string></property></widget></item>
+          <item row="4" column="1"><widget class="QComboBox" name="comboEtat"><item><property name="text"><string>🟡 En cours</string></property></item><item><property name="text"><string>🟢 Terminée</string></property></item><item><property name="text"><string>🔵 Livrée</string></property></item></widget></item>
+
+          <item row="5" column="0"><widget class="QLabel" name="label_Responsable"><property name="text"><string>Responsable:</string></property></widget></item>
+          <item row="5" column="1"><widget class="QComboBox" name="comboResponsable"/></item>
+
+          <item row="6" column="0" colspan="2">
            <layout class="QHBoxLayout" name="horizontalLayout_3">
             <item><widget class="QPushButton" name="btnAjouter"><property name="text"><string>➕ Ajouter</string></property></widget></item>
             <item><widget class="QPushButton" name="btnModifier"><property name="text"><string>✏️ Modifier</string></property></widget></item>
@@ -116,6 +120,7 @@
          </layout>
         </widget>
        </item>
+
        <item>
         <widget class="QGroupBox" name="groupBoxListe">
          <property name="title">
@@ -143,7 +148,7 @@
             <item><widget class="QPushButton" name="btnTriPrixCroissant"><property name="text"><string>💰 Tri Prix Croissant</string></property></widget></item>
             <item><widget class="QPushButton" name="btnTriPrixDecroissant"><property name="text"><string>💰 Tri Prix Décroissant</string></property></widget></item>
             <item><spacer name="horizontalSpacer"><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
-            <item><widget class="QLabel" name="labelTotal"><property name="text"><string>Total: € 1,600.00</string></property><property name="alignment"><set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set></property></widget></item>
+            <item><widget class="QLabel" name="labelTotal"><property name="text"><string>Total: € 0.00</string></property><property name="alignment"><set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set></property></widget></item>
            </layout>
           </item>
          </layout>
@@ -244,7 +249,7 @@
          <property name="title"><string>Génération automatique de facture PDF</string></property>
          <layout class="QGridLayout" name="gridLayout_4">
           <item row="0" column="0"><widget class="QLabel" name="label_SelectCommande"><property name="text"><string>Sélectionner une commande:</string></property></widget></item>
-          <item row="0" column="1"><widget class="QComboBox" name="comboFactureCommande"><item><property name="text"><string>CMD-001 - Table en chêne</string></property></item><item><property name="text"><string>CMD-002 - Bibliothèque</string></property></item><item><property name="text"><string>CMD-003 - Chaise design</string></property></item><item><property name="text"><string>CMD-004 - Table de chevet</string></property></item></widget></item>
+          <item row="0" column="1"><widget class="QComboBox" name="comboFactureCommande"/></item>
           <item row="1" column="0"><widget class="QLabel" name="label_ClientInfo"><property name="text"><string>Informations client:</string></property></widget></item>
           <item row="1" column="1"><widget class="QTextEdit" name="txtClientInfo"><property name="placeholderText"><string>Nom, adresse, téléphone, email...</string></property></widget></item>
           <item row="2" column="0" colspan="2">
@@ -267,6 +272,7 @@
        </item>
       </layout>
      </widget>
+
     </widget>
    </item>
   </layout>
