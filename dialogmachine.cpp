@@ -13,7 +13,7 @@ DialogMachine::~DialogMachine()
     delete ui;
 }
 
-QString DialogMachine::getID() const { return ui->lineEditID->text(); }
+QString DialogMachine::getID() const { return ""; }
 QString DialogMachine::getReference() const { return ui->lineEditReference->text(); }
 QString DialogMachine::getNom() const { return ui->lineEditNom->text(); }
 QString DialogMachine::getType() const { return ui->comboBoxType->currentText(); }
@@ -21,10 +21,9 @@ QString DialogMachine::getEtat() const { return ui->comboBoxEtat->currentText();
 QString DialogMachine::getDateMaintenance() const { return ui->dateEditMaintenance->date().toString("dd/MM/yyyy"); }
 int DialogMachine::getHeuresCumulees() const { return ui->spinBoxHeures->value(); }
 int DialogMachine::getQuantite() const { return ui->spinBoxQuantite->value(); }
-QString DialogMachine::getResponsableMaintenance() const { return ui->lineEditRespMaintenance->text(); }
-QString DialogMachine::getResponsableAtelier() const { return ui->lineEditRespAtelier->text(); }
+int DialogMachine::getIdEmploye() const { return ui->spinBoxIdEmploye->value(); }
 
-void DialogMachine::setID(const QString &id) { ui->lineEditID->setText(id); }
+void DialogMachine::setID(const QString &id) { Q_UNUSED(id) }
 void DialogMachine::setReference(const QString &ref) { ui->lineEditReference->setText(ref); }
 void DialogMachine::setNom(const QString &nom) { ui->lineEditNom->setText(nom); }
 void DialogMachine::setType(const QString &type) {
@@ -41,7 +40,4 @@ void DialogMachine::setDateMaintenance(const QString &date) {
 }
 void DialogMachine::setHeuresCumulees(int heures) { ui->spinBoxHeures->setValue(heures); }
 void DialogMachine::setQuantite(int quantite) { ui->spinBoxQuantite->setValue(quantite); }
-void DialogMachine::setResponsableMaintenance(const QString &resp) { ui->lineEditRespMaintenance->setText(resp); }
-void DialogMachine::setResponsableAtelier(const QString &resp) { ui->lineEditRespAtelier->setText(resp); }
-int DialogMachine::getIdEmploye() const { return ui->spinBoxIdEmploye->value(); }
 void DialogMachine::setIdEmploye(int id) { ui->spinBoxIdEmploye->setValue(id); }

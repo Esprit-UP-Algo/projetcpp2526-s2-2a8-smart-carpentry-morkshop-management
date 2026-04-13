@@ -79,28 +79,22 @@ QLineEdit:focus, QComboBox:focus, QSpinBox:focus, QDateEdit:focus {
     <widget class="QGroupBox" name="groupBox">
      <property name="title"><string>Informations Machine</string></property>
      <layout class="QFormLayout" name="formLayout">
-      <item row="0" column="0"><widget class="QLabel" name="label"><property name="text"><string>ID Machine :</string></property></widget></item>
-      <item row="0" column="1"><widget class="QLineEdit" name="lineEditID"><property name="readOnly"><bool>true</bool></property><property name="placeholderText"><string>Auto-généré</string></property></widget></item>
-      <item row="1" column="0"><widget class="QLabel" name="label_2"><property name="text"><string>Référence :</string></property></widget></item>
-      <item row="1" column="1"><widget class="QLineEdit" name="lineEditReference"><property name="placeholderText"><string>Ex: SCE-001</string></property></widget></item>
-      <item row="2" column="0"><widget class="QLabel" name="label_3"><property name="text"><string>Nom :</string></property></widget></item>
-      <item row="2" column="1"><widget class="QLineEdit" name="lineEditNom"><property name="placeholderText"><string>Ex: Scie circulaire principale</string></property></widget></item>
-      <item row="3" column="0"><widget class="QLabel" name="label_4"><property name="text"><string>Type :</string></property></widget></item>
-      <item row="3" column="1"><widget class="QComboBox" name="comboBoxType"><item><property name="text"><string>Scie</string></property></item><item><property name="text"><string>Perceuse</string></property></item><item><property name="text"><string>Raboteuse</string></property></item><item><property name="text"><string>Ponceuse</string></property></item><item><property name="text"><string>Défonceuse</string></property></item><item><property name="text"><string>Tour à bois</string></property></item></widget></item>
-      <item row="4" column="0"><widget class="QLabel" name="label_5"><property name="text"><string>État :</string></property></widget></item>
-      <item row="4" column="1"><widget class="QComboBox" name="comboBoxEtat"><item><property name="text"><string>Disponible</string></property></item><item><property name="text"><string>En maintenance</string></property></item><item><property name="text"><string>Hors service</string></property></item></widget></item>
-      <item row="5" column="0"><widget class="QLabel" name="label_6"><property name="text"><string>Date Dernière Maintenance :</string></property></widget></item>
-      <item row="5" column="1"><widget class="QDateEdit" name="dateEditMaintenance"><property name="calendarPopup"><bool>true</bool></property></widget></item>
-      <item row="6" column="0"><widget class="QLabel" name="label_7"><property name="text"><string>Heures Cumulées :</string></property></widget></item>
-      <item row="6" column="1"><widget class="QSpinBox" name="spinBoxHeures"><property name="suffix"><string> h</string></property><property name="maximum"><number>999999</number></property></widget></item>
-      <item row="7" column="0"><widget class="QLabel" name="label_8"><property name="text"><string>Quantité :</string></property></widget></item>
-      <item row="7" column="1"><widget class="QSpinBox" name="spinBoxQuantite"><property name="minimum"><number>1</number></property><property name="maximum"><number>100</number></property></widget></item>
-      <item row="8" column="0"><widget class="QLabel" name="label_9"><property name="text"><string>Responsable Maintenance :</string></property></widget></item>
-      <item row="8" column="1"><widget class="QLineEdit" name="lineEditRespMaintenance"><property name="placeholderText"><string>Nom du responsable</string></property></widget></item>
-      <item row="9" column="0"><widget class="QLabel" name="label_10"><property name="text"><string>Responsable Atelier :</string></property></widget></item>
-      <item row="9" column="1"><widget class="QLineEdit" name="lineEditRespAtelier"><property name="placeholderText"><string>Nom du responsable</string></property></widget></item>
-      <item row="10" column="0"><widget class="QLabel" name="labelIdEmploye"><property name="text"><string>ID Employé (responsable) :</string></property></widget></item>
-      <item row="10" column="1"><widget class="QSpinBox" name="spinBoxIdEmploye"><property name="minimum"><number>1</number></property><property name="maximum"><number>999999</number></property></widget></item>
+      <item row="0" column="0"><widget class="QLabel" name="label_2"><property name="text"><string>Référence :</string></property></widget></item>
+      <item row="0" column="1"><widget class="QLineEdit" name="lineEditReference"><property name="placeholderText"><string>Ex: SCE-001</string></property></widget></item>
+      <item row="1" column="0"><widget class="QLabel" name="label_3"><property name="text"><string>Nom :</string></property></widget></item>
+      <item row="1" column="1"><widget class="QLineEdit" name="lineEditNom"><property name="placeholderText"><string>Ex: Scie circulaire principale</string></property></widget></item>
+      <item row="2" column="0"><widget class="QLabel" name="label_4"><property name="text"><string>Type :</string></property></widget></item>
+      <item row="2" column="1"><widget class="QComboBox" name="comboBoxType"><item><property name="text"><string>Scie</string></property></item><item><property name="text"><string>Perceuse</string></property></item><item><property name="text"><string>Raboteuse</string></property></item><item><property name="text"><string>Ponceuse</string></property></item><item><property name="text"><string>Défonceuse</string></property></item><item><property name="text"><string>Tour à bois</string></property></item></widget></item>
+      <item row="3" column="0"><widget class="QLabel" name="label_5"><property name="text"><string>État :</string></property></widget></item>
+      <item row="3" column="1"><widget class="QComboBox" name="comboBoxEtat"><item><property name="text"><string>Disponible</string></property></item><item><property name="text"><string>En maintenance</string></property></item><item><property name="text"><string>Hors service</string></property></item></widget></item>
+      <item row="4" column="0"><widget class="QLabel" name="label_6"><property name="text"><string>Date Dernière Maintenance :</string></property></widget></item>
+      <item row="4" column="1"><widget class="QDateEdit" name="dateEditMaintenance"><property name="calendarPopup"><bool>true</bool></property></widget></item>
+      <item row="5" column="0"><widget class="QLabel" name="label_7"><property name="text"><string>Heures Cumulées :</string></property></widget></item>
+      <item row="5" column="1"><widget class="QSpinBox" name="spinBoxHeures"><property name="suffix"><string> h</string></property><property name="maximum"><number>999999</number></property></widget></item>
+      <item row="6" column="0"><widget class="QLabel" name="label_8"><property name="text"><string>Quantité :</string></property></widget></item>
+      <item row="6" column="1"><widget class="QSpinBox" name="spinBoxQuantite"><property name="minimum"><number>1</number></property><property name="maximum"><number>100</number></property></widget></item>
+      <item row="7" column="0"><widget class="QLabel" name="labelIdEmploye"><property name="text"><string>ID Employé (responsable) :</string></property></widget></item>
+      <item row="7" column="1"><widget class="QSpinBox" name="spinBoxIdEmploye"><property name="minimum"><number>1</number></property><property name="maximum"><number>999999</number></property></widget></item>
      </layout>
     </widget>
    </item>

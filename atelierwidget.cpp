@@ -9,6 +9,10 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDate>
+#include <QCalendarWidget>
+#include <QHeaderView>
+#include <QTextCharFormat>
+#include <QFont>
 
 AtelierWidget::AtelierWidget(QWidget *parent)
     : QWidget(parent)
@@ -48,18 +52,41 @@ void AtelierWidget::connectSignals()
     connect(ui->btnPlanifierMaintenance, &QPushButton::clicked, this, &AtelierWidget::onBtnPlanifierMaintenanceClicked);
     connect(ui->btnDetecterCritiques, &QPushButton::clicked, this, &AtelierWidget::onBtnDetecterCritiquesClicked);
     connect(ui->btnAnalyserRisques, &QPushButton::clicked, this, &AtelierWidget::onBtnAnalyserRisquesClicked);
+    connect(ui->calendarAtelier, &QCalendarWidget::selectionChanged, this, &AtelierWidget::onCalendrierDateChanged);
+    connect(ui->calendarAtelier, &QCalendarWidget::currentPageChanged, this, &AtelierWidget::onCalendrierPageChanged);
 }
 
 void AtelierWidget::initialiserTableau()
 {
-    ui->tableMachines->setColumnWidth(0, 80);   // ID_MACHINE
-    ui->tableMachines->setColumnWidth(1, 140);  // REFERENCE
-    ui->tableMachines->setColumnWidth(2, 120);  // TYPE
-    ui->tableMachines->setColumnWidth(3, 120);  // ETAT
-    ui->tableMachines->setColumnWidth(4, 160);  // DATE_DERNIERE_MAINTENANCE
-    ui->tableMachines->setColumnWidth(5, 120);  // HEURES_UTILISATION
-    ui->tableMachines->setColumnWidth(6, 100);  // QUANTITE
-    ui->tableMachines->setColumnWidth(7, 140);  // colonne libre
+    // Tableau principal : colonnes fixes adaptées
+    ui->tableMachines->setColumnWidth(0, 80);
+    ui->tableMachines->setColumnWidth(1, 140);
+    ui->tableMachines->setColumnWidth(2, 120);
+    ui->tableMachines->setColumnWidth(3, 120);
+    ui->tableMachines->setColumnWidth(4, 160);
+    ui->tableMachines->setColumnWidth(5, 120);
+    ui->tableMachines->setColumnWidth(6, 100);
+    ui->tableMachines->horizontalHeader()->setStretchLastSection(true);
+    // Tableaux statistiques : colonnes qui s'étirent pour remplir l'espace
+    ui->tableMachinesCritiques->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableMachinesCritiques->verticalHeader()->setVisible(false);
+    ui->tableMachinesCritiques->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+    ui->tableMachinesSollicitees->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableMachinesSollicitees->verticalHeader()->setVisible(false);
+    ui->tableMachinesSollicitees->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+    // Tableaux calendrier
+    ui->tableCalMachines->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableCalMachines->verticalHeader()->setVisible(false);
+    ui->tableCalMachines->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+    ui->tableCalCommandes->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableCalCommandes->verticalHeader()->setVisible(false);
+    ui->tableCalCommandes->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+    // Highlight initial du calendrier
+    highlighterDatesCommandes();
 }
 
 void AtelierWidget::chargerDonnees()
@@ -90,7 +117,6 @@ void AtelierWidget::chargerDonnees()
         ui->tableMachines->setItem(row, 4, new QTableWidgetItem(query.value("DATE_DERNIERE_MAINTNANCE").toString()));
         ui->tableMachines->setItem(row, 5, new QTableWidgetItem(query.value("HEURES_UTILISATION").toString()));
         ui->tableMachines->setItem(row, 6, new QTableWidgetItem(query.value("QUANTITE").toString()));
-        ui->tableMachines->setItem(row, 7, new QTableWidgetItem(""));
 
         totalMachines++;
         QString etat = query.value("ETAT").toString();
@@ -116,10 +142,9 @@ void AtelierWidget::onBtnAjouterClicked()
     dialog.setWindowTitle("Ajouter une Machine");
 
     if (dialog.exec() == QDialog::Accepted) {
-        bool refOk;
-        int ref = dialog.getReference().toInt(&refOk);
-        if (!refOk || ref <= 0) {
-            QMessageBox::warning(this, "Erreur", "La référence doit être un nombre entier positif.");
+        QString ref = dialog.getReference().trimmed();
+        if (ref.isEmpty()) {
+            QMessageBox::warning(this, "Erreur", "La référence ne peut pas être vide.");
             return;
         }
 
@@ -166,12 +191,10 @@ void AtelierWidget::onBtnModifierClicked()
     dialog.setDateMaintenance(ui->tableMachines->item(currentRow, 4)->text());
     dialog.setHeuresCumulees(ui->tableMachines->item(currentRow, 5)->text().toInt());
     dialog.setQuantite(ui->tableMachines->item(currentRow, 6)->text().toInt());
-
     if (dialog.exec() == QDialog::Accepted) {
-        bool refOk;
-        int ref = dialog.getReference().toInt(&refOk);
-        if (!refOk || ref <= 0) {
-            QMessageBox::warning(this, "Erreur", "La référence doit être un nombre entier positif.");
+        QString ref = dialog.getReference().trimmed();
+        if (ref.isEmpty()) {
+            QMessageBox::warning(this, "Erreur", "La référence ne peut pas être vide.");
             return;
         }
 
@@ -448,5 +471,108 @@ void AtelierWidget::chargerMachinesSollicitees()
         ui->tableMachinesSollicitees->setItem(row, 3, new QTableWidgetItem(etat));
         ui->tableMachinesSollicitees->setItem(row, 4, new QTableWidgetItem(prochaine));
         rang++;
+    }
+}
+
+void AtelierWidget::onCalendrierDateChanged()
+{
+    const QDate date = ui->calendarAtelier->selectedDate();
+    ui->lblDateSelectionnee->setText("📅 " + date.toString("dddd dd MMMM yyyy"));
+
+    // --- Machines dont la maintenance était ce jour ---
+    ui->tableCalMachines->setRowCount(0);
+    QSqlQuery qMac;
+    qMac.prepare(
+        "SELECT m.TYPE, m.ETAT, m.HEURES_UTILISATION, NVL(e.NOM, '—') AS NOM_EMP "
+        "FROM ATELIER.MACHINE m "
+        "LEFT JOIN ATELIER.EMPLOYE e ON m.ID_EMPLOYE = e.ID_EMPLOYE "
+        "WHERE TRUNC(m.DATE_DERNIERE_MAINTNANCE) = TO_DATE(:d, 'YYYY-MM-DD')"
+    );
+    qMac.bindValue(":d", date.toString("yyyy-MM-dd"));
+    if (qMac.exec()) {
+        int row = 0;
+        while (qMac.next()) {
+            ui->tableCalMachines->insertRow(row);
+            ui->tableCalMachines->setItem(row, 0, new QTableWidgetItem(qMac.value("TYPE").toString()));
+            ui->tableCalMachines->setItem(row, 1, new QTableWidgetItem(qMac.value("ETAT").toString()));
+            ui->tableCalMachines->setItem(row, 2, new QTableWidgetItem(qMac.value("HEURES_UTILISATION").toString() + "h"));
+            ui->tableCalMachines->setItem(row, 3, new QTableWidgetItem(qMac.value("NOM_EMP").toString()));
+            row++;
+        }
+    }
+
+    // --- Commandes passées ce jour (DATE_COMMANDE) ---
+    ui->tableCalCommandes->setRowCount(0);
+    QSqlQuery qCmd;
+    qCmd.prepare(
+        "SELECT c.ID_COMMANDE, c.DETAILS_COMMANDE, c.DIMENSIONS, c.PRIX, c.ETAT "
+        "FROM ATELIER.COMMANDE c "
+        "WHERE TRUNC(c.DATE_COMMANDE) = TO_DATE(:d, 'YYYY-MM-DD') "
+        "ORDER BY c.ID_COMMANDE"
+    );
+    qCmd.bindValue(":d", date.toString("yyyy-MM-dd"));
+    if (qCmd.exec()) {
+        int row = 0;
+        while (qCmd.next()) {
+            ui->tableCalCommandes->insertRow(row);
+            ui->tableCalCommandes->setItem(row, 0, new QTableWidgetItem(qCmd.value("ID_COMMANDE").toString()));
+            ui->tableCalCommandes->setItem(row, 1, new QTableWidgetItem(qCmd.value("DETAILS_COMMANDE").toString()));
+            ui->tableCalCommandes->setItem(row, 2, new QTableWidgetItem(qCmd.value("PRIX").toString() + " €"));
+            ui->tableCalCommandes->setItem(row, 3, new QTableWidgetItem(qCmd.value("ETAT").toString()));
+            ui->tableCalCommandes->setItem(row, 4, new QTableWidgetItem(qCmd.value("DIMENSIONS").toString()));
+            row++;
+        }
+    }
+
+    // Mettre à jour le titre du groupe avec le nombre de commandes
+    int nbCmd = ui->tableCalCommandes->rowCount();
+    ui->groupCalCommandes->setTitle(
+        nbCmd > 0
+        ? QString(" 📦 Commandes ce jour (%1)").arg(nbCmd)
+        : " 📦 Commandes ce jour (aucune)"
+    );
+}
+
+void AtelierWidget::onCalendrierPageChanged(int year, int month)
+{
+    Q_UNUSED(year)
+    Q_UNUSED(month)
+    highlighterDatesCommandes();
+}
+
+void AtelierWidget::highlighterDatesCommandes()
+{
+    // Récupère toutes les dates avec au moins une commande ce mois
+    QTextCharFormat formatCommande;
+    formatCommande.setBackground(QColor("#D4E8C2"));       // vert clair
+    formatCommande.setForeground(QColor("#2E5E00"));
+    formatCommande.setFontWeight(QFont::Bold);
+
+    // Reset d'abord le format du mois affiché
+    const QDate premier(ui->calendarAtelier->yearShown(),
+                        ui->calendarAtelier->monthShown(), 1);
+    const QDate dernier = premier.addMonths(1).addDays(-1);
+
+    QTextCharFormat formatNormal;
+    for (QDate d = premier; d <= dernier; d = d.addDays(1))
+        ui->calendarAtelier->setDateTextFormat(d, formatNormal);
+
+    // Requête : dates distinctes avec commandes
+    QSqlQuery query;
+    query.prepare(
+        "SELECT DISTINCT TRUNC(DATE_COMMANDE) AS JOUR "
+        "FROM ATELIER.COMMANDE "
+        "WHERE DATE_COMMANDE >= TO_DATE(:debut, 'YYYY-MM-DD') "
+        "  AND DATE_COMMANDE <  TO_DATE(:fin,   'YYYY-MM-DD')"
+    );
+    query.bindValue(":debut", premier.toString("yyyy-MM-dd"));
+    query.bindValue(":fin",   dernier.addDays(1).toString("yyyy-MM-dd"));
+
+    if (query.exec()) {
+        while (query.next()) {
+            QDate jour = query.value("JOUR").toDate();
+            if (jour.isValid())
+                ui->calendarAtelier->setDateTextFormat(jour, formatCommande);
+        }
     }
 }

@@ -24,8 +24,6 @@ public:
     QString getDateMaintenance() const;
     int getHeuresCumulees() const;
     int getQuantite() const;
-    QString getResponsableMaintenance() const;
-    QString getResponsableAtelier() const;
     int getIdEmploye() const;
 
     void setID(const QString &id);
@@ -36,8 +34,6 @@ public:
     void setDateMaintenance(const QString &date);
     void setHeuresCumulees(int heures);
     void setQuantite(int quantite);
-    void setResponsableMaintenance(const QString &resp);
-    void setResponsableAtelier(const QString &resp);
     void setIdEmploye(int id);
 
 private:

@@ -25,6 +25,8 @@ private slots:
     void onBtnPlanifierMaintenanceClicked();
     void onBtnDetecterCritiquesClicked();
     void onBtnAnalyserRisquesClicked();
+    void onCalendrierDateChanged();
+    void onCalendrierPageChanged(int year, int month);
 
 private:
     Ui::AtelierWidget *ui;
@@ -34,6 +36,7 @@ private:
     void chargerDonnees();
     void chargerMachinesCritiques();
     void chargerMachinesSollicitees();
+    void highlighterDatesCommandes();
 };
 
 #endif // ATELIERWIDGET_H
