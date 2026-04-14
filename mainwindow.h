@@ -36,8 +36,8 @@ private:
 
     EmployeWidget *employesWidget;
     ClientsWidget *clientsWidget;
-    CommandesWidget *commandesWidget;
-    StockWidget *stockWidget;      // ✅ vraie classe
+    CommandesWidget *commandeswidget;
+    StockWidget *stockWidget;
     AtelierWidget *atelierWidget;
 
     QString currentRole;

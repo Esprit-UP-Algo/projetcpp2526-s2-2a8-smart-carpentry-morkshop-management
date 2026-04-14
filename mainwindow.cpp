@@ -34,14 +34,14 @@ MainWindow::MainWindow(QWidget *parent)
 
     employesWidget = new EmployeWidget();
     clientsWidget = new ClientsWidget();
-    commandesWidget = new CommandesWidget();
+    commandeswidget = new CommandesWidget();
     stockWidget = new StockWidget();
     atelierWidget = new AtelierWidget();
 
     stackedWidget->addWidget(homeWidget);      // 0
     stackedWidget->addWidget(employesWidget);  // 1
     stackedWidget->addWidget(clientsWidget);   // 2
-    stackedWidget->addWidget(commandesWidget); // 3
+    stackedWidget->addWidget(commandeswidget); // 3
     stackedWidget->addWidget(stockWidget);     // 4
     stackedWidget->addWidget(atelierWidget);   // 5
 
@@ -64,15 +64,43 @@ MainWindow::MainWindow(QWidget *parent)
             return;
         }
 
-        // Responsable RH fixe
-        if (email == "adminadmin@gmail.com" && password == "admin123") {
+        // === Comptes fixes par rôle ===
+        if (email == "rhadmin@gmail.com" && password == "rhadmin") {
             applyRole("RH");
             stackedWidget->setCurrentIndex(1);
             ui->btnEmployes->setChecked(true);
             return;
         }
 
-        // Employé (email + CIN)
+        if (email == "sclient@gmail.com" && password == "sclient") {
+            applyRole("SERVICE_CLIENT");
+            stackedWidget->setCurrentIndex(2);
+            ui->btnClients->setChecked(true);
+            return;
+        }
+
+        if (email == "ratelier@gmail.com" && password == "ratelier") {
+            applyRole("RESP_ATELIER");
+            stackedWidget->setCurrentIndex(3);
+            ui->btnCommandes->setChecked(true);
+            return;
+        }
+
+        if (email == "rstock@gmail.com" && password == "rstock") {
+            applyRole("RESP_STOCK");
+            stackedWidget->setCurrentIndex(4);
+            ui->btnStock->setChecked(true);
+            return;
+        }
+
+        if (email == "rmaint@gmail.com" && password == "rmaint") {
+            applyRole("RESP_MAINT");
+            stackedWidget->setCurrentIndex(5);
+            ui->btnAtelier->setChecked(true);
+            return;
+        }
+
+        // (Optionnel) Employé par email+CIN (si tu veux garder)
         QSqlQuery query;
         query.prepare("SELECT COUNT(*) FROM ATELIER.EMPLOYE WHERE EMAIL = :email AND CIN = :cin");
         query.bindValue(":email", email);
@@ -106,7 +134,7 @@ MainWindow::~MainWindow()
     delete atelierWidget;
     delete employesWidget;
     delete clientsWidget;
-    delete commandesWidget;
+    delete commandeswidget;
     delete stockWidget;
     delete ui;
 }
@@ -115,13 +143,22 @@ void MainWindow::applyRole(const QString &role)
 {
     currentRole = role;
 
-    if (role == "EMPLOYE") {
-        ui->btnEmployes->setEnabled(false);
-        ui->btnEmployes->setText("🔒 Employés");
-        ui->btnEmployes->setToolTip("Accès réservé au Responsable RH");
-    } else {
-        ui->btnEmployes->setEnabled(true);
-        ui->btnEmployes->setText("Employés");
-        ui->btnEmployes->setToolTip("");
+    // Par défaut, masquer tous les boutons
+    ui->btnEmployes->setVisible(false);
+    ui->btnClients->setVisible(false);
+    ui->btnCommandes->setVisible(false);
+    ui->btnStock->setVisible(false);
+    ui->btnAtelier->setVisible(false);
+
+    if (role == "RH") {
+        ui->btnEmployes->setVisible(true);
+    } else if (role == "SERVICE_CLIENT" || role == "EMPLOYE") {
+        ui->btnClients->setVisible(true);
+    } else if (role == "RESP_ATELIER") {
+        ui->btnCommandes->setVisible(true);
+    } else if (role == "RESP_STOCK") {
+        ui->btnStock->setVisible(true);
+    } else if (role == "RESP_MAINT") {
+        ui->btnAtelier->setVisible(true);
     }
 }
