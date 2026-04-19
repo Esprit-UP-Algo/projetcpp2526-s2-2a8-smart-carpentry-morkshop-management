@@ -1,31 +1,47 @@
-QT       += core gui
+QT       += core gui sql printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
 
-# You can make your code fail to compile if it uses deprecated APIs.
-# In order to do so, uncomment the following line.
-#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
-
 SOURCES += \
+    connection.cpp \
+    employe.cpp \
+    employewidget.cpp \
+    commande.cpp \
+    commandeswidget.cpp \
+    client.cpp \
+    clientswidget.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    atelierwidget.cpp \
+    dialogmachine.cpp \
+    stock.cpp \
+    stockwidget.cpp
 
 HEADERS += \
-    mainwindow.h
+    connection.h \
+    employe.h \
+    employewidget.h \
+    commande.h \
+    commandeswidget.h \
+    client.h \
+    clientswidget.h \
+    mainwindow.h \
+    atelierwidget.h \
+    dialogmachine.h \
+    stock.h \
+    stockwidget.h
 
 FORMS += \
     AtelierWidget.ui \
     ClientsWidget.ui \
     CommandesWidget.ui \
-    StockWidget.ui \
-    mainwindow.ui
-
-# Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
+    DialogMachine.ui \
+    EmployeWidget.ui \
+    HomeWidget.ui \
+    mainwindow.ui \
+    stockwidget.ui
 
 RESOURCES += \
     logo.qrc
