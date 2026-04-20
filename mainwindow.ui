@@ -42,10 +42,10 @@
     QTableWidget { background-color: #FFFFFF; alternate-background-color: #F5EBE0; border: 2px solid #C9B59A; border-radius: 5px; gridline-color: #C9B59A; color: #3D2817; }
     QTableWidget::item:selected { background-color: #8B5A2B; color: #F5EBE0; }
     QHeaderView::section { background-color: #8B5A2B; color: #F5EBE0; padding: 6px; border: none; font-weight: bold; font-size: 10pt; }
-    QPushButton#btnEmployes, QPushButton#btnClients, QPushButton#btnCommandes, QPushButton#btnStock, QPushButton#btnAtelier { background-color: #C9B59A; color: #3D2817; border: none; border-left: 0px solid #8B5A2B; border-radius: 0; padding: 20px 15px; font-size: 15pt; font-weight: bold; text-align: left; }
-    QPushButton#btnEmployes:hover, QPushButton#btnClients:hover, QPushButton#btnCommandes:hover, QPushButton#btnStock:hover, QPushButton#btnAtelier:hover { background-color: #9B8068; color: white; }
-    QPushButton#btnEmployes:checked, QPushButton#btnClients:checked, QPushButton#btnCommandes:checked, QPushButton#btnStock:checked, QPushButton#btnAtelier:checked { background-color: #8B5A2B; color: #F5EBE0; border-left: 6px solid #5D4037; }
-    QPushButton#btnEmployes:pressed, QPushButton#btnClients:pressed, QPushButton#btnCommandes:pressed, QPushButton#btnStock:pressed, QPushButton#btnAtelier:pressed { background-color: #5D4037; color: white; }
+    QPushButton#btnEmployes, QPushButton#btnClients, QPushButton#btnCommandes, QPushButton#btnStock, QPushButton#btnAtelier, QPushButton#btnPlanification { background-color: #C9B59A; color: #3D2817; border: none; border-left: 0px solid #8B5A2B; border-radius: 0; padding: 20px 15px; font-size: 15pt; font-weight: bold; text-align: left; }
+    QPushButton#btnEmployes:hover, QPushButton#btnClients:hover, QPushButton#btnCommandes:hover, QPushButton#btnStock:hover, QPushButton#btnAtelier:hover, QPushButton#btnPlanification:hover { background-color: #9B8068; color: white; }
+    QPushButton#btnEmployes:checked, QPushButton#btnClients:checked, QPushButton#btnCommandes:checked, QPushButton#btnStock:checked, QPushButton#btnAtelier:checked, QPushButton#btnPlanification:checked { background-color: #8B5A2B; color: #F5EBE0; border-left: 6px solid #5D4037; }
+    QPushButton#btnEmployes:pressed, QPushButton#btnClients:pressed, QPushButton#btnCommandes:pressed, QPushButton#btnStock:pressed, QPushButton#btnAtelier:pressed, QPushButton#btnPlanification:pressed { background-color: #5D4037; color: white; }
    </string>
   </property>
   <widget class="QWidget" name="centralwidget">

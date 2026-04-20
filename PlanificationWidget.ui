@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PlanificationWidget</class>
+ <widget class="QWidget" name="PlanificationWidget">
+  <property name="geometry"><rect><x>0</x><y>0</y><width>1200</width><height>800</height></rect></property>
+  <property name="styleSheet">
+   <string notr="true">
+QWidget { background-color: #F5F0E8; }
+QPushButton { background-color: #6B4423; color: #FAF8F3; border: none; padding: 10px 20px; border-radius: 6px; font-weight: 600; font-size: 10pt; min-height: 32px; }
+QPushButton:hover { background-color: #8B6F47; }
+QPushButton#btnSupprimer { background-color: #A0522D; }
+QPushButton#btnModifierStatut { background-color: #6B7B3E; }
+QGroupBox { background-color: #FAF8F3; border: 2px solid #C9B896; border-radius: 10px; margin-top: 20px; padding-top: 20px; font-weight: 600; font-size: 11pt; color: #6B4423; }
+QGroupBox::title { subcontrol-origin: margin; subcontrol-position: top left; padding: 6px 14px; background-color: #6B4423; color: #FAF8F3; border-radius: 5px; left: 10px; }
+QLabel { color: #5A3820; font-size: 10pt; }
+QLineEdit, QComboBox, QDateEdit, QTextEdit { background-color: #FFFFFF; border: 2px solid #C9B896; border-radius: 6px; padding: 6px 10px; font-size: 10pt; color: #5A3820; }
+QTableWidget { background-color: #FFFFFF; alternate-background-color: #FAF8F3; border: 2px solid #C9B896; gridline-color: #E8DCC4; font-size: 9pt; border-radius: 6px; }
+QTableWidget::item:selected { background-color: #9B8B5B; color: #FAF8F3; }
+QHeaderView::section { background-color: #6B4423; color: #FAF8F3; padding: 8px 6px; border: none; font-weight: 700; font-size: 9pt; }
+   </string>
+  </property>
+  <layout class="QVBoxLayout" name="mainLayout">
+   <property name="spacing"><number>10</number></property>
+   <property name="leftMargin"><number>15</number></property>
+   <property name="topMargin"><number>15</number></property>
+   <property name="rightMargin"><number>15</number></property>
+   <property name="bottomMargin"><number>15</number></property>
+
+   <!-- Header -->
+   <item>
+    <widget class="QLabel" name="lblTitre">
+     <property name="text"><string>📅 PLANIFICATION DES TÂCHES</string></property>
+     <property name="styleSheet"><string>font-size: 18pt; font-weight: 700; color: #6B4423; padding: 10px;</string></property>
+     <property name="alignment"><set>Qt::AlignCenter</set></property>
+    </widget>
+   </item>
+
+   <item>
+    <layout class="QHBoxLayout" name="mainHLayout">
+
+     <!-- Formulaire ajout -->
+     <item>
+      <widget class="QGroupBox" name="groupAjouter">
+       <property name="title"><string> ➕ Nouvelle Tâche</string></property>
+       <property name="maximumWidth"><number>360</number></property>
+       <layout class="QFormLayout" name="formLayout">
+        <property name="leftMargin"><number>15</number></property>
+        <property name="topMargin"><number>25</number></property>
+        <property name="rightMargin"><number>15</number></property>
+        <property name="bottomMargin"><number>15</number></property>
+        <property name="verticalSpacing"><number>12</number></property>
+
+        <item row="0" column="0"><widget class="QLabel"><property name="text"><string>Employé :</string></property></widget></item>
+        <item row="0" column="1"><widget class="QComboBox" name="comboEmploye"><property name="minimumWidth"><number>200</number></property></widget></item>
+
+        <item row="1" column="0"><widget class="QLabel"><property name="text"><string>Commande :</string></property></widget></item>
+        <item row="1" column="1"><widget class="QComboBox" name="comboCommande"><property name="minimumWidth"><number>200</number></property></widget></item>
+
+        <item row="2" column="0"><widget class="QLabel"><property name="text"><string>Machine :</string></property></widget></item>
+        <item row="2" column="1"><widget class="QComboBox" name="comboMachine"><property name="minimumWidth"><number>200</number></property></widget></item>
+
+        <item row="3" column="0"><widget class="QLabel"><property name="text"><string>Date début :</string></property></widget></item>
+        <item row="3" column="1"><widget class="QDateEdit" name="dateDebut"><property name="calendarPopup"><bool>true</bool></property><property name="displayFormat"><string>dd/MM/yyyy</string></property></widget></item>
+
+        <item row="4" column="0"><widget class="QLabel"><property name="text"><string>Date fin :</string></property></widget></item>
+        <item row="4" column="1"><widget class="QDateEdit" name="dateFin"><property name="calendarPopup"><bool>true</bool></property><property name="displayFormat"><string>dd/MM/yyyy</string></property></widget></item>
+
+        <item row="5" column="0"><widget class="QLabel"><property name="text"><string>Priorité :</string></property></widget></item>
+        <item row="5" column="1">
+         <widget class="QComboBox" name="comboPriorite">
+          <item><property name="text"><string>🔴 Haute</string></property></item>
+          <item><property name="text"><string>🟡 Normale</string></property></item>
+          <item><property name="text"><string>🟢 Basse</string></property></item>
+         </widget>
+        </item>
+
+        <item row="6" column="0"><widget class="QLabel"><property name="text"><string>Notes :</string></property></widget></item>
+        <item row="6" column="1"><widget class="QTextEdit" name="txtNotes"><property name="maximumHeight"><number>70</number></property></widget></item>
+
+        <item row="7" column="0" colspan="2">
+         <widget class="QPushButton" name="btnAjouter">
+          <property name="text"><string>✅ Assigner la Tâche</string></property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+
+     <!-- Liste des tâches -->
+     <item>
+      <layout class="QVBoxLayout" name="listeLayout">
+
+       <!-- Filtres -->
+       <item>
+        <layout class="QHBoxLayout" name="filtresLayout">
+         <item><widget class="QLabel"><property name="text"><string>Statut :</string></property></widget></item>
+         <item>
+          <widget class="QComboBox" name="comboFiltreStatut">
+           <item><property name="text"><string>-- Tous --</string></property></item>
+           <item><property name="text"><string>En attente</string></property></item>
+           <item><property name="text"><string>En cours</string></property></item>
+           <item><property name="text"><string>Terminee</string></property></item>
+           <item><property name="text"><string>En retard</string></property></item>
+          </widget>
+         </item>
+         <item><widget class="QLabel"><property name="text"><string>Employé :</string></property></widget></item>
+         <item><widget class="QComboBox" name="comboFiltreEmploye"><property name="minimumWidth"><number>160</number></property></widget></item>
+         <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+        </layout>
+       </item>
+
+       <!-- Tableau -->
+       <item>
+        <widget class="QTableWidget" name="tableListeTaches">
+         <property name="alternatingRowColors"><bool>true</bool></property>
+         <property name="selectionBehavior"><enum>QAbstractItemView::SelectRows</enum></property>
+         <property name="editTriggers"><set>QAbstractItemView::NoEditTriggers</set></property>
+         <column><property name="text"><string>ID</string></property></column>
+         <column><property name="text"><string>PRIORITÉ</string></property></column>
+         <column><property name="text"><string>EMPLOYÉ</string></property></column>
+         <column><property name="text"><string>COMMANDE</string></property></column>
+         <column><property name="text"><string>MACHINE</string></property></column>
+         <column><property name="text"><string>DÉBUT</string></property></column>
+         <column><property name="text"><string>FIN</string></property></column>
+         <column><property name="text"><string>STATUT</string></property></column>
+         <column><property name="text"><string>NOTES</string></property></column>
+        </widget>
+       </item>
+
+       <!-- Boutons actions -->
+       <item>
+        <layout class="QHBoxLayout" name="actionsLayout">
+         <item><widget class="QPushButton" name="btnModifierStatut"><property name="text"><string>✏️ Changer Statut</string></property></widget></item>
+         <item><widget class="QPushButton" name="btnSupprimer"><property name="text"><string>🗑️ Supprimer</string></property></widget></item>
+         <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+        </layout>
+       </item>
+
+      </layout>
+     </item>
+
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -15,7 +15,10 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     atelierwidget.cpp \
-    dialogmachine.cpp
+    dialogmachine.cpp \
+    stock.cpp \
+    stockwidget.cpp \
+    planificationwidget.cpp
 
 HEADERS += \
     connection.h \
@@ -27,7 +30,10 @@ HEADERS += \
     clientswidget.h \
     mainwindow.h \
     atelierwidget.h \
-    dialogmachine.h
+    dialogmachine.h \
+    stock.h \
+    stockwidget.h \
+    planificationwidget.h
 
 FORMS += \
     AtelierWidget.ui \
@@ -37,6 +43,7 @@ FORMS += \
     EmployeWidget.ui \
     HomeWidget.ui \
     StockWidget.ui \
+    PlanificationWidget.ui \
     mainwindow.ui
 
 RESOURCES += \

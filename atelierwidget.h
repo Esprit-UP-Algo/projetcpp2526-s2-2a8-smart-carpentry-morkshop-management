@@ -27,6 +27,11 @@ private slots:
     void onBtnAnalyserRisquesClicked();
     void onCalendrierDateChanged();
     void onCalendrierPageChanged(int year, int month);
+    void onPlanAjouter();
+    void onPlanSupprimer();
+    void onPlanModifierStatut();
+    void onPlanFiltreChanged();
+    void onBtnExportCSVMachinesClicked();
 
 private:
     Ui::AtelierWidget *ui;
@@ -37,6 +42,8 @@ private:
     void chargerMachinesCritiques();
     void chargerMachinesSollicitees();
     void highlighterDatesCommandes();
+    void planRemplirCombos();
+    void planChargerTaches();
 };
 
 #endif // ATELIERWIDGET_H

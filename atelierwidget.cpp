@@ -13,6 +13,7 @@
 #include <QHeaderView>
 #include <QTextCharFormat>
 #include <QFont>
+#include <QInputDialog>
 
 AtelierWidget::AtelierWidget(QWidget *parent)
     : QWidget(parent)
@@ -52,8 +53,19 @@ void AtelierWidget::connectSignals()
     connect(ui->btnPlanifierMaintenance, &QPushButton::clicked, this, &AtelierWidget::onBtnPlanifierMaintenanceClicked);
     connect(ui->btnDetecterCritiques, &QPushButton::clicked, this, &AtelierWidget::onBtnDetecterCritiquesClicked);
     connect(ui->btnAnalyserRisques, &QPushButton::clicked, this, &AtelierWidget::onBtnAnalyserRisquesClicked);
+    connect(ui->btnExportCSVMachines, &QPushButton::clicked, this, &AtelierWidget::onBtnExportCSVMachinesClicked);
     connect(ui->calendarAtelier, &QCalendarWidget::selectionChanged, this, &AtelierWidget::onCalendrierDateChanged);
     connect(ui->calendarAtelier, &QCalendarWidget::currentPageChanged, this, &AtelierWidget::onCalendrierPageChanged);
+
+    // Planification tab
+    connect(ui->btnPlanAjouter,       &QPushButton::clicked, this, &AtelierWidget::onPlanAjouter);
+    connect(ui->btnPlanSupprimer,     &QPushButton::clicked, this, &AtelierWidget::onPlanSupprimer);
+    connect(ui->btnPlanModifierStatut,&QPushButton::clicked, this, &AtelierWidget::onPlanModifierStatut);
+    connect(ui->comboPlanFiltreStatut,  QOverload<int>::of(&QComboBox::currentIndexChanged), this, &AtelierWidget::onPlanFiltreChanged);
+    connect(ui->comboPlanFiltreEmploye, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &AtelierWidget::onPlanFiltreChanged);
+
+    planRemplirCombos();
+    planChargerTaches();
 }
 
 void AtelierWidget::initialiserTableau()
@@ -575,4 +587,213 @@ void AtelierWidget::highlighterDatesCommandes()
                 ui->calendarAtelier->setDateTextFormat(jour, formatCommande);
         }
     }
+}
+
+// ─── Planification ───────────────────────────────────────────────────────────
+
+void AtelierWidget::planRemplirCombos()
+{
+    // Employés
+    auto remplirEmp = [&](QComboBox *cb, bool avecTous) {
+        cb->clear();
+        if (avecTous) cb->addItem("-- Tous --", QVariant());
+        QSqlQuery q("SELECT ID_EMPLOYE, NOM FROM ATELIER.EMPLOYE ORDER BY NOM");
+        while (q.next())
+            cb->addItem(q.value("NOM").toString(), q.value("ID_EMPLOYE"));
+    };
+    remplirEmp(ui->comboPlanEmploye,       false);
+    remplirEmp(ui->comboPlanFiltreEmploye, true);
+
+    // Commandes
+    ui->comboPlanCommande->clear();
+    QSqlQuery qCmd("SELECT ID_COMMANDE, DETAILS_COMMANDE FROM ATELIER.COMMANDE ORDER BY ID_COMMANDE DESC");
+    while (qCmd.next())
+        ui->comboPlanCommande->addItem(
+            "#" + qCmd.value("ID_COMMANDE").toString() + " — " + qCmd.value("DETAILS_COMMANDE").toString(),
+            qCmd.value("ID_COMMANDE"));
+
+    // Machines
+    ui->comboPlanMachine->clear();
+    ui->comboPlanMachine->addItem("-- Aucune --", QVariant());
+    QSqlQuery qMac("SELECT ID_MACHINE, REFERENCE, TYPE FROM ATELIER.MACHINE ORDER BY TYPE");
+    while (qMac.next())
+        ui->comboPlanMachine->addItem(
+            qMac.value("REFERENCE").toString() + " (" + qMac.value("TYPE").toString() + ")",
+            qMac.value("ID_MACHINE"));
+}
+
+void AtelierWidget::planChargerTaches()
+{
+    QString sql =
+        "SELECT p.ID_TACHE, p.PRIORITE, e.NOM, c.DETAILS_COMMANDE, "
+        "       NVL(TO_CHAR(m.ID_MACHINE),'—'), p.DATE_DEBUT, p.DATE_FIN, p.STATUT, NVL(p.NOTES,'') "
+        "FROM ATELIER.PLANIFICATION p "
+        "JOIN ATELIER.COMMANDE c ON p.ID_COMMANDE = c.ID_COMMANDE "
+        "JOIN ATELIER.EMPLOYE  e ON p.ID_EMPLOYE  = e.ID_EMPLOYE "
+        "LEFT JOIN ATELIER.MACHINE m ON p.ID_MACHINE = m.ID_MACHINE "
+        "WHERE 1=1 ";
+
+    QString filtreStatut = ui->comboPlanFiltreStatut->currentText();
+    if (filtreStatut != "-- Tous --")
+        sql += "AND p.STATUT = '" + filtreStatut + "' ";
+
+    QVariant filtreEmp = ui->comboPlanFiltreEmploye->currentData();
+    if (filtreEmp.isValid())
+        sql += "AND p.ID_EMPLOYE = " + filtreEmp.toString() + " ";
+
+    sql += "ORDER BY p.DATE_DEBUT, p.PRIORITE";
+
+    QSqlQuery q;
+    q.prepare(sql);
+    q.exec();
+
+    ui->tablePlanTaches->setRowCount(0);
+    int row = 0;
+    while (q.next()) {
+        ui->tablePlanTaches->insertRow(row);
+        ui->tablePlanTaches->setItem(row, 0, new QTableWidgetItem(q.value(0).toString()));
+
+        int prio = q.value(1).toInt();
+        QString prioStr = prio == 1 ? "🔴 Haute" : (prio == 3 ? "🟢 Basse" : "🟡 Normale");
+        ui->tablePlanTaches->setItem(row, 1, new QTableWidgetItem(prioStr));
+        ui->tablePlanTaches->setItem(row, 2, new QTableWidgetItem(q.value(2).toString()));
+        ui->tablePlanTaches->setItem(row, 3, new QTableWidgetItem(q.value(3).toString()));
+        ui->tablePlanTaches->setItem(row, 4, new QTableWidgetItem(q.value(4).toString()));
+        ui->tablePlanTaches->setItem(row, 5, new QTableWidgetItem(q.value(5).toDate().toString("dd/MM/yyyy")));
+        ui->tablePlanTaches->setItem(row, 6, new QTableWidgetItem(q.value(6).toDate().toString("dd/MM/yyyy")));
+
+        QString statut = q.value(7).toString();
+        auto *itemStatut = new QTableWidgetItem(statut);
+        if (statut == "En cours")   itemStatut->setBackground(QColor("#C8E6C9"));
+        else if (statut == "En attente") itemStatut->setBackground(QColor("#FFF9C4"));
+        else if (statut == "En retard")  itemStatut->setBackground(QColor("#FFCDD2"));
+        else if (statut == "Terminee")   itemStatut->setBackground(QColor("#E0E0E0"));
+        ui->tablePlanTaches->setItem(row, 7, itemStatut);
+        ui->tablePlanTaches->setItem(row, 8, new QTableWidgetItem(q.value(8).toString()));
+        row++;
+    }
+}
+
+void AtelierWidget::onPlanAjouter()
+{
+    if (ui->comboPlanEmploye->currentIndex() < 0 || ui->comboPlanCommande->currentIndex() < 0) {
+        QMessageBox::warning(this, "Erreur", "Veuillez sélectionner un employé et une commande.");
+        return;
+    }
+    if (ui->planDateFin->date() < ui->planDateDebut->date()) {
+        QMessageBox::warning(this, "Erreur", "La date de fin doit être après la date de début.");
+        return;
+    }
+
+    QSqlQuery q;
+    q.prepare(
+        "INSERT INTO ATELIER.PLANIFICATION "
+        "(ID_COMMANDE, ID_EMPLOYE, ID_MACHINE, DATE_DEBUT, DATE_FIN, STATUT, PRIORITE, NOTES) "
+        "VALUES (:cmd, :emp, :mac, :debut, :fin, 'En attente', :prio, :notes)"
+    );
+    q.bindValue(":cmd",   ui->comboPlanCommande->currentData().toInt());
+    q.bindValue(":emp",   ui->comboPlanEmploye->currentData().toInt());
+    QVariant mac = ui->comboPlanMachine->currentData();
+    q.bindValue(":mac",   mac.isValid() ? mac : QVariant(QVariant::Int));
+    q.bindValue(":debut", ui->planDateDebut->date());
+    q.bindValue(":fin",   ui->planDateFin->date());
+    q.bindValue(":prio",  ui->comboPlanPriorite->currentIndex() + 1);
+    q.bindValue(":notes", ui->planNotes->toPlainText().trimmed());
+
+    if (!q.exec()) {
+        QMessageBox::warning(this, "Erreur SQL", q.lastError().text());
+        return;
+    }
+    QMessageBox::information(this, "Succès", "Tâche assignée !");
+    ui->planNotes->clear();
+    ui->planDateDebut->setDate(QDate::currentDate());
+    ui->planDateFin->setDate(QDate::currentDate().addDays(1));
+    planChargerTaches();
+}
+
+void AtelierWidget::onPlanSupprimer()
+{
+    int row = ui->tablePlanTaches->currentRow();
+    if (row < 0) { QMessageBox::warning(this, "Attention", "Sélectionnez une tâche."); return; }
+    int id = ui->tablePlanTaches->item(row, 0)->text().toInt();
+    if (QMessageBox::question(this, "Confirmation", "Supprimer cette tâche ?",
+        QMessageBox::Yes | QMessageBox::No) != QMessageBox::Yes) return;
+    QSqlQuery q;
+    q.prepare("DELETE FROM ATELIER.PLANIFICATION WHERE ID_TACHE = :id");
+    q.bindValue(":id", id);
+    if (!q.exec()) { QMessageBox::warning(this, "Erreur SQL", q.lastError().text()); return; }
+    planChargerTaches();
+}
+
+void AtelierWidget::onPlanModifierStatut()
+{
+    int row = ui->tablePlanTaches->currentRow();
+    if (row < 0) { QMessageBox::warning(this, "Attention", "Sélectionnez une tâche."); return; }
+    int id = ui->tablePlanTaches->item(row, 0)->text().toInt();
+    QStringList statuts = {"En attente", "En cours", "Terminee", "En retard"};
+    bool ok;
+    QString choix = QInputDialog::getItem(this, "Changer le statut", "Nouveau statut :", statuts, 0, false, &ok);
+    if (!ok) return;
+    QSqlQuery q;
+    q.prepare("UPDATE ATELIER.PLANIFICATION SET STATUT=:s WHERE ID_TACHE=:id");
+    q.bindValue(":s", choix);
+    q.bindValue(":id", id);
+    if (!q.exec()) { QMessageBox::warning(this, "Erreur SQL", q.lastError().text()); return; }
+    planChargerTaches();
+}
+
+void AtelierWidget::onPlanFiltreChanged() { planChargerTaches(); }
+
+void AtelierWidget::onBtnExportCSVMachinesClicked()
+{
+    QString fileName = QFileDialog::getSaveFileName(
+        this, "Exporter les machines en CSV", "", "CSV Files (*.csv)");
+    if (fileName.isEmpty()) return;
+
+    QFile file(fileName);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QMessageBox::critical(this, "Erreur", "Impossible d'ouvrir le fichier.");
+        return;
+    }
+
+    QTextStream out(&file);
+    // En-tête
+    out << "ID_MACHINE,REFERENCE,TYPE,ETAT,DATE_MAINTENANCE,HEURES_UTILISATION,QUANTITE,NIVEAU_RISQUE,ACTION_REQUISE\n";
+
+    QSqlQuery query;
+    query.prepare("SELECT ID_MACHINE, REFERENCE, TYPE, ETAT, DATE_DERNIERE_MAINTNANCE, HEURES_UTILISATION, QUANTITE FROM ATELIER.MACHINE ORDER BY ID_MACHINE");
+    if (!query.exec()) {
+        QMessageBox::warning(this, "Erreur SQL", query.lastError().text());
+        return;
+    }
+
+    int total = 0, critiques = 0;
+    while (query.next()) {
+        QString etat   = query.value("ETAT").toString();
+        double heures  = query.value("HEURES_UTILISATION").toDouble();
+        QDate date     = query.value("DATE_DERNIERE_MAINTNANCE").toDate();
+        QString risque = calculerNiveauRisque(etat, heures, date);
+
+        QString action;
+        if (risque == "ÉLEVÉ")  { action = "Maintenance immédiate"; critiques++; }
+        else if (risque == "MOYEN") action = "Planifier maintenance";
+        else action = "RAS";
+
+        out << query.value("ID_MACHINE").toString() << ","
+            << query.value("REFERENCE").toString() << ","
+            << query.value("TYPE").toString() << ","
+            << etat << ","
+            << date.toString("yyyy-MM-dd") << ","
+            << QString::number(heures) << ","
+            << query.value("QUANTITE").toString() << ","
+            << risque << ","
+            << action << "\n";
+        total++;
+    }
+
+    file.close();
+
+    QMessageBox::information(this, "Export réussi",
+        QString("✅ %1 machines exportées.\n⚠️ %2 machine(s) critique(s) détectée(s).\n\nFichier : %3")
+        .arg(total).arg(critiques).arg(fileName));
 }

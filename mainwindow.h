@@ -9,7 +9,6 @@ QT_BEGIN_NAMESPACE
 namespace Ui {
     class MainWindow;
     class HomeWidget;
-    class StockWidget;
 }
 QT_END_NAMESPACE
 
@@ -17,6 +16,7 @@ class AtelierWidget;
 class EmployeWidget;
 class CommandesWidget;
 class ClientsWidget;
+class StockWidget;
 
 class MainWindow : public QMainWindow
 {
@@ -37,11 +37,8 @@ private:
     EmployeWidget *employesWidget;
     ClientsWidget *clientsWidget;
     CommandesWidget *commandesWidget;
-
-    QWidget *stockWidget;
+    StockWidget *stockWidget;
     AtelierWidget *atelierWidget;
-
-    Ui::StockWidget *stockUi;
 
     QString currentRole;
     void applyRole(const QString &role);
