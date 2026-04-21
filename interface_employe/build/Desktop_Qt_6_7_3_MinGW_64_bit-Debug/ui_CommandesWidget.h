@@ -14,7 +14,6 @@
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QDateEdit>
 #include <QtWidgets/QDoubleSpinBox>
-#include <QtWidgets/QFrame>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHBoxLayout>
@@ -36,15 +35,14 @@ QT_BEGIN_NAMESPACE
 class Ui_CommandesWidget
 {
 public:
-    QVBoxLayout *vboxLayout;
-    QFrame *frame;
+    QVBoxLayout *verticalLayout;
+    QLabel *labelHeader;
+    QLabel *labelAlerte;
     QTabWidget *tabWidget;
     QWidget *tabGestion;
     QHBoxLayout *horizontalLayout;
     QGroupBox *groupBoxForm;
     QGridLayout *gridLayout;
-    QLabel *label_ID;
-    QLineEdit *txtID;
     QLabel *label_Date;
     QDateEdit *dateCommande;
     QLabel *label_Details;
@@ -86,41 +84,36 @@ public:
     QHBoxLayout *horizontalLayout_5;
     QPushButton *btnRechercher;
     QPushButton *btnResetRecherche;
-    QHBoxLayout *horizontalLayout_6;
     QGroupBox *groupBoxMetiers;
-    QVBoxLayout *verticalLayout_8;
+    QGridLayout *gridLayout_3;
     QLabel *label_Delai;
     QLabel *valueDelai;
-    QProgressBar *progressCharge;
     QLabel *label_Charge;
+    QProgressBar *progressCharge;
     QLabel *label_Alertes;
     QLabel *valueAlertes;
-    QGroupBox *groupBoxStats;
-    QVBoxLayout *verticalLayout_9;
-    QLabel *label_CommandesVendues;
-    QTableWidget *tableTopCommandes;
-    QHBoxLayout *horizontalLayout_7;
-    QPushButton *btnGenererStats;
-    QPushButton *btnExporterStats;
     QGroupBox *groupBoxResultats;
     QVBoxLayout *verticalLayout_10;
     QTableWidget *tableResultats;
+    QWidget *tabStats;
+    QVBoxLayout *verticalLayout_8;
+    QGroupBox *groupBoxStats;
+    QVBoxLayout *verticalLayout_9;
+    QTableWidget *tableStatsMois;
+    QHBoxLayout *horizontalLayout_6;
+    QPushButton *btnGenererStats;
     QWidget *tabFacture;
     QVBoxLayout *verticalLayout_11;
     QGroupBox *groupBoxFacture;
-    QGridLayout *gridLayout_3;
+    QGridLayout *gridLayout_4;
     QLabel *label_SelectCommande;
     QComboBox *comboFactureCommande;
     QLabel *label_ClientInfo;
     QTextEdit *txtClientInfo;
-    QLabel *label_DetailsFacture;
-    QTextEdit *txtDetailsFacture;
-    QHBoxLayout *horizontalLayout_8;
+    QHBoxLayout *horizontalLayout_7;
     QPushButton *btnGenererPDF;
     QPushButton *btnApercuPDF;
-    QPushButton *btnEnvoyerEmail;
-    QSpacerItem *horizontalSpacer_2;
-    QLabel *label_PDFStatus;
+    QSpacerItem *horizontalSpacer_3;
     QGroupBox *groupBoxPreview;
     QVBoxLayout *verticalLayout_12;
     QLabel *labelPreview;
@@ -129,16 +122,60 @@ public:
     {
         if (CommandesWidget->objectName().isEmpty())
             CommandesWidget->setObjectName("CommandesWidget");
-        CommandesWidget->resize(920, 750);
-        vboxLayout = new QVBoxLayout(CommandesWidget);
-        vboxLayout->setObjectName("vboxLayout");
-        frame = new QFrame(CommandesWidget);
-        frame->setObjectName("frame");
-        frame->setFrameShape(QFrame::Shape::StyledPanel);
-        frame->setFrameShadow(QFrame::Shadow::Raised);
-        tabWidget = new QTabWidget(frame);
+        CommandesWidget->resize(1225, 808);
+        CommandesWidget->setStyleSheet(QString::fromUtf8("\n"
+"    QWidget { background-color: #F5EBE0; color: #3D2817; font-family: 'Segoe UI', Arial, sans-serif; }\n"
+"    QTabWidget::pane { border: 2px solid #8B5A2B; background-color: #F5EBE0; border-radius: 5px; }\n"
+"    QTabBar::tab { background-color: #C9B59A; color: #3D2817; padding: 10px 20px; margin-right: 2px; border-top-left-radius: 5px; border-top-right-radius: 5px; font-weight: bold; }\n"
+"    QTabBar::tab:selected { background-color: #8B5A2B; color: #F5EBE0; }\n"
+"    QTabBar::tab:hover { background-color: #9B8068; }\n"
+"    QGroupBox { background-color: #FFFFFF; border: 2px solid #8B5A2B; border-radius: 8px; margin-top: 15px; padding-top: 15px; font-weight: bold; }\n"
+"    QGroupBox::title { color: #5D4037; subcontrol-origin: margin; left: 10px; padding: 0 5px; font-size: 10pt; }\n"
+"    QLineEdit, QTextEdit, QDateEdit, QComboBox, QSpinBox, QDoubleSpinBox { background-color: #FFFFFF; border: 2px solid #C9B59A; border-radius: 5px; padding: 8px; color: #3D2817; font-size: 10pt; }\n"
+"    QLineEdit:focus"
+                        ", QTextEdit:focus, QDateEdit:focus, QComboBox:focus, QSpinBox:focus, QDoubleSpinBox:focus { border: 2px solid #8B5A2B; }\n"
+"    QComboBox { font-size: 10pt; min-height: 28px; }\n"
+"    QComboBox::drop-down { border: none; width: 20px; }\n"
+"    QComboBox::down-arrow { image: none; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 4px solid #8B5A2B; margin-right: 6px; }\n"
+"    QPushButton { background-color: #8B5A2B; color: #F5EBE0; border: none; border-radius: 5px; padding: 10px 20px; font-weight: bold; font-size: 10pt; }\n"
+"    QPushButton:hover { background-color: #9B8068; }\n"
+"    QPushButton:pressed { background-color: #5D4037; }\n"
+"    QPushButton#btnAjouter { background-color: #8B9B6A; }\n"
+"    QPushButton#btnAjouter:hover { background-color: #9BAB7A; }\n"
+"    QPushButton#btnModifier { background-color: #8B5A2B; }\n"
+"    QPushButton#btnModifier:hover { background-color: #9B8068; }\n"
+"    QPushButton#btnSupprimer { background-color: #5D4037; }\n"
+"    QPushButto"
+                        "n#btnSupprimer:hover { background-color: #6D4C41; }\n"
+"    QPushButton#btnVider, QPushButton#btnRechercher, QPushButton#btnResetRecherche, QPushButton#btnTriPrixCroissant, QPushButton#btnTriPrixDecroissant, QPushButton#btnGenererStats { background-color: #C9B59A; color: #3D2817; }\n"
+"    QPushButton#btnVider:hover, QPushButton#btnRechercher:hover, QPushButton#btnResetRecherche:hover, QPushButton#btnTriPrixCroissant:hover, QPushButton#btnTriPrixDecroissant:hover, QPushButton#btnGenererStats:hover { background-color: #D9C5AA; }\n"
+"    QTableWidget { background-color: #FFFFFF; alternate-background-color: #F5EBE0; border: 2px solid #C9B59A; border-radius: 5px; gridline-color: #C9B59A; color: #3D2817; }\n"
+"    QTableWidget::item:selected { background-color: #8B5A2B; color: #F5EBE0; }\n"
+"    QHeaderView::section { background-color: #8B5A2B; color: #F5EBE0; padding: 6px; border: none; font-weight: bold; font-size: 10pt; }\n"
+"    QLabel#labelHeader { font-size: 22px; font-weight: bold; color: #3D2817; padding: 1"
+                        "5px; background-color: #C9B59A; border-radius: 8px; margin: 10px; border: 2px solid #8B5A2B; }\n"
+"    QLabel#labelAlerte { background-color: #FFF3CD; color: #856404; padding: 10px; border-radius: 5px; border: 1px solid #FFEAA7; font-weight: bold; }\n"
+"    QProgressBar { border: 2px solid #C9B59A; border-radius: 5px; text-align: center; background-color: #FFFFFF; color: #3D2817; }\n"
+"    QProgressBar::chunk { background-color: #8B9B6A; border-radius: 3px; }\n"
+"    QPushButton#btnGenererPDF, QPushButton#btnApercuPDF, QPushButton#btnEnvoyerEmail { background-color: #8B9B6A; }\n"
+"    QPushButton#btnGenererPDF:hover, QPushButton#btnApercuPDF:hover, QPushButton#btnEnvoyerEmail:hover { background-color: #9BAB7A; }\n"
+"  "));
+        verticalLayout = new QVBoxLayout(CommandesWidget);
+        verticalLayout->setObjectName("verticalLayout");
+        labelHeader = new QLabel(CommandesWidget);
+        labelHeader->setObjectName("labelHeader");
+        labelHeader->setAlignment(Qt::AlignmentFlag::AlignCenter);
+
+        verticalLayout->addWidget(labelHeader);
+
+        labelAlerte = new QLabel(CommandesWidget);
+        labelAlerte->setObjectName("labelAlerte");
+        labelAlerte->setAlignment(Qt::AlignmentFlag::AlignCenter);
+
+        verticalLayout->addWidget(labelAlerte);
+
+        tabWidget = new QTabWidget(CommandesWidget);
         tabWidget->setObjectName("tabWidget");
-        tabWidget->setGeometry(QRect(0, 0, 1311, 721));
         tabGestion = new QWidget();
         tabGestion->setObjectName("tabGestion");
         horizontalLayout = new QHBoxLayout(tabGestion);
@@ -147,41 +184,31 @@ public:
         groupBoxForm->setObjectName("groupBoxForm");
         gridLayout = new QGridLayout(groupBoxForm);
         gridLayout->setObjectName("gridLayout");
-        label_ID = new QLabel(groupBoxForm);
-        label_ID->setObjectName("label_ID");
-
-        gridLayout->addWidget(label_ID, 0, 0, 1, 1);
-
-        txtID = new QLineEdit(groupBoxForm);
-        txtID->setObjectName("txtID");
-
-        gridLayout->addWidget(txtID, 0, 1, 1, 1);
-
         label_Date = new QLabel(groupBoxForm);
         label_Date->setObjectName("label_Date");
 
-        gridLayout->addWidget(label_Date, 1, 0, 1, 1);
+        gridLayout->addWidget(label_Date, 0, 0, 1, 1);
 
         dateCommande = new QDateEdit(groupBoxForm);
         dateCommande->setObjectName("dateCommande");
         dateCommande->setCalendarPopup(true);
 
-        gridLayout->addWidget(dateCommande, 1, 1, 1, 1);
+        gridLayout->addWidget(dateCommande, 0, 1, 1, 1);
 
         label_Details = new QLabel(groupBoxForm);
         label_Details->setObjectName("label_Details");
 
-        gridLayout->addWidget(label_Details, 2, 0, 1, 1);
+        gridLayout->addWidget(label_Details, 1, 0, 1, 1);
 
         txtDetails = new QTextEdit(groupBoxForm);
         txtDetails->setObjectName("txtDetails");
 
-        gridLayout->addWidget(txtDetails, 2, 1, 1, 1);
+        gridLayout->addWidget(txtDetails, 1, 1, 1, 1);
 
         label_Dimensions = new QLabel(groupBoxForm);
         label_Dimensions->setObjectName("label_Dimensions");
 
-        gridLayout->addWidget(label_Dimensions, 3, 0, 1, 1);
+        gridLayout->addWidget(label_Dimensions, 2, 0, 1, 1);
 
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setObjectName("horizontalLayout_2");
@@ -214,24 +241,24 @@ public:
         horizontalLayout_2->addWidget(spinHauteur);
 
 
-        gridLayout->addLayout(horizontalLayout_2, 3, 1, 1, 1);
+        gridLayout->addLayout(horizontalLayout_2, 2, 1, 1, 1);
 
         label_Prix = new QLabel(groupBoxForm);
         label_Prix->setObjectName("label_Prix");
 
-        gridLayout->addWidget(label_Prix, 4, 0, 1, 1);
+        gridLayout->addWidget(label_Prix, 3, 0, 1, 1);
 
         spinPrix = new QDoubleSpinBox(groupBoxForm);
         spinPrix->setObjectName("spinPrix");
         spinPrix->setMaximum(100000.000000000000000);
         spinPrix->setSingleStep(50.000000000000000);
 
-        gridLayout->addWidget(spinPrix, 4, 1, 1, 1);
+        gridLayout->addWidget(spinPrix, 3, 1, 1, 1);
 
         label_Etat = new QLabel(groupBoxForm);
         label_Etat->setObjectName("label_Etat");
 
-        gridLayout->addWidget(label_Etat, 5, 0, 1, 1);
+        gridLayout->addWidget(label_Etat, 4, 0, 1, 1);
 
         comboEtat = new QComboBox(groupBoxForm);
         comboEtat->addItem(QString());
@@ -239,20 +266,17 @@ public:
         comboEtat->addItem(QString());
         comboEtat->setObjectName("comboEtat");
 
-        gridLayout->addWidget(comboEtat, 5, 1, 1, 1);
+        gridLayout->addWidget(comboEtat, 4, 1, 1, 1);
 
         label_Responsable = new QLabel(groupBoxForm);
         label_Responsable->setObjectName("label_Responsable");
 
-        gridLayout->addWidget(label_Responsable, 6, 0, 1, 1);
+        gridLayout->addWidget(label_Responsable, 5, 0, 1, 1);
 
         comboResponsable = new QComboBox(groupBoxForm);
-        comboResponsable->addItem(QString());
-        comboResponsable->addItem(QString());
-        comboResponsable->addItem(QString());
         comboResponsable->setObjectName("comboResponsable");
 
-        gridLayout->addWidget(comboResponsable, 6, 1, 1, 1);
+        gridLayout->addWidget(comboResponsable, 5, 1, 1, 1);
 
         horizontalLayout_3 = new QHBoxLayout();
         horizontalLayout_3->setObjectName("horizontalLayout_3");
@@ -277,7 +301,7 @@ public:
         horizontalLayout_3->addWidget(btnVider);
 
 
-        gridLayout->addLayout(horizontalLayout_3, 7, 0, 1, 2);
+        gridLayout->addLayout(horizontalLayout_3, 6, 0, 1, 2);
 
 
         horizontalLayout->addWidget(groupBoxForm);
@@ -304,6 +328,11 @@ public:
         QTableWidgetItem *__qtablewidgetitem6 = new QTableWidgetItem();
         tableCommandes->setHorizontalHeaderItem(6, __qtablewidgetitem6);
         tableCommandes->setObjectName("tableCommandes");
+        tableCommandes->setAlternatingRowColors(true);
+        tableCommandes->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
+        tableCommandes->setColumnCount(7);
+        tableCommandes->horizontalHeader()->setVisible(true);
+        tableCommandes->horizontalHeader()->setStretchLastSection(true);
 
         verticalLayout_6->addWidget(tableCommandes);
 
@@ -384,91 +413,43 @@ public:
 
         verticalLayout_7->addWidget(groupBoxRecherche);
 
-        horizontalLayout_6 = new QHBoxLayout();
-        horizontalLayout_6->setObjectName("horizontalLayout_6");
         groupBoxMetiers = new QGroupBox(tabRecherche);
         groupBoxMetiers->setObjectName("groupBoxMetiers");
-        verticalLayout_8 = new QVBoxLayout(groupBoxMetiers);
-        verticalLayout_8->setObjectName("verticalLayout_8");
+        gridLayout_3 = new QGridLayout(groupBoxMetiers);
+        gridLayout_3->setObjectName("gridLayout_3");
         label_Delai = new QLabel(groupBoxMetiers);
         label_Delai->setObjectName("label_Delai");
 
-        verticalLayout_8->addWidget(label_Delai);
+        gridLayout_3->addWidget(label_Delai, 0, 0, 1, 1);
 
         valueDelai = new QLabel(groupBoxMetiers);
         valueDelai->setObjectName("valueDelai");
-        valueDelai->setAlignment(Qt::AlignmentFlag::AlignCenter);
 
-        verticalLayout_8->addWidget(valueDelai);
+        gridLayout_3->addWidget(valueDelai, 0, 1, 1, 1);
+
+        label_Charge = new QLabel(groupBoxMetiers);
+        label_Charge->setObjectName("label_Charge");
+
+        gridLayout_3->addWidget(label_Charge, 1, 0, 1, 1);
 
         progressCharge = new QProgressBar(groupBoxMetiers);
         progressCharge->setObjectName("progressCharge");
         progressCharge->setValue(75);
 
-        verticalLayout_8->addWidget(progressCharge);
-
-        label_Charge = new QLabel(groupBoxMetiers);
-        label_Charge->setObjectName("label_Charge");
-        label_Charge->setAlignment(Qt::AlignmentFlag::AlignCenter);
-
-        verticalLayout_8->addWidget(label_Charge);
+        gridLayout_3->addWidget(progressCharge, 1, 1, 1, 1);
 
         label_Alertes = new QLabel(groupBoxMetiers);
         label_Alertes->setObjectName("label_Alertes");
 
-        verticalLayout_8->addWidget(label_Alertes);
+        gridLayout_3->addWidget(label_Alertes, 2, 0, 1, 1);
 
         valueAlertes = new QLabel(groupBoxMetiers);
         valueAlertes->setObjectName("valueAlertes");
-        valueAlertes->setAlignment(Qt::AlignmentFlag::AlignCenter);
 
-        verticalLayout_8->addWidget(valueAlertes);
-
-
-        horizontalLayout_6->addWidget(groupBoxMetiers);
-
-        groupBoxStats = new QGroupBox(tabRecherche);
-        groupBoxStats->setObjectName("groupBoxStats");
-        verticalLayout_9 = new QVBoxLayout(groupBoxStats);
-        verticalLayout_9->setObjectName("verticalLayout_9");
-        label_CommandesVendues = new QLabel(groupBoxStats);
-        label_CommandesVendues->setObjectName("label_CommandesVendues");
-
-        verticalLayout_9->addWidget(label_CommandesVendues);
-
-        tableTopCommandes = new QTableWidget(groupBoxStats);
-        if (tableTopCommandes->columnCount() < 3)
-            tableTopCommandes->setColumnCount(3);
-        QTableWidgetItem *__qtablewidgetitem7 = new QTableWidgetItem();
-        tableTopCommandes->setHorizontalHeaderItem(0, __qtablewidgetitem7);
-        QTableWidgetItem *__qtablewidgetitem8 = new QTableWidgetItem();
-        tableTopCommandes->setHorizontalHeaderItem(1, __qtablewidgetitem8);
-        QTableWidgetItem *__qtablewidgetitem9 = new QTableWidgetItem();
-        tableTopCommandes->setHorizontalHeaderItem(2, __qtablewidgetitem9);
-        tableTopCommandes->setObjectName("tableTopCommandes");
-
-        verticalLayout_9->addWidget(tableTopCommandes);
-
-        horizontalLayout_7 = new QHBoxLayout();
-        horizontalLayout_7->setObjectName("horizontalLayout_7");
-        btnGenererStats = new QPushButton(groupBoxStats);
-        btnGenererStats->setObjectName("btnGenererStats");
-
-        horizontalLayout_7->addWidget(btnGenererStats);
-
-        btnExporterStats = new QPushButton(groupBoxStats);
-        btnExporterStats->setObjectName("btnExporterStats");
-
-        horizontalLayout_7->addWidget(btnExporterStats);
+        gridLayout_3->addWidget(valueAlertes, 2, 1, 1, 1);
 
 
-        verticalLayout_9->addLayout(horizontalLayout_7);
-
-
-        horizontalLayout_6->addWidget(groupBoxStats);
-
-
-        verticalLayout_7->addLayout(horizontalLayout_6);
+        verticalLayout_7->addWidget(groupBoxMetiers);
 
         groupBoxResultats = new QGroupBox(tabRecherche);
         groupBoxResultats->setObjectName("groupBoxResultats");
@@ -477,18 +458,18 @@ public:
         tableResultats = new QTableWidget(groupBoxResultats);
         if (tableResultats->columnCount() < 6)
             tableResultats->setColumnCount(6);
+        QTableWidgetItem *__qtablewidgetitem7 = new QTableWidgetItem();
+        tableResultats->setHorizontalHeaderItem(0, __qtablewidgetitem7);
+        QTableWidgetItem *__qtablewidgetitem8 = new QTableWidgetItem();
+        tableResultats->setHorizontalHeaderItem(1, __qtablewidgetitem8);
+        QTableWidgetItem *__qtablewidgetitem9 = new QTableWidgetItem();
+        tableResultats->setHorizontalHeaderItem(2, __qtablewidgetitem9);
         QTableWidgetItem *__qtablewidgetitem10 = new QTableWidgetItem();
-        tableResultats->setHorizontalHeaderItem(0, __qtablewidgetitem10);
+        tableResultats->setHorizontalHeaderItem(3, __qtablewidgetitem10);
         QTableWidgetItem *__qtablewidgetitem11 = new QTableWidgetItem();
-        tableResultats->setHorizontalHeaderItem(1, __qtablewidgetitem11);
+        tableResultats->setHorizontalHeaderItem(4, __qtablewidgetitem11);
         QTableWidgetItem *__qtablewidgetitem12 = new QTableWidgetItem();
-        tableResultats->setHorizontalHeaderItem(2, __qtablewidgetitem12);
-        QTableWidgetItem *__qtablewidgetitem13 = new QTableWidgetItem();
-        tableResultats->setHorizontalHeaderItem(3, __qtablewidgetitem13);
-        QTableWidgetItem *__qtablewidgetitem14 = new QTableWidgetItem();
-        tableResultats->setHorizontalHeaderItem(4, __qtablewidgetitem14);
-        QTableWidgetItem *__qtablewidgetitem15 = new QTableWidgetItem();
-        tableResultats->setHorizontalHeaderItem(5, __qtablewidgetitem15);
+        tableResultats->setHorizontalHeaderItem(5, __qtablewidgetitem12);
         tableResultats->setObjectName("tableResultats");
 
         verticalLayout_10->addWidget(tableResultats);
@@ -497,75 +478,90 @@ public:
         verticalLayout_7->addWidget(groupBoxResultats);
 
         tabWidget->addTab(tabRecherche, QString());
+        tabStats = new QWidget();
+        tabStats->setObjectName("tabStats");
+        verticalLayout_8 = new QVBoxLayout(tabStats);
+        verticalLayout_8->setObjectName("verticalLayout_8");
+        groupBoxStats = new QGroupBox(tabStats);
+        groupBoxStats->setObjectName("groupBoxStats");
+        verticalLayout_9 = new QVBoxLayout(groupBoxStats);
+        verticalLayout_9->setObjectName("verticalLayout_9");
+        tableStatsMois = new QTableWidget(groupBoxStats);
+        if (tableStatsMois->columnCount() < 2)
+            tableStatsMois->setColumnCount(2);
+        QTableWidgetItem *__qtablewidgetitem13 = new QTableWidgetItem();
+        tableStatsMois->setHorizontalHeaderItem(0, __qtablewidgetitem13);
+        QTableWidgetItem *__qtablewidgetitem14 = new QTableWidgetItem();
+        tableStatsMois->setHorizontalHeaderItem(1, __qtablewidgetitem14);
+        tableStatsMois->setObjectName("tableStatsMois");
+        tableStatsMois->setAlternatingRowColors(true);
+        tableStatsMois->setRowCount(12);
+        tableStatsMois->setColumnCount(2);
+        tableStatsMois->horizontalHeader()->setVisible(true);
+        tableStatsMois->horizontalHeader()->setStretchLastSection(true);
+
+        verticalLayout_9->addWidget(tableStatsMois);
+
+        horizontalLayout_6 = new QHBoxLayout();
+        horizontalLayout_6->setObjectName("horizontalLayout_6");
+        btnGenererStats = new QPushButton(groupBoxStats);
+        btnGenererStats->setObjectName("btnGenererStats");
+
+        horizontalLayout_6->addWidget(btnGenererStats);
+
+
+        verticalLayout_9->addLayout(horizontalLayout_6);
+
+
+        verticalLayout_8->addWidget(groupBoxStats);
+
+        tabWidget->addTab(tabStats, QString());
         tabFacture = new QWidget();
         tabFacture->setObjectName("tabFacture");
         verticalLayout_11 = new QVBoxLayout(tabFacture);
         verticalLayout_11->setObjectName("verticalLayout_11");
         groupBoxFacture = new QGroupBox(tabFacture);
         groupBoxFacture->setObjectName("groupBoxFacture");
-        gridLayout_3 = new QGridLayout(groupBoxFacture);
-        gridLayout_3->setObjectName("gridLayout_3");
+        gridLayout_4 = new QGridLayout(groupBoxFacture);
+        gridLayout_4->setObjectName("gridLayout_4");
         label_SelectCommande = new QLabel(groupBoxFacture);
         label_SelectCommande->setObjectName("label_SelectCommande");
 
-        gridLayout_3->addWidget(label_SelectCommande, 0, 0, 1, 1);
+        gridLayout_4->addWidget(label_SelectCommande, 0, 0, 1, 1);
 
         comboFactureCommande = new QComboBox(groupBoxFacture);
-        comboFactureCommande->addItem(QString());
-        comboFactureCommande->addItem(QString());
-        comboFactureCommande->addItem(QString());
         comboFactureCommande->setObjectName("comboFactureCommande");
 
-        gridLayout_3->addWidget(comboFactureCommande, 0, 1, 1, 1);
+        gridLayout_4->addWidget(comboFactureCommande, 0, 1, 1, 1);
 
         label_ClientInfo = new QLabel(groupBoxFacture);
         label_ClientInfo->setObjectName("label_ClientInfo");
 
-        gridLayout_3->addWidget(label_ClientInfo, 1, 0, 1, 1);
+        gridLayout_4->addWidget(label_ClientInfo, 1, 0, 1, 1);
 
         txtClientInfo = new QTextEdit(groupBoxFacture);
         txtClientInfo->setObjectName("txtClientInfo");
 
-        gridLayout_3->addWidget(txtClientInfo, 1, 1, 1, 1);
+        gridLayout_4->addWidget(txtClientInfo, 1, 1, 1, 1);
 
-        label_DetailsFacture = new QLabel(groupBoxFacture);
-        label_DetailsFacture->setObjectName("label_DetailsFacture");
-
-        gridLayout_3->addWidget(label_DetailsFacture, 2, 0, 1, 1);
-
-        txtDetailsFacture = new QTextEdit(groupBoxFacture);
-        txtDetailsFacture->setObjectName("txtDetailsFacture");
-
-        gridLayout_3->addWidget(txtDetailsFacture, 2, 1, 1, 1);
-
-        horizontalLayout_8 = new QHBoxLayout();
-        horizontalLayout_8->setObjectName("horizontalLayout_8");
+        horizontalLayout_7 = new QHBoxLayout();
+        horizontalLayout_7->setObjectName("horizontalLayout_7");
         btnGenererPDF = new QPushButton(groupBoxFacture);
         btnGenererPDF->setObjectName("btnGenererPDF");
 
-        horizontalLayout_8->addWidget(btnGenererPDF);
+        horizontalLayout_7->addWidget(btnGenererPDF);
 
         btnApercuPDF = new QPushButton(groupBoxFacture);
         btnApercuPDF->setObjectName("btnApercuPDF");
 
-        horizontalLayout_8->addWidget(btnApercuPDF);
+        horizontalLayout_7->addWidget(btnApercuPDF);
 
-        btnEnvoyerEmail = new QPushButton(groupBoxFacture);
-        btnEnvoyerEmail->setObjectName("btnEnvoyerEmail");
+        horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Minimum);
 
-        horizontalLayout_8->addWidget(btnEnvoyerEmail);
-
-        horizontalSpacer_2 = new QSpacerItem(40, 20, QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Minimum);
-
-        horizontalLayout_8->addItem(horizontalSpacer_2);
-
-        label_PDFStatus = new QLabel(groupBoxFacture);
-        label_PDFStatus->setObjectName("label_PDFStatus");
-
-        horizontalLayout_8->addWidget(label_PDFStatus);
+        horizontalLayout_7->addItem(horizontalSpacer_3);
 
 
-        gridLayout_3->addLayout(horizontalLayout_8, 3, 0, 1, 2);
+        gridLayout_4->addLayout(horizontalLayout_7, 2, 0, 1, 2);
 
 
         verticalLayout_11->addWidget(groupBoxFacture);
@@ -585,7 +581,7 @@ public:
 
         tabWidget->addTab(tabFacture, QString());
 
-        vboxLayout->addWidget(frame);
+        verticalLayout->addWidget(tabWidget);
 
 
         retranslateUi(CommandesWidget);
@@ -598,12 +594,12 @@ public:
 
     void retranslateUi(QWidget *CommandesWidget)
     {
+        labelHeader->setText(QCoreApplication::translate("CommandesWidget", "\360\237\223\246 GESTION DES COMMANDES - SMART CARPENTRY WORKSHOP", nullptr));
+        labelAlerte->setText(QCoreApplication::translate("CommandesWidget", "\342\232\240\357\270\217 ALERTE: 0 commandes en retard de livraison", nullptr));
         groupBoxForm->setTitle(QCoreApplication::translate("CommandesWidget", "Informations Commande", nullptr));
-        label_ID->setText(QCoreApplication::translate("CommandesWidget", "ID Commande:", nullptr));
-        txtID->setPlaceholderText(QCoreApplication::translate("CommandesWidget", "CMD-001", nullptr));
         label_Date->setText(QCoreApplication::translate("CommandesWidget", "Date:", nullptr));
         label_Details->setText(QCoreApplication::translate("CommandesWidget", "D\303\251tails:", nullptr));
-        txtDetails->setPlaceholderText(QCoreApplication::translate("CommandesWidget", "Description d\303\251taill\303\251e de la commande...", nullptr));
+        txtDetails->setPlaceholderText(QCoreApplication::translate("CommandesWidget", "Description de la commande...", nullptr));
         label_Dimensions->setText(QCoreApplication::translate("CommandesWidget", "Dimensions (L\303\227l\303\227H):", nullptr));
         spinLongueur->setSuffix(QCoreApplication::translate("CommandesWidget", " cm", nullptr));
         label_x1->setText(QCoreApplication::translate("CommandesWidget", "\303\227", nullptr));
@@ -618,10 +614,6 @@ public:
         comboEtat->setItemText(2, QCoreApplication::translate("CommandesWidget", "\360\237\224\265 Livr\303\251e", nullptr));
 
         label_Responsable->setText(QCoreApplication::translate("CommandesWidget", "Responsable:", nullptr));
-        comboResponsable->setItemText(0, QCoreApplication::translate("CommandesWidget", "Jean Martin", nullptr));
-        comboResponsable->setItemText(1, QCoreApplication::translate("CommandesWidget", "Marie Dubois", nullptr));
-        comboResponsable->setItemText(2, QCoreApplication::translate("CommandesWidget", "Pierre Lambert", nullptr));
-
         btnAjouter->setText(QCoreApplication::translate("CommandesWidget", "\342\236\225 Ajouter", nullptr));
         btnModifier->setText(QCoreApplication::translate("CommandesWidget", "\342\234\217\357\270\217 Modifier", nullptr));
         btnSupprimer->setText(QCoreApplication::translate("CommandesWidget", "\360\237\227\221\357\270\217 Supprimer", nullptr));
@@ -656,51 +648,37 @@ public:
         btnResetRecherche->setText(QCoreApplication::translate("CommandesWidget", "\360\237\224\204 R\303\251initialiser", nullptr));
         groupBoxMetiers->setTitle(QCoreApplication::translate("CommandesWidget", "\360\237\232\200 M\303\251tiers Innovants", nullptr));
         label_Delai->setText(QCoreApplication::translate("CommandesWidget", "Estimation intelligente du d\303\251lai:", nullptr));
-        valueDelai->setText(QCoreApplication::translate("CommandesWidget", "\342\217\261\357\270\217 5-7 jours (selon charge actuelle)", nullptr));
-        label_Charge->setText(QCoreApplication::translate("CommandesWidget", "Charge actuelle: 75%", nullptr));
-        label_Alertes->setText(QCoreApplication::translate("CommandesWidget", "Alertes intelligentes sur les retards:", nullptr));
+        valueDelai->setText(QCoreApplication::translate("CommandesWidget", "\342\217\261\357\270\217 5-7 jours", nullptr));
+        label_Charge->setText(QCoreApplication::translate("CommandesWidget", "Charge actuelle:", nullptr));
+        label_Alertes->setText(QCoreApplication::translate("CommandesWidget", "Alertes retards:", nullptr));
         valueAlertes->setText(QCoreApplication::translate("CommandesWidget", "\360\237\224\264 2 commandes en retard", nullptr));
-        groupBoxStats->setTitle(QCoreApplication::translate("CommandesWidget", "\360\237\223\210 Statistiques Avanc\303\251es", nullptr));
-        label_CommandesVendues->setText(QCoreApplication::translate("CommandesWidget", "Commandes plus vendues:", nullptr));
-        QTableWidgetItem *___qtablewidgetitem7 = tableTopCommandes->horizontalHeaderItem(0);
-        ___qtablewidgetitem7->setText(QCoreApplication::translate("CommandesWidget", "Produit", nullptr));
-        QTableWidgetItem *___qtablewidgetitem8 = tableTopCommandes->horizontalHeaderItem(1);
-        ___qtablewidgetitem8->setText(QCoreApplication::translate("CommandesWidget", "Quantit\303\251", nullptr));
-        QTableWidgetItem *___qtablewidgetitem9 = tableTopCommandes->horizontalHeaderItem(2);
-        ___qtablewidgetitem9->setText(QCoreApplication::translate("CommandesWidget", "CA Total", nullptr));
-        btnGenererStats->setText(QCoreApplication::translate("CommandesWidget", "\360\237\223\212 G\303\251n\303\251rer Statistiques", nullptr));
-        btnExporterStats->setText(QCoreApplication::translate("CommandesWidget", "\360\237\223\244 Exporter CSV", nullptr));
         groupBoxResultats->setTitle(QCoreApplication::translate("CommandesWidget", "R\303\251sultats de Recherche", nullptr));
-        QTableWidgetItem *___qtablewidgetitem10 = tableResultats->horizontalHeaderItem(0);
-        ___qtablewidgetitem10->setText(QCoreApplication::translate("CommandesWidget", "ID", nullptr));
-        QTableWidgetItem *___qtablewidgetitem11 = tableResultats->horizontalHeaderItem(1);
-        ___qtablewidgetitem11->setText(QCoreApplication::translate("CommandesWidget", "Date", nullptr));
-        QTableWidgetItem *___qtablewidgetitem12 = tableResultats->horizontalHeaderItem(2);
-        ___qtablewidgetitem12->setText(QCoreApplication::translate("CommandesWidget", "D\303\251tails", nullptr));
-        QTableWidgetItem *___qtablewidgetitem13 = tableResultats->horizontalHeaderItem(3);
-        ___qtablewidgetitem13->setText(QCoreApplication::translate("CommandesWidget", "Prix", nullptr));
-        QTableWidgetItem *___qtablewidgetitem14 = tableResultats->horizontalHeaderItem(4);
-        ___qtablewidgetitem14->setText(QCoreApplication::translate("CommandesWidget", "\303\211tat", nullptr));
-        QTableWidgetItem *___qtablewidgetitem15 = tableResultats->horizontalHeaderItem(5);
-        ___qtablewidgetitem15->setText(QCoreApplication::translate("CommandesWidget", "Responsable", nullptr));
-        tabWidget->setTabText(tabWidget->indexOf(tabRecherche), QCoreApplication::translate("CommandesWidget", "\360\237\224\215 Recherche & Statistiques", nullptr));
+        QTableWidgetItem *___qtablewidgetitem7 = tableResultats->horizontalHeaderItem(0);
+        ___qtablewidgetitem7->setText(QCoreApplication::translate("CommandesWidget", "ID", nullptr));
+        QTableWidgetItem *___qtablewidgetitem8 = tableResultats->horizontalHeaderItem(1);
+        ___qtablewidgetitem8->setText(QCoreApplication::translate("CommandesWidget", "Date", nullptr));
+        QTableWidgetItem *___qtablewidgetitem9 = tableResultats->horizontalHeaderItem(2);
+        ___qtablewidgetitem9->setText(QCoreApplication::translate("CommandesWidget", "D\303\251tails", nullptr));
+        QTableWidgetItem *___qtablewidgetitem10 = tableResultats->horizontalHeaderItem(3);
+        ___qtablewidgetitem10->setText(QCoreApplication::translate("CommandesWidget", "Prix", nullptr));
+        QTableWidgetItem *___qtablewidgetitem11 = tableResultats->horizontalHeaderItem(4);
+        ___qtablewidgetitem11->setText(QCoreApplication::translate("CommandesWidget", "\303\211tat", nullptr));
+        QTableWidgetItem *___qtablewidgetitem12 = tableResultats->horizontalHeaderItem(5);
+        ___qtablewidgetitem12->setText(QCoreApplication::translate("CommandesWidget", "Responsable", nullptr));
+        tabWidget->setTabText(tabWidget->indexOf(tabRecherche), QCoreApplication::translate("CommandesWidget", "\360\237\224\215 Recherche", nullptr));
+        groupBoxStats->setTitle(QCoreApplication::translate("CommandesWidget", "R\303\251partition des commandes par mois", nullptr));
+        QTableWidgetItem *___qtablewidgetitem13 = tableStatsMois->horizontalHeaderItem(0);
+        ___qtablewidgetitem13->setText(QCoreApplication::translate("CommandesWidget", "Nombre de commandes", nullptr));
+        QTableWidgetItem *___qtablewidgetitem14 = tableStatsMois->horizontalHeaderItem(1);
+        ___qtablewidgetitem14->setText(QCoreApplication::translate("CommandesWidget", "Chiffre d'affaires (\342\202\254)", nullptr));
+        btnGenererStats->setText(QCoreApplication::translate("CommandesWidget", "\360\237\223\212 Actualiser les statistiques", nullptr));
+        tabWidget->setTabText(tabWidget->indexOf(tabStats), QCoreApplication::translate("CommandesWidget", "\360\237\223\212 Statistiques", nullptr));
         groupBoxFacture->setTitle(QCoreApplication::translate("CommandesWidget", "G\303\251n\303\251ration automatique de facture PDF", nullptr));
         label_SelectCommande->setText(QCoreApplication::translate("CommandesWidget", "S\303\251lectionner une commande:", nullptr));
-        comboFactureCommande->setItemText(0, QCoreApplication::translate("CommandesWidget", "CMD-001 - Table en ch\303\252ne", nullptr));
-        comboFactureCommande->setItemText(1, QCoreApplication::translate("CommandesWidget", "CMD-002 - Biblioth\303\250que", nullptr));
-        comboFactureCommande->setItemText(2, QCoreApplication::translate("CommandesWidget", "CMD-003 - Chaise design", nullptr));
-
         label_ClientInfo->setText(QCoreApplication::translate("CommandesWidget", "Informations client:", nullptr));
         txtClientInfo->setPlaceholderText(QCoreApplication::translate("CommandesWidget", "Nom, adresse, t\303\251l\303\251phone, email...", nullptr));
-        label_DetailsFacture->setText(QCoreApplication::translate("CommandesWidget", "D\303\251tails facture:", nullptr));
-        txtDetailsFacture->setPlainText(QCoreApplication::translate("CommandesWidget", "\342\200\242 Table en ch\303\252ne massif - 180\303\22790\303\22775 cm\n"
-"\342\200\242 Finition vernis mat\n"
-"\342\200\242 Livraison incluse\n"
-"\342\200\242 Garantie 2 ans", nullptr));
         btnGenererPDF->setText(QCoreApplication::translate("CommandesWidget", "\360\237\223\204 G\303\251n\303\251rer Facture PDF", nullptr));
         btnApercuPDF->setText(QCoreApplication::translate("CommandesWidget", "\360\237\221\201\357\270\217 Aper\303\247u Facture", nullptr));
-        btnEnvoyerEmail->setText(QCoreApplication::translate("CommandesWidget", "\360\237\223\247 Envoyer au Client", nullptr));
-        label_PDFStatus->setText(QCoreApplication::translate("CommandesWidget", "\360\237\237\242 Pr\303\252t \303\240 g\303\251n\303\251rer", nullptr));
         groupBoxPreview->setTitle(QCoreApplication::translate("CommandesWidget", "Aper\303\247u Facture", nullptr));
         labelPreview->setText(QCoreApplication::translate("CommandesWidget", "Votre facture PDF sera g\303\251n\303\251r\303\251e ici...", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tabFacture), QCoreApplication::translate("CommandesWidget", "\360\237\247\276 G\303\251n\303\251ration Facture", nullptr));

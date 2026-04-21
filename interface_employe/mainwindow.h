@@ -6,14 +6,17 @@
 #include <QStackedWidget>
 
 QT_BEGIN_NAMESPACE
-namespace Ui { 
+namespace Ui {
     class MainWindow;
-    class ClientsWidget;
-    class CommandesWidget;
-    class StockWidget;
-    class AtelierWidget;
+    class HomeWidget;
 }
 QT_END_NAMESPACE
+
+class AtelierWidget;
+class EmployeWidget;
+class CommandesWidget;
+class ClientsWidget;
+class StockWidget;
 
 class MainWindow : public QMainWindow
 {
@@ -28,16 +31,17 @@ private:
     QButtonGroup *navigationButtonGroup;
     QStackedWidget *stackedWidget;
 
-    // Module widgets
-    QWidget *clientsWidget;
-    QWidget *commandesWidget;
-    QWidget *stockWidget;
-    QWidget *atelierWidget;
-    
-    // UI objects for module widgets
-    Ui::ClientsWidget *clientsUi;
-    Ui::CommandesWidget *commandesUi;
-    Ui::StockWidget *stockUi;
-    Ui::AtelierWidget *atelierUi;
+    QWidget *homeWidget;
+    Ui::HomeWidget *homeUi;
+
+    EmployeWidget *employesWidget;
+    ClientsWidget *clientsWidget;
+    CommandesWidget *commandeswidget;
+    StockWidget *stockWidget;
+    AtelierWidget *atelierWidget;
+
+    QString currentRole;
+    void applyRole(const QString &role);
 };
+
 #endif // MAINWINDOW_H

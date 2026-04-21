@@ -39,18 +39,14 @@ public:
     QHBoxLayout *horizontalLayout;
     QGroupBox *groupBoxForm;
     QVBoxLayout *verticalLayout_2;
-    QLabel *label;
-    QLineEdit *txtIdMateriau;
     QLabel *label_2;
     QLineEdit *txtNom;
     QLabel *label_3;
     QComboBox *comboType;
     QLabel *label_4;
     QDoubleSpinBox *spinQuantite;
-    QLabel *label_5;
-    QDoubleSpinBox *spinSeuilAlerte;
-    QLabel *label_6;
-    QLineEdit *txtResponsable;
+    QLabel *label_prix;
+    QDoubleSpinBox *spinPrixAchat;
     QSpacerItem *verticalSpacer;
     QPushButton *btnAjouter;
     QPushButton *btnModifier;
@@ -64,7 +60,6 @@ public:
     QLabel *label_8;
     QComboBox *comboFiltreType;
     QPushButton *btnRechercher;
-    QLabel *lblAlert;
     QTableWidget *tableWidget;
     QWidget *tabStatistiques;
     QVBoxLayout *verticalLayout_4;
@@ -72,8 +67,6 @@ public:
     QGridLayout *gridLayout;
     QLabel *label_9;
     QLabel *lblTotalMateriaux;
-    QLabel *label_11;
-    QLabel *lblMateriauxAlerte;
     QLabel *label_13;
     QLabel *lblTypesMateriaux;
     QGroupBox *groupBox_2;
@@ -236,15 +229,6 @@ public:
 "    background-color: transparent;\n"
 "}\n"
 "\n"
-"QLabel#lblAlert {\n"
-"    font-size: 14px;\n"
-"    font-weight: bold;\n"
-"    color: #6B4423;\n"
-"    background-color: #F9E79F;\n"
-"    padding: 5px;\n"
-"    border-radius: 4px;\n"
-"}\n"
-"\n"
 "QTabWidget::pane {\n"
 "    border: 2px solid #8B6F47;\n"
 "    border-radius: 4px;\n"
@@ -257,8 +241,7 @@ public:
 "    padding: 10px 20px;\n"
 "    margin-right: 2px;\n"
 "    border-top-left-radius: 4px;\n"
-"    b"
-                        "order-top-right-radius: 4px;\n"
+"    border-top-right-radius: 4px;\n"
 "}\n"
 "\n"
 "QTabBar::tab:selected {\n"
@@ -267,7 +250,8 @@ public:
 "}\n"
 "\n"
 "QTabBar::tab:hover {\n"
-"    background-color: #A4A964;\n"
+"    background-color: #A4A964"
+                        ";\n"
 "    color: white;\n"
 "}\n"
 "\n"
@@ -312,17 +296,6 @@ public:
         groupBoxForm->setObjectName("groupBoxForm");
         verticalLayout_2 = new QVBoxLayout(groupBoxForm);
         verticalLayout_2->setObjectName("verticalLayout_2");
-        label = new QLabel(groupBoxForm);
-        label->setObjectName("label");
-
-        verticalLayout_2->addWidget(label);
-
-        txtIdMateriau = new QLineEdit(groupBoxForm);
-        txtIdMateriau->setObjectName("txtIdMateriau");
-        txtIdMateriau->setReadOnly(true);
-
-        verticalLayout_2->addWidget(txtIdMateriau);
-
         label_2 = new QLabel(groupBoxForm);
         label_2->setObjectName("label_2");
 
@@ -362,27 +335,17 @@ public:
 
         verticalLayout_2->addWidget(spinQuantite);
 
-        label_5 = new QLabel(groupBoxForm);
-        label_5->setObjectName("label_5");
+        label_prix = new QLabel(groupBoxForm);
+        label_prix->setObjectName("label_prix");
 
-        verticalLayout_2->addWidget(label_5);
+        verticalLayout_2->addWidget(label_prix);
 
-        spinSeuilAlerte = new QDoubleSpinBox(groupBoxForm);
-        spinSeuilAlerte->setObjectName("spinSeuilAlerte");
-        spinSeuilAlerte->setMaximum(999999.000000000000000);
-        spinSeuilAlerte->setValue(10.000000000000000);
+        spinPrixAchat = new QDoubleSpinBox(groupBoxForm);
+        spinPrixAchat->setObjectName("spinPrixAchat");
+        spinPrixAchat->setMaximum(999999.000000000000000);
+        spinPrixAchat->setDecimals(2);
 
-        verticalLayout_2->addWidget(spinSeuilAlerte);
-
-        label_6 = new QLabel(groupBoxForm);
-        label_6->setObjectName("label_6");
-
-        verticalLayout_2->addWidget(label_6);
-
-        txtResponsable = new QLineEdit(groupBoxForm);
-        txtResponsable->setObjectName("txtResponsable");
-
-        verticalLayout_2->addWidget(txtResponsable);
+        verticalLayout_2->addWidget(spinPrixAchat);
 
         verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Expanding);
 
@@ -454,14 +417,9 @@ public:
 
         verticalLayout_3->addWidget(groupBoxRecherche);
 
-        lblAlert = new QLabel(tabGestion);
-        lblAlert->setObjectName("lblAlert");
-
-        verticalLayout_3->addWidget(lblAlert);
-
         tableWidget = new QTableWidget(tabGestion);
-        if (tableWidget->columnCount() < 7)
-            tableWidget->setColumnCount(7);
+        if (tableWidget->columnCount() < 4)
+            tableWidget->setColumnCount(4);
         QTableWidgetItem *__qtablewidgetitem = new QTableWidgetItem();
         tableWidget->setHorizontalHeaderItem(0, __qtablewidgetitem);
         QTableWidgetItem *__qtablewidgetitem1 = new QTableWidgetItem();
@@ -470,12 +428,6 @@ public:
         tableWidget->setHorizontalHeaderItem(2, __qtablewidgetitem2);
         QTableWidgetItem *__qtablewidgetitem3 = new QTableWidgetItem();
         tableWidget->setHorizontalHeaderItem(3, __qtablewidgetitem3);
-        QTableWidgetItem *__qtablewidgetitem4 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(4, __qtablewidgetitem4);
-        QTableWidgetItem *__qtablewidgetitem5 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(5, __qtablewidgetitem5);
-        QTableWidgetItem *__qtablewidgetitem6 = new QTableWidgetItem();
-        tableWidget->setHorizontalHeaderItem(6, __qtablewidgetitem6);
         tableWidget->setObjectName("tableWidget");
         tableWidget->setEditTriggers(QAbstractItemView::EditTrigger::NoEditTriggers);
         tableWidget->setSelectionMode(QAbstractItemView::SelectionMode::SingleSelection);
@@ -512,30 +464,17 @@ public:
 
         gridLayout->addWidget(lblTotalMateriaux, 0, 1, 1, 1);
 
-        label_11 = new QLabel(groupBox);
-        label_11->setObjectName("label_11");
-        label_11->setFont(font);
-
-        gridLayout->addWidget(label_11, 1, 0, 1, 1);
-
-        lblMateriauxAlerte = new QLabel(groupBox);
-        lblMateriauxAlerte->setObjectName("lblMateriauxAlerte");
-        lblMateriauxAlerte->setFont(font);
-        lblMateriauxAlerte->setStyleSheet(QString::fromUtf8("color: #6B4423; font-weight: bold;"));
-
-        gridLayout->addWidget(lblMateriauxAlerte, 1, 1, 1, 1);
-
         label_13 = new QLabel(groupBox);
         label_13->setObjectName("label_13");
         label_13->setFont(font);
 
-        gridLayout->addWidget(label_13, 2, 0, 1, 1);
+        gridLayout->addWidget(label_13, 1, 0, 1, 1);
 
         lblTypesMateriaux = new QLabel(groupBox);
         lblTypesMateriaux->setObjectName("lblTypesMateriaux");
         lblTypesMateriaux->setFont(font1);
 
-        gridLayout->addWidget(lblTypesMateriaux, 2, 1, 1, 1);
+        gridLayout->addWidget(lblTypesMateriaux, 1, 1, 1, 1);
 
 
         verticalLayout_4->addWidget(groupBox);
@@ -547,14 +486,14 @@ public:
         tableStats = new QTableWidget(groupBox_2);
         if (tableStats->columnCount() < 4)
             tableStats->setColumnCount(4);
+        QTableWidgetItem *__qtablewidgetitem4 = new QTableWidgetItem();
+        tableStats->setHorizontalHeaderItem(0, __qtablewidgetitem4);
+        QTableWidgetItem *__qtablewidgetitem5 = new QTableWidgetItem();
+        tableStats->setHorizontalHeaderItem(1, __qtablewidgetitem5);
+        QTableWidgetItem *__qtablewidgetitem6 = new QTableWidgetItem();
+        tableStats->setHorizontalHeaderItem(2, __qtablewidgetitem6);
         QTableWidgetItem *__qtablewidgetitem7 = new QTableWidgetItem();
-        tableStats->setHorizontalHeaderItem(0, __qtablewidgetitem7);
-        QTableWidgetItem *__qtablewidgetitem8 = new QTableWidgetItem();
-        tableStats->setHorizontalHeaderItem(1, __qtablewidgetitem8);
-        QTableWidgetItem *__qtablewidgetitem9 = new QTableWidgetItem();
-        tableStats->setHorizontalHeaderItem(2, __qtablewidgetitem9);
-        QTableWidgetItem *__qtablewidgetitem10 = new QTableWidgetItem();
-        tableStats->setHorizontalHeaderItem(3, __qtablewidgetitem10);
+        tableStats->setHorizontalHeaderItem(3, __qtablewidgetitem7);
         tableStats->setObjectName("tableStats");
         tableStats->setEditTriggers(QAbstractItemView::EditTrigger::NoEditTriggers);
 
@@ -589,18 +528,16 @@ public:
         verticalLayout_7->addWidget(btnGenererReappro);
 
         tableReappro = new QTableWidget(groupBox_3);
-        if (tableReappro->columnCount() < 5)
-            tableReappro->setColumnCount(5);
+        if (tableReappro->columnCount() < 4)
+            tableReappro->setColumnCount(4);
+        QTableWidgetItem *__qtablewidgetitem8 = new QTableWidgetItem();
+        tableReappro->setHorizontalHeaderItem(0, __qtablewidgetitem8);
+        QTableWidgetItem *__qtablewidgetitem9 = new QTableWidgetItem();
+        tableReappro->setHorizontalHeaderItem(1, __qtablewidgetitem9);
+        QTableWidgetItem *__qtablewidgetitem10 = new QTableWidgetItem();
+        tableReappro->setHorizontalHeaderItem(2, __qtablewidgetitem10);
         QTableWidgetItem *__qtablewidgetitem11 = new QTableWidgetItem();
-        tableReappro->setHorizontalHeaderItem(0, __qtablewidgetitem11);
-        QTableWidgetItem *__qtablewidgetitem12 = new QTableWidgetItem();
-        tableReappro->setHorizontalHeaderItem(1, __qtablewidgetitem12);
-        QTableWidgetItem *__qtablewidgetitem13 = new QTableWidgetItem();
-        tableReappro->setHorizontalHeaderItem(2, __qtablewidgetitem13);
-        QTableWidgetItem *__qtablewidgetitem14 = new QTableWidgetItem();
-        tableReappro->setHorizontalHeaderItem(3, __qtablewidgetitem14);
-        QTableWidgetItem *__qtablewidgetitem15 = new QTableWidgetItem();
-        tableReappro->setHorizontalHeaderItem(4, __qtablewidgetitem15);
+        tableReappro->setHorizontalHeaderItem(3, __qtablewidgetitem11);
         tableReappro->setObjectName("tableReappro");
         tableReappro->setEditTriggers(QAbstractItemView::EditTrigger::NoEditTriggers);
 
@@ -652,16 +589,16 @@ public:
         tablePrevision = new QTableWidget(groupBox_4);
         if (tablePrevision->columnCount() < 5)
             tablePrevision->setColumnCount(5);
+        QTableWidgetItem *__qtablewidgetitem12 = new QTableWidgetItem();
+        tablePrevision->setHorizontalHeaderItem(0, __qtablewidgetitem12);
+        QTableWidgetItem *__qtablewidgetitem13 = new QTableWidgetItem();
+        tablePrevision->setHorizontalHeaderItem(1, __qtablewidgetitem13);
+        QTableWidgetItem *__qtablewidgetitem14 = new QTableWidgetItem();
+        tablePrevision->setHorizontalHeaderItem(2, __qtablewidgetitem14);
+        QTableWidgetItem *__qtablewidgetitem15 = new QTableWidgetItem();
+        tablePrevision->setHorizontalHeaderItem(3, __qtablewidgetitem15);
         QTableWidgetItem *__qtablewidgetitem16 = new QTableWidgetItem();
-        tablePrevision->setHorizontalHeaderItem(0, __qtablewidgetitem16);
-        QTableWidgetItem *__qtablewidgetitem17 = new QTableWidgetItem();
-        tablePrevision->setHorizontalHeaderItem(1, __qtablewidgetitem17);
-        QTableWidgetItem *__qtablewidgetitem18 = new QTableWidgetItem();
-        tablePrevision->setHorizontalHeaderItem(2, __qtablewidgetitem18);
-        QTableWidgetItem *__qtablewidgetitem19 = new QTableWidgetItem();
-        tablePrevision->setHorizontalHeaderItem(3, __qtablewidgetitem19);
-        QTableWidgetItem *__qtablewidgetitem20 = new QTableWidgetItem();
-        tablePrevision->setHorizontalHeaderItem(4, __qtablewidgetitem20);
+        tablePrevision->setHorizontalHeaderItem(4, __qtablewidgetitem16);
         tablePrevision->setObjectName("tablePrevision");
         tablePrevision->setEditTriggers(QAbstractItemView::EditTrigger::NoEditTriggers);
 
@@ -728,8 +665,6 @@ public:
         StockWidget->setWindowTitle(QCoreApplication::translate("StockWidget", "Gestion du Stock de Mat\303\251riaux", nullptr));
         lblTitle->setText(QCoreApplication::translate("StockWidget", "\360\237\224\247 Gestion du Stock de Mat\303\251riaux - Atelier de Menuiserie", nullptr));
         groupBoxForm->setTitle(QCoreApplication::translate("StockWidget", "Informations du Mat\303\251riau", nullptr));
-        label->setText(QCoreApplication::translate("StockWidget", "ID Mat\303\251riau:", nullptr));
-        txtIdMateriau->setPlaceholderText(QCoreApplication::translate("StockWidget", "Auto-g\303\251n\303\251r\303\251", nullptr));
         label_2->setText(QCoreApplication::translate("StockWidget", "Nom du Mat\303\251riau: *", nullptr));
         txtNom->setPlaceholderText(QCoreApplication::translate("StockWidget", "Ex: Planche de ch\303\252ne", nullptr));
         label_3->setText(QCoreApplication::translate("StockWidget", "Type: *", nullptr));
@@ -744,10 +679,8 @@ public:
 
         label_4->setText(QCoreApplication::translate("StockWidget", "Quantit\303\251: *", nullptr));
         spinQuantite->setSuffix(QCoreApplication::translate("StockWidget", " unit\303\251s", nullptr));
-        label_5->setText(QCoreApplication::translate("StockWidget", "Seuil d'Alerte: *", nullptr));
-        spinSeuilAlerte->setSuffix(QCoreApplication::translate("StockWidget", " unit\303\251s", nullptr));
-        label_6->setText(QCoreApplication::translate("StockWidget", "Responsable du Stock:", nullptr));
-        txtResponsable->setPlaceholderText(QCoreApplication::translate("StockWidget", "Nom du responsable", nullptr));
+        label_prix->setText(QCoreApplication::translate("StockWidget", "Prix d'Achat: *", nullptr));
+        spinPrixAchat->setSuffix(QCoreApplication::translate("StockWidget", " TND", nullptr));
         btnAjouter->setText(QCoreApplication::translate("StockWidget", "\342\236\225 Ajouter", nullptr));
         btnModifier->setText(QCoreApplication::translate("StockWidget", "\342\234\217\357\270\217 Modifier", nullptr));
         btnDelete->setText(QCoreApplication::translate("StockWidget", "\360\237\227\221\357\270\217 Supprimer", nullptr));
@@ -767,67 +700,56 @@ public:
         comboFiltreType->setItemText(8, QCoreApplication::translate("StockWidget", "Autre", nullptr));
 
         btnRechercher->setText(QCoreApplication::translate("StockWidget", "\360\237\224\215 Rechercher", nullptr));
-        lblAlert->setText(QCoreApplication::translate("StockWidget", "\342\232\240\357\270\217 Alertes de Stock Bas: 0 mat\303\251riau(x)", nullptr));
         QTableWidgetItem *___qtablewidgetitem = tableWidget->horizontalHeaderItem(0);
-        ___qtablewidgetitem->setText(QCoreApplication::translate("StockWidget", "ID", nullptr));
+        ___qtablewidgetitem->setText(QCoreApplication::translate("StockWidget", "Nom", nullptr));
         QTableWidgetItem *___qtablewidgetitem1 = tableWidget->horizontalHeaderItem(1);
-        ___qtablewidgetitem1->setText(QCoreApplication::translate("StockWidget", "Nom", nullptr));
+        ___qtablewidgetitem1->setText(QCoreApplication::translate("StockWidget", "Type", nullptr));
         QTableWidgetItem *___qtablewidgetitem2 = tableWidget->horizontalHeaderItem(2);
-        ___qtablewidgetitem2->setText(QCoreApplication::translate("StockWidget", "Type", nullptr));
+        ___qtablewidgetitem2->setText(QCoreApplication::translate("StockWidget", "Quantit\303\251", nullptr));
         QTableWidgetItem *___qtablewidgetitem3 = tableWidget->horizontalHeaderItem(3);
-        ___qtablewidgetitem3->setText(QCoreApplication::translate("StockWidget", "Quantit\303\251", nullptr));
-        QTableWidgetItem *___qtablewidgetitem4 = tableWidget->horizontalHeaderItem(4);
-        ___qtablewidgetitem4->setText(QCoreApplication::translate("StockWidget", "Seuil Alerte", nullptr));
-        QTableWidgetItem *___qtablewidgetitem5 = tableWidget->horizontalHeaderItem(5);
-        ___qtablewidgetitem5->setText(QCoreApplication::translate("StockWidget", "Responsable", nullptr));
-        QTableWidgetItem *___qtablewidgetitem6 = tableWidget->horizontalHeaderItem(6);
-        ___qtablewidgetitem6->setText(QCoreApplication::translate("StockWidget", "Statut", nullptr));
+        ___qtablewidgetitem3->setText(QCoreApplication::translate("StockWidget", "Prix Achat", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tabGestion), QCoreApplication::translate("StockWidget", "\360\237\223\246 Gestion des Mat\303\251riaux", nullptr));
         groupBox->setTitle(QCoreApplication::translate("StockWidget", "Statistiques G\303\251n\303\251rales", nullptr));
         label_9->setText(QCoreApplication::translate("StockWidget", "Total Mat\303\251riaux:", nullptr));
         lblTotalMateriaux->setText(QCoreApplication::translate("StockWidget", "0", nullptr));
-        label_11->setText(QCoreApplication::translate("StockWidget", "Mat\303\251riaux en Alerte:", nullptr));
-        lblMateriauxAlerte->setText(QCoreApplication::translate("StockWidget", "0", nullptr));
         label_13->setText(QCoreApplication::translate("StockWidget", "Types de Mat\303\251riaux:", nullptr));
         lblTypesMateriaux->setText(QCoreApplication::translate("StockWidget", "0", nullptr));
         groupBox_2->setTitle(QCoreApplication::translate("StockWidget", "R\303\251partition par Type", nullptr));
-        QTableWidgetItem *___qtablewidgetitem7 = tableStats->horizontalHeaderItem(0);
-        ___qtablewidgetitem7->setText(QCoreApplication::translate("StockWidget", "Type", nullptr));
-        QTableWidgetItem *___qtablewidgetitem8 = tableStats->horizontalHeaderItem(1);
-        ___qtablewidgetitem8->setText(QCoreApplication::translate("StockWidget", "Nombre d'articles", nullptr));
-        QTableWidgetItem *___qtablewidgetitem9 = tableStats->horizontalHeaderItem(2);
-        ___qtablewidgetitem9->setText(QCoreApplication::translate("StockWidget", "Quantit\303\251 Totale", nullptr));
-        QTableWidgetItem *___qtablewidgetitem10 = tableStats->horizontalHeaderItem(3);
-        ___qtablewidgetitem10->setText(QCoreApplication::translate("StockWidget", "Pourcentage", nullptr));
+        QTableWidgetItem *___qtablewidgetitem4 = tableStats->horizontalHeaderItem(0);
+        ___qtablewidgetitem4->setText(QCoreApplication::translate("StockWidget", "Type", nullptr));
+        QTableWidgetItem *___qtablewidgetitem5 = tableStats->horizontalHeaderItem(1);
+        ___qtablewidgetitem5->setText(QCoreApplication::translate("StockWidget", "Nombre d'articles", nullptr));
+        QTableWidgetItem *___qtablewidgetitem6 = tableStats->horizontalHeaderItem(2);
+        ___qtablewidgetitem6->setText(QCoreApplication::translate("StockWidget", "Quantit\303\251 Totale", nullptr));
+        QTableWidgetItem *___qtablewidgetitem7 = tableStats->horizontalHeaderItem(3);
+        ___qtablewidgetitem7->setText(QCoreApplication::translate("StockWidget", "Pourcentage", nullptr));
         btnActualiserStats->setText(QCoreApplication::translate("StockWidget", "\360\237\224\204 Actualiser les Statistiques", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tabStatistiques), QCoreApplication::translate("StockWidget", "\360\237\223\212 Statistiques & Consommation", nullptr));
         groupBox_3->setTitle(QCoreApplication::translate("StockWidget", "1. Proposition Automatique de R\303\251approvisionnement", nullptr));
         label_14->setText(QCoreApplication::translate("StockWidget", "Le syst\303\250me analyse automatiquement le stock et propose les mat\303\251riaux \303\240 r\303\251approvisionner", nullptr));
         btnGenererReappro->setText(QCoreApplication::translate("StockWidget", "\360\237\224\256 G\303\251n\303\251rer Propositions de R\303\251approvisionnement", nullptr));
-        QTableWidgetItem *___qtablewidgetitem11 = tableReappro->horizontalHeaderItem(0);
-        ___qtablewidgetitem11->setText(QCoreApplication::translate("StockWidget", "Mat\303\251riau", nullptr));
-        QTableWidgetItem *___qtablewidgetitem12 = tableReappro->horizontalHeaderItem(1);
-        ___qtablewidgetitem12->setText(QCoreApplication::translate("StockWidget", "Stock Actuel", nullptr));
-        QTableWidgetItem *___qtablewidgetitem13 = tableReappro->horizontalHeaderItem(2);
-        ___qtablewidgetitem13->setText(QCoreApplication::translate("StockWidget", "Seuil Alerte", nullptr));
-        QTableWidgetItem *___qtablewidgetitem14 = tableReappro->horizontalHeaderItem(3);
-        ___qtablewidgetitem14->setText(QCoreApplication::translate("StockWidget", "Quantit\303\251 Recommand\303\251e", nullptr));
-        QTableWidgetItem *___qtablewidgetitem15 = tableReappro->horizontalHeaderItem(4);
-        ___qtablewidgetitem15->setText(QCoreApplication::translate("StockWidget", "Priorit\303\251", nullptr));
+        QTableWidgetItem *___qtablewidgetitem8 = tableReappro->horizontalHeaderItem(0);
+        ___qtablewidgetitem8->setText(QCoreApplication::translate("StockWidget", "Mat\303\251riau", nullptr));
+        QTableWidgetItem *___qtablewidgetitem9 = tableReappro->horizontalHeaderItem(1);
+        ___qtablewidgetitem9->setText(QCoreApplication::translate("StockWidget", "Stock Actuel", nullptr));
+        QTableWidgetItem *___qtablewidgetitem10 = tableReappro->horizontalHeaderItem(2);
+        ___qtablewidgetitem10->setText(QCoreApplication::translate("StockWidget", "Quantit\303\251 Recommand\303\251e", nullptr));
+        QTableWidgetItem *___qtablewidgetitem11 = tableReappro->horizontalHeaderItem(3);
+        ___qtablewidgetitem11->setText(QCoreApplication::translate("StockWidget", "Priorit\303\251", nullptr));
         groupBox_4->setTitle(QCoreApplication::translate("StockWidget", "2. Pr\303\251vision de Consommation selon les Commandes", nullptr));
         label_15->setText(QCoreApplication::translate("StockWidget", "Nombre de commandes pr\303\251vues:", nullptr));
         label_16->setText(QCoreApplication::translate("StockWidget", "P\303\251riode (jours):", nullptr));
         btnPrevision->setText(QCoreApplication::translate("StockWidget", "\360\237\223\210 Calculer Pr\303\251visions", nullptr));
-        QTableWidgetItem *___qtablewidgetitem16 = tablePrevision->horizontalHeaderItem(0);
-        ___qtablewidgetitem16->setText(QCoreApplication::translate("StockWidget", "Mat\303\251riau", nullptr));
-        QTableWidgetItem *___qtablewidgetitem17 = tablePrevision->horizontalHeaderItem(1);
-        ___qtablewidgetitem17->setText(QCoreApplication::translate("StockWidget", "Consommation Moyenne", nullptr));
-        QTableWidgetItem *___qtablewidgetitem18 = tablePrevision->horizontalHeaderItem(2);
-        ___qtablewidgetitem18->setText(QCoreApplication::translate("StockWidget", "Consommation Pr\303\251vue", nullptr));
-        QTableWidgetItem *___qtablewidgetitem19 = tablePrevision->horizontalHeaderItem(3);
-        ___qtablewidgetitem19->setText(QCoreApplication::translate("StockWidget", "Stock Actuel", nullptr));
-        QTableWidgetItem *___qtablewidgetitem20 = tablePrevision->horizontalHeaderItem(4);
-        ___qtablewidgetitem20->setText(QCoreApplication::translate("StockWidget", "Stock Suffisant?", nullptr));
+        QTableWidgetItem *___qtablewidgetitem12 = tablePrevision->horizontalHeaderItem(0);
+        ___qtablewidgetitem12->setText(QCoreApplication::translate("StockWidget", "Mat\303\251riau", nullptr));
+        QTableWidgetItem *___qtablewidgetitem13 = tablePrevision->horizontalHeaderItem(1);
+        ___qtablewidgetitem13->setText(QCoreApplication::translate("StockWidget", "Consommation Moyenne", nullptr));
+        QTableWidgetItem *___qtablewidgetitem14 = tablePrevision->horizontalHeaderItem(2);
+        ___qtablewidgetitem14->setText(QCoreApplication::translate("StockWidget", "Consommation Pr\303\251vue", nullptr));
+        QTableWidgetItem *___qtablewidgetitem15 = tablePrevision->horizontalHeaderItem(3);
+        ___qtablewidgetitem15->setText(QCoreApplication::translate("StockWidget", "Stock Actuel", nullptr));
+        QTableWidgetItem *___qtablewidgetitem16 = tablePrevision->horizontalHeaderItem(4);
+        ___qtablewidgetitem16->setText(QCoreApplication::translate("StockWidget", "Stock Suffisant?", nullptr));
         tabWidget->setTabText(tabWidget->indexOf(tabInnovant), QCoreApplication::translate("StockWidget", "\360\237\244\226 M\303\251tiers Innovants", nullptr));
         groupBox_5->setTitle(QCoreApplication::translate("StockWidget", "Export des Donn\303\251es", nullptr));
         label_17->setText(QCoreApplication::translate("StockWidget", "Exportez vos donn\303\251es de stock au format Excel pour archivage ou analyse externe", nullptr));
