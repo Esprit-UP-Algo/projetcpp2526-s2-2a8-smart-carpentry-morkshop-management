@@ -9,12 +9,23 @@
 #include <QDate>
 #include <QSqlQuery>
 #include <QRegularExpression>
+#include <QGridLayout>
+#include <QComboBox>
+#include <QLabel>
+#include <QSignalBlocker>
+#include <utility>
 
 CommandesWidget::CommandesWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::CommandesWidget)
+    , comboMateriau(nullptr)
+    , labelPrixPrediction(nullptr)
+    , updatingPredictedPrice(false)
 {
     ui->setupUi(this);
+
+    setupPredictionUi();
+    remplirMateriaux();
 
     connect(ui->btnAjouter, &QPushButton::clicked, this, &CommandesWidget::onAjouter);
     connect(ui->btnModifier, &QPushButton::clicked, this, &CommandesWidget::onModifier);
@@ -34,6 +45,7 @@ CommandesWidget::CommandesWidget(QWidget *parent)
     chargerTable();
     remplirComboFacture();
     updateAlertes();
+    updatePricePrediction();
 }
 
 CommandesWidget::~CommandesWidget()
@@ -75,40 +87,44 @@ void CommandesWidget::parseDimensions(const QString &dims)
 void CommandesWidget::chargerTable(const QString &orderBy)
 {
     QSqlQuery query = Commande::getAll(orderBy);
-    chargerTable(query);
+    chargerTable(std::move(query));
 }
 
-void CommandesWidget::chargerTable(const QSqlQuery &query)
+void CommandesWidget::chargerTable(QSqlQuery query)
 {
     ui->tableCommandes->setRowCount(0);
     int row = 0;
-    QSqlQuery q = query;
-    while (q.next()) {
+    while (query.next()) {
+        const QString detailsWithTag = query.value("DETAILS_COMMANDE").toString();
+        const QString material = extractMaterialTag(detailsWithTag);
+
         ui->tableCommandes->insertRow(row);
-        ui->tableCommandes->setItem(row, 0, new QTableWidgetItem(q.value("ID_COMMANDE").toString()));
-        ui->tableCommandes->setItem(row, 1, new QTableWidgetItem(q.value("DATE_COMMANDE").toString()));
-        ui->tableCommandes->setItem(row, 2, new QTableWidgetItem(q.value("DETAILS_COMMANDE").toString()));
-        ui->tableCommandes->setItem(row, 3, new QTableWidgetItem(q.value("DIMENSIONS").toString()));
-        ui->tableCommandes->setItem(row, 4, new QTableWidgetItem(q.value("PRIX").toString()));
-        ui->tableCommandes->setItem(row, 5, new QTableWidgetItem(q.value("ETAT").toString()));
-        ui->tableCommandes->setItem(row, 6, new QTableWidgetItem("-"));
+        ui->tableCommandes->setItem(row, 0, new QTableWidgetItem(query.value("ID_COMMANDE").toString()));
+        ui->tableCommandes->setItem(row, 1, new QTableWidgetItem(query.value("DATE_COMMANDE").toString()));
+        ui->tableCommandes->setItem(row, 2, new QTableWidgetItem(stripMaterialTag(detailsWithTag)));
+        ui->tableCommandes->setItem(row, 3, new QTableWidgetItem(query.value("DIMENSIONS").toString()));
+        ui->tableCommandes->setItem(row, 4, new QTableWidgetItem(query.value("PRIX").toString()));
+        ui->tableCommandes->setItem(row, 5, new QTableWidgetItem(query.value("ETAT").toString()));
+        ui->tableCommandes->setItem(row, 6, new QTableWidgetItem(material.isEmpty() ? "-" : material));
         row++;
     }
 }
 
-void CommandesWidget::chargerResultats(const QSqlQuery &query)
+void CommandesWidget::chargerResultats(QSqlQuery query)
 {
     ui->tableResultats->setRowCount(0);
     int row = 0;
-    QSqlQuery q = query;
-    while (q.next()) {
+    while (query.next()) {
+        const QString detailsWithTag = query.value("DETAILS_COMMANDE").toString();
+        const QString material = extractMaterialTag(detailsWithTag);
+
         ui->tableResultats->insertRow(row);
-        ui->tableResultats->setItem(row, 0, new QTableWidgetItem(q.value("ID_COMMANDE").toString()));
-        ui->tableResultats->setItem(row, 1, new QTableWidgetItem(q.value("DATE_COMMANDE").toString()));
-        ui->tableResultats->setItem(row, 2, new QTableWidgetItem(q.value("DETAILS_COMMANDE").toString()));
-        ui->tableResultats->setItem(row, 3, new QTableWidgetItem(q.value("PRIX").toString()));
-        ui->tableResultats->setItem(row, 4, new QTableWidgetItem(q.value("ETAT").toString()));
-        ui->tableResultats->setItem(row, 5, new QTableWidgetItem("-"));
+        ui->tableResultats->setItem(row, 0, new QTableWidgetItem(query.value("ID_COMMANDE").toString()));
+        ui->tableResultats->setItem(row, 1, new QTableWidgetItem(query.value("DATE_COMMANDE").toString()));
+        ui->tableResultats->setItem(row, 2, new QTableWidgetItem(stripMaterialTag(detailsWithTag)));
+        ui->tableResultats->setItem(row, 3, new QTableWidgetItem(query.value("PRIX").toString()));
+        ui->tableResultats->setItem(row, 4, new QTableWidgetItem(query.value("ETAT").toString()));
+        ui->tableResultats->setItem(row, 5, new QTableWidgetItem(material.isEmpty() ? "-" : material));
         row++;
     }
 }
@@ -122,7 +138,7 @@ void CommandesWidget::onAjouter()
 
     Commande c;
     c.dateCommande = ui->dateCommande->date();
-    c.details = ui->txtDetails->toPlainText();
+    c.details = composeDetailsWithMaterial();
     c.dimensions = buildDimensions();
     c.prix = ui->spinPrix->value();
     c.etat = ui->comboEtat->currentText();
@@ -151,7 +167,7 @@ void CommandesWidget::onModifier()
     Commande c;
     c.id = id;
     c.dateCommande = ui->dateCommande->date();
-    c.details = ui->txtDetails->toPlainText();
+    c.details = composeDetailsWithMaterial();
     c.dimensions = buildDimensions();
     c.prix = ui->spinPrix->value();
     c.etat = ui->comboEtat->currentText();
@@ -226,7 +242,7 @@ void CommandesWidget::onRechercher()
     }
 
     QSqlQuery query = Commande::rechercher(critere, valeur);
-    chargerResultats(query);
+    chargerResultats(std::move(query));
 }
 
 void CommandesWidget::onResetRecherche()
@@ -261,6 +277,9 @@ void CommandesWidget::onGenererPDF()
     }
     html += "<p><b>Date :</b> " + ui->dateCommande->date().toString("yyyy-MM-dd") + "</p>";
     html += "<p><b>Détails :</b> " + ui->txtDetails->toPlainText() + "</p>";
+    if (comboMateriau) {
+        html += "<p><b>Matériau :</b> " + comboMateriau->currentText() + "</p>";
+    }
     html += "<p><b>Dimensions :</b> " + buildDimensions() + "</p>";
     html += "<p><b>Prix :</b> " + QString::number(ui->spinPrix->value()) + " €</p>";
     html += "<p><b>État :</b> " + ui->comboEtat->currentText() + "</p>";
@@ -281,6 +300,10 @@ void CommandesWidget::remplirFormulaireDepuisTable(int row)
     parseDimensions(ui->tableCommandes->item(row, 3)->text());
     ui->spinPrix->setValue(ui->tableCommandes->item(row, 4)->text().toDouble());
     ui->comboEtat->setCurrentText(ui->tableCommandes->item(row, 5)->text());
+    if (comboMateriau) {
+        comboMateriau->setCurrentText(ui->tableCommandes->item(row, 6)->text());
+    }
+    updatePricePrediction();
 }
 
 void CommandesWidget::clearForm()
@@ -293,6 +316,10 @@ void CommandesWidget::clearForm()
     ui->spinPrix->setValue(0);
     ui->comboEtat->setCurrentIndex(0);
     ui->comboResponsable->setCurrentIndex(0);
+    if (comboMateriau) {
+        comboMateriau->setCurrentIndex(0);
+    }
+    updatePricePrediction();
 }
 
 void CommandesWidget::remplirComboFacture()
@@ -301,7 +328,7 @@ void CommandesWidget::remplirComboFacture()
     QSqlQuery query = Commande::getAll("DATE_COMMANDE DESC");
     while (query.next()) {
         ui->comboFactureCommande->addItem(
-            query.value("ID_COMMANDE").toString() + " - " + query.value("DETAILS_COMMANDE").toString()
+            query.value("ID_COMMANDE").toString() + " - " + stripMaterialTag(query.value("DETAILS_COMMANDE").toString())
         );
     }
 }
@@ -314,4 +341,191 @@ void CommandesWidget::updateAlertes()
         int count = query.value(0).toInt();
         ui->labelAlerte->setText(QString("⚠️ ALERTE: %1 commandes en retard de livraison").arg(count));
     }
+}
+
+void CommandesWidget::setupPredictionUi()
+{
+    auto *grid = qobject_cast<QGridLayout*>(ui->groupBoxForm->layout());
+    if (!grid) {
+        return;
+    }
+
+    auto *labelMateriau = new QLabel("Matériau:", this);
+    comboMateriau = new QComboBox(this);
+    comboMateriau->setEditable(false);
+
+    labelPrixPrediction = new QLabel("Prix prédit: € 0.00", this);
+
+    grid->addWidget(labelMateriau, 7, 0);
+    grid->addWidget(comboMateriau, 7, 1);
+    grid->addWidget(labelPrixPrediction, 8, 0, 1, 2);
+
+    connect(comboMateriau, &QComboBox::currentTextChanged, this, [this]() { updatePricePrediction(); });
+    connect(ui->spinLongueur, qOverload<int>(&QSpinBox::valueChanged), this, [this]() { updatePricePrediction(); });
+    connect(ui->spinLargeur, qOverload<int>(&QSpinBox::valueChanged), this, [this]() { updatePricePrediction(); });
+    connect(ui->spinHauteur, qOverload<int>(&QSpinBox::valueChanged), this, [this]() { updatePricePrediction(); });
+    connect(ui->txtDetails, &QTextEdit::textChanged, this, [this]() { updatePricePrediction(); });
+    connect(ui->spinPrix, qOverload<double>(&QDoubleSpinBox::valueChanged), this, [this](double) {
+        if (!updatingPredictedPrice) {
+            updatePricePrediction();
+        }
+    });
+}
+
+void CommandesWidget::remplirMateriaux()
+{
+    if (!comboMateriau) {
+        return;
+    }
+
+    comboMateriau->clear();
+    comboMateriau->addItem("Standard");
+
+    QSqlQuery q;
+    q.prepare("SELECT DISTINCT TYPE FROM ATELIER.MATERIAU WHERE TYPE IS NOT NULL ORDER BY TYPE");
+    if (q.exec()) {
+        while (q.next()) {
+            const QString type = q.value(0).toString().trimmed();
+            if (!type.isEmpty()) {
+                comboMateriau->addItem(type);
+            }
+        }
+    }
+}
+
+double CommandesWidget::predictPrixCommande() const
+{
+    const double l = ui->spinLongueur->value();
+    const double w = ui->spinLargeur->value();
+    const double h = ui->spinHauteur->value();
+    const double volumeCm3 = l * w * h;
+    if (volumeCm3 <= 0.0) {
+        return 0.0;
+    }
+
+    QSqlQuery q;
+    q.prepare("SELECT DIMENSIONS, PRIX, DETAILS_COMMANDE FROM ATELIER.COMMANDE WHERE PRIX > 0");
+    if (!q.exec()) {
+        return 0.0;
+    }
+
+    const QString selectedMaterial = comboMateriau ? comboMateriau->currentText().trimmed().toLower() : QString();
+    double sumUnit = 0.0;
+    int count = 0;
+
+    while (q.next()) {
+        const QString dims = q.value(0).toString();
+        const double prix = q.value(1).toDouble();
+        if (prix <= 0.0) {
+            continue;
+        }
+
+        QRegularExpressionMatch m = QRegularExpression("(\\d+)\\s*[x×]\\s*(\\d+)\\s*[x×]\\s*(\\d+)").match(dims);
+        if (!m.hasMatch()) {
+            continue;
+        }
+
+        const double dl = m.captured(1).toDouble();
+        const double dw = m.captured(2).toDouble();
+        const double dh = m.captured(3).toDouble();
+        const double v = dl * dw * dh;
+        if (v <= 0.0) {
+            continue;
+        }
+
+        if (!selectedMaterial.isEmpty() && selectedMaterial != "standard") {
+            const QString material = extractMaterialTag(q.value(2).toString()).trimmed().toLower();
+            if (!material.isEmpty() && material != selectedMaterial) {
+                continue;
+            }
+        }
+
+        sumUnit += (prix / v);
+        ++count;
+    }
+
+    if (count == 0) {
+        QSqlQuery qall;
+        qall.prepare("SELECT AVG(PRIX) FROM ATELIER.COMMANDE WHERE PRIX > 0");
+        if (qall.exec() && qall.next()) {
+            const double avgPrix = qall.value(0).toDouble();
+            return avgPrix > 0.0 ? avgPrix : 0.0;
+        }
+        return 0.0;
+    }
+
+    double predicted = (sumUnit / static_cast<double>(count)) * volumeCm3;
+
+    if (comboMateriau && comboMateriau->currentText().trimmed().toLower() != "standard") {
+        QSqlQuery qMat;
+        qMat.prepare("SELECT AVG(PRIX_ACHAT) FROM ATELIER.MATERIAU WHERE LOWER(TYPE)=:t");
+        qMat.bindValue(":t", comboMateriau->currentText().trimmed().toLower());
+
+        QSqlQuery qAll;
+        qAll.prepare("SELECT AVG(PRIX_ACHAT) FROM ATELIER.MATERIAU WHERE PRIX_ACHAT > 0");
+
+        if (qMat.exec() && qMat.next() && qAll.exec() && qAll.next()) {
+            const double matAvg = qMat.value(0).toDouble();
+            const double allAvg = qAll.value(0).toDouble();
+            if (matAvg > 0.0 && allAvg > 0.0) {
+                double coeff = matAvg / allAvg;
+                if (coeff < 0.7) coeff = 0.7;
+                if (coeff > 1.6) coeff = 1.6;
+                predicted *= coeff;
+            }
+        }
+    }
+
+    const QString detailsLower = ui->txtDetails->toPlainText().toLower();
+    if (detailsLower.contains("sculpt") || detailsLower.contains("sur mesure") || detailsLower.contains("luxe")) {
+        predicted *= 1.15;
+    }
+
+    if (predicted < 50.0) {
+        predicted = 50.0;
+    }
+    return predicted;
+}
+
+void CommandesWidget::updatePricePrediction()
+{
+    const double predicted = predictPrixCommande();
+    if (labelPrixPrediction) {
+        labelPrixPrediction->setText(QString("Prix prédit: € %1").arg(QString::number(predicted, 'f', 2)));
+    }
+
+    if (predicted <= 0.0) {
+        return;
+    }
+
+    updatingPredictedPrice = true;
+    {
+        QSignalBlocker blocker(ui->spinPrix);
+        ui->spinPrix->setValue(predicted);
+    }
+    updatingPredictedPrice = false;
+}
+
+QString CommandesWidget::extractMaterialTag(const QString &details)
+{
+    const QRegularExpression re("\\[MATIERE:([^\\]]+)\\]", QRegularExpression::CaseInsensitiveOption);
+    const QRegularExpressionMatch m = re.match(details);
+    return m.hasMatch() ? m.captured(1).trimmed() : QString();
+}
+
+QString CommandesWidget::stripMaterialTag(const QString &details)
+{
+    QString d = details;
+    d.remove(QRegularExpression("^\\s*\\[MATIERE:[^\\]]+\\]\\s*", QRegularExpression::CaseInsensitiveOption));
+    return d.trimmed();
+}
+
+QString CommandesWidget::composeDetailsWithMaterial() const
+{
+    const QString base = ui->txtDetails->toPlainText().trimmed();
+    const QString material = comboMateriau ? comboMateriau->currentText().trimmed() : QString();
+    if (material.isEmpty() || material.toLower() == "standard") {
+        return base;
+    }
+    return QString("[MATIERE:%1] %2").arg(material, base);
 }

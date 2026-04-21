@@ -18,6 +18,17 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    // ✅ Force style rouge Déconnexion (même si QSS UI ne passe pas)
+    ui->btnDeconnexion->setStyleSheet(
+        "QPushButton#btnDeconnexion {"
+        " background-color: #C0392B; color: white; font-weight: bold; border-radius: 5px;"
+        " padding: 10px 20px; }"
+        "QPushButton#btnDeconnexion:hover { background-color: #E74C3C; }"
+        "QPushButton#btnDeconnexion:pressed { background-color: #922B21; }"
+    );
+    ui->btnDeconnexion->setMinimumHeight(45);
+    ui->btnDeconnexion->setCursor(Qt::PointingHandCursor);
+
     navigationButtonGroup = new QButtonGroup(this);
     navigationButtonGroup->setExclusive(true);
     navigationButtonGroup->addButton(ui->btnEmployes);
@@ -64,6 +75,14 @@ MainWindow::MainWindow(QWidget *parent)
             return;
         }
 
+        // ✅ ADMIN COMPLET
+        if (email == "adminadmin@gmail.com" && password == "admin123") {
+            applyRole("ADMIN");
+            stackedWidget->setCurrentIndex(1);
+            ui->btnEmployes->setChecked(true);
+            return;
+        }
+
         // === Comptes fixes par rôle ===
         if (email == "rhadmin@gmail.com" && password == "rhadmin") {
             applyRole("RH");
@@ -100,7 +119,6 @@ MainWindow::MainWindow(QWidget *parent)
             return;
         }
 
-        // (Optionnel) Employé par email+CIN (si tu veux garder)
         QSqlQuery query;
         query.prepare("SELECT COUNT(*) FROM ATELIER.EMPLOYE WHERE EMAIL = :email AND CIN = :cin");
         query.bindValue(":email", email);
@@ -115,9 +133,7 @@ MainWindow::MainWindow(QWidget *parent)
         QMessageBox::warning(this, "Erreur", "Email ou mot de passe incorrect.");
     };
 
-    // bouton
     connect(homeUi->btnAccederModules, &QPushButton::clicked, this, doLogin);
-    // ENTER sur email + mot de passe
     connect(homeUi->lineEmail, &QLineEdit::returnPressed, this, doLogin);
     connect(homeUi->linePassword, &QLineEdit::returnPressed, this, doLogin);
 
@@ -126,6 +142,21 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->btnCommandes, &QPushButton::clicked, this, [this](){ stackedWidget->setCurrentIndex(3); });
     connect(ui->btnStock, &QPushButton::clicked, this, [this](){ stackedWidget->setCurrentIndex(4); });
     connect(ui->btnAtelier, &QPushButton::clicked, this, [this](){ stackedWidget->setCurrentIndex(5); });
+
+    connect(ui->btnDeconnexion, &QPushButton::clicked, this, [this]() {
+        currentRole.clear();
+        stackedWidget->setCurrentIndex(0);
+        ui->sidebar->setVisible(false);
+
+        homeUi->lineEmail->clear();
+        homeUi->linePassword->clear();
+
+        ui->btnEmployes->setChecked(false);
+        ui->btnClients->setChecked(false);
+        ui->btnCommandes->setChecked(false);
+        ui->btnStock->setChecked(false);
+        ui->btnAtelier->setChecked(false);
+    });
 }
 
 MainWindow::~MainWindow()
@@ -143,14 +174,19 @@ void MainWindow::applyRole(const QString &role)
 {
     currentRole = role;
 
-    // Par défaut, masquer tous les boutons
     ui->btnEmployes->setVisible(false);
     ui->btnClients->setVisible(false);
     ui->btnCommandes->setVisible(false);
     ui->btnStock->setVisible(false);
     ui->btnAtelier->setVisible(false);
 
-    if (role == "RH") {
+    if (role == "ADMIN") {
+        ui->btnEmployes->setVisible(true);
+        ui->btnClients->setVisible(true);
+        ui->btnCommandes->setVisible(true);
+        ui->btnStock->setVisible(true);
+        ui->btnAtelier->setVisible(true);
+    } else if (role == "RH") {
         ui->btnEmployes->setVisible(true);
     } else if (role == "SERVICE_CLIENT" || role == "EMPLOYE") {
         ui->btnClients->setVisible(true);

@@ -1,6 +1,7 @@
 #include "employe.h"
 #include <QSqlQuery>
 #include <QVariant>
+#include <QRandomGenerator>
 
 static double appliquerPenaliteAbsence(double salaire, const QString &dispo)
 {
@@ -10,13 +11,25 @@ static double appliquerPenaliteAbsence(double salaire, const QString &dispo)
     return salaire;
 }
 
+QString Employe::genererCodeAcces(int length)
+{
+    // ✅ uniquement chiffres pour keypad
+    const QString digits = "0123456789";
+    QString code;
+    for (int i = 0; i < length; ++i) {
+        int idx = QRandomGenerator::global()->bounded(digits.size());
+        code.append(digits[idx]);
+    }
+    return code;
+}
+
 bool Employe::ajouter() const
 {
     QSqlQuery query;
     query.prepare(
         "INSERT INTO ATELIER.EMPLOYE "
-        "(CIN, NOM, POSTE, SALAIRE, DISPONIBILTE, TELEPHONE, EMAIL, DATE_EMBAUCHE, ADRESSE) "
-        "VALUES (:cin, :nom, :poste, :salaire, :dispo, :tel, :email, :date, :adresse)"
+        "(CIN, NOM, POSTE, SALAIRE, DISPONIBILTE, TELEPHONE, EMAIL, DATE_EMBAUCHE, ADRESSE, CODE_ACCES) "
+        "VALUES (:cin, :nom, :poste, :salaire, :dispo, :tel, :email, :date, :adresse, :code)"
     );
 
     const double salaireFinal = appliquerPenaliteAbsence(salaire, disponibilite);
@@ -30,6 +43,7 @@ bool Employe::ajouter() const
     query.bindValue(":email", email);
     query.bindValue(":date", dateEmbauche);
     query.bindValue(":adresse", adresse);
+    query.bindValue(":code", codeAcces);
 
     return query.exec();
 }
@@ -40,7 +54,7 @@ bool Employe::modifier() const
     query.prepare(
         "UPDATE ATELIER.EMPLOYE SET "
         "CIN=:cin, NOM=:nom, POSTE=:poste, SALAIRE=:salaire, DISPONIBILTE=:dispo, "
-        "TELEPHONE=:tel, EMAIL=:email, DATE_EMBAUCHE=:date, ADRESSE=:adresse "
+        "TELEPHONE=:tel, EMAIL=:email, DATE_EMBAUCHE=:date, ADRESSE=:adresse, CODE_ACCES=:code "
         "WHERE ID_EMPLOYE=:id"
     );
 
@@ -56,6 +70,7 @@ bool Employe::modifier() const
     query.bindValue(":email", email);
     query.bindValue(":date", dateEmbauche);
     query.bindValue(":adresse", adresse);
+    query.bindValue(":code", codeAcces);
 
     return query.exec();
 }

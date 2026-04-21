@@ -36,7 +36,7 @@ private:
     Ui::ClientsWidget *ui;
 
     void chargerTable(const QString &orderBy = QString());
-    void chargerTable(const QSqlQuery &query);
+    void chargerTable(QSqlQuery query);
     void remplirFormulaireDepuisTable(const QString &id);
     void clearForm();
 

@@ -1,6 +1,7 @@
 #include "employewidget.h"
 #include "ui_EmployeWidget.h"
 #include "employe.h"
+#include "mailer.h"
 
 #include <QMessageBox>
 #include <QFileDialog>
@@ -10,6 +11,8 @@
 #include <QSqlError>
 #include <QDate>
 #include <QRegularExpression>
+#include <QInputDialog>
+#include <utility>
 
 EmployeWidget::EmployeWidget(QWidget *parent)
     : QWidget(parent)
@@ -19,13 +22,13 @@ EmployeWidget::EmployeWidget(QWidget *parent)
 
     ui->tableWidgetEmployes->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    // ID est gardé mais caché
+    // ✅ 10 colonnes (Code d’accès non affiché)
     ui->tableWidgetEmployes->setColumnCount(10);
     ui->tableWidgetEmployes->setHorizontalHeaderLabels({
         "ID Employé", "CIN", "Nom", "Poste", "Salaire",
         "Disponibilité", "Téléphone", "Email", "Date d’embauche", "Adresse"
     });
-    ui->tableWidgetEmployes->setColumnHidden(0, true); // ✅ cacher ID
+    ui->tableWidgetEmployes->setColumnHidden(0, true);
 
     connect(ui->btnValider, &QPushButton::clicked, this, &EmployeWidget::onValider);
     connect(ui->btnConfirmerModification, &QPushButton::clicked, this, &EmployeWidget::onConfirmerModification);
@@ -45,10 +48,17 @@ EmployeWidget::EmployeWidget(QWidget *parent)
     connect(ui->btnExportPDF, &QPushButton::clicked, this, &EmployeWidget::onExportPDF);
     connect(ui->btnActualiserStats, &QPushButton::clicked, this, &EmployeWidget::onActualiserStats);
 
+    // ✅ nouveaux
+    connect(ui->btnRenvoyerCode, &QPushButton::clicked, this, &EmployeWidget::onRenvoyerCode);
+    connect(ui->btnActualiserAbsences, &QPushButton::clicked, this, &EmployeWidget::onActualiserAbsences);
+    connect(ui->btnExportAbsencesPDF, &QPushButton::clicked, this, &EmployeWidget::onExportAbsencesPDF);
+    connect(ui->tableWidgetAbsences, &QTableWidget::cellDoubleClicked, this, &EmployeWidget::onAbsenceDoubleClicked);
+
     ui->btnConfirmerModification->setEnabled(false);
 
     chargerTable();
     onActualiserStats();
+    chargerAbsences();
 }
 
 EmployeWidget::~EmployeWidget()
@@ -169,8 +179,26 @@ void EmployeWidget::onValider()
     e.dateEmbauche = ui->dateEditEmbauche->date();
     e.adresse = ui->textEditAdresse->toPlainText().trimmed();
 
+    e.codeAcces = Employe::genererCodeAcces(6); // ✅ 6 chiffres
+
     if (e.ajouter()) {
-        QMessageBox::information(this, "Succès", "Employé ajouté.");
+        QString err;
+        bool sent = Mailer::sendMail(
+            e.email,
+            "Bienvenue chez Smart Carpentry",
+            "Bonjour " + e.nom + ",\n\n"
+            "Bienvenue chez Smart Carpentry.\n"
+            "Voici votre code d'accès : " + e.codeAcces + "\n\n"
+            "Cordialement,\nRH",
+            &err
+        );
+
+        if (!sent) {
+            QMessageBox::warning(this, "Email non envoyé", "Erreur SMTP:\n" + err);
+        } else {
+            QMessageBox::information(this, "Succès", "Employé ajouté et email envoyé.");
+        }
+
         chargerTable();
         clearForm();
         onActualiserStats();
@@ -209,6 +237,11 @@ void EmployeWidget::onConfirmerModification()
     e.email = ui->lineEditEmail->text().trimmed();
     e.dateEmbauche = ui->dateEditEmbauche->date();
     e.adresse = ui->textEditAdresse->toPlainText().trimmed();
+
+    QSqlQuery q;
+    q.prepare("SELECT CODE_ACCES FROM ATELIER.EMPLOYE WHERE ID_EMPLOYE = :id");
+    q.bindValue(":id", currentEditId);
+    if (q.exec() && q.next()) e.codeAcces = q.value(0).toString();
 
     if (e.modifier()) {
         QMessageBox::information(this, "Succès", "Employé modifié.");
@@ -335,7 +368,7 @@ void EmployeWidget::onTrier()
               "ORDER BY SALAIRE " + order);
     q.bindValue(":term", "%" + term.toLower() + "%");
     q.exec();
-    chargerTable(q);
+    chargerTable(std::move(q));
 }
 
 void EmployeWidget::onTableClicked(int row, int)
@@ -375,7 +408,7 @@ void EmployeWidget::onExportPDF()
     html += "<tr><th>CIN</th><th>Nom</th><th>Poste</th><th>Salaire</th></tr>";
     for (int row = 0; row < ui->tableWidgetEmployes->rowCount(); ++row) {
         html += "<tr>";
-        for (int col = 1; col < 5; ++col) { // ✅ sans ID
+        for (int col = 1; col < 5; ++col) {
             auto item = ui->tableWidgetEmployes->item(row, col);
             html += "<td>" + (item ? item->text() : "") + "</td>";
         }
@@ -420,26 +453,25 @@ void EmployeWidget::onActualiserStats()
 void EmployeWidget::chargerTable(const QString &orderBy)
 {
     QSqlQuery query = Employe::getAll(orderBy);
-    chargerTable(query);
+    chargerTable(std::move(query));
 }
 
-void EmployeWidget::chargerTable(const QSqlQuery &query)
+void EmployeWidget::chargerTable(QSqlQuery query)
 {
     ui->tableWidgetEmployes->setRowCount(0);
     int row = 0;
-    QSqlQuery q = query;
-    while (q.next()) {
+    while (query.next()) {
         ui->tableWidgetEmployes->insertRow(row);
-        ui->tableWidgetEmployes->setItem(row, 0, new QTableWidgetItem(q.value("ID_EMPLOYE").toString()));
-        ui->tableWidgetEmployes->setItem(row, 1, new QTableWidgetItem(q.value("CIN").toString()));
-        ui->tableWidgetEmployes->setItem(row, 2, new QTableWidgetItem(q.value("NOM").toString()));
-        ui->tableWidgetEmployes->setItem(row, 3, new QTableWidgetItem(q.value("POSTE").toString()));
-        ui->tableWidgetEmployes->setItem(row, 4, new QTableWidgetItem(q.value("SALAIRE").toString()));
-        ui->tableWidgetEmployes->setItem(row, 5, new QTableWidgetItem(q.value("DISPONIBILTE").toString()));
-        ui->tableWidgetEmployes->setItem(row, 6, new QTableWidgetItem(q.value("TELEPHONE").toString()));
-        ui->tableWidgetEmployes->setItem(row, 7, new QTableWidgetItem(q.value("EMAIL").toString()));
-        ui->tableWidgetEmployes->setItem(row, 8, new QTableWidgetItem(q.value("DATE_EMBAUCHE").toString()));
-        ui->tableWidgetEmployes->setItem(row, 9, new QTableWidgetItem(q.value("ADRESSE").toString()));
+        ui->tableWidgetEmployes->setItem(row, 0, new QTableWidgetItem(query.value("ID_EMPLOYE").toString()));
+        ui->tableWidgetEmployes->setItem(row, 1, new QTableWidgetItem(query.value("CIN").toString()));
+        ui->tableWidgetEmployes->setItem(row, 2, new QTableWidgetItem(query.value("NOM").toString()));
+        ui->tableWidgetEmployes->setItem(row, 3, new QTableWidgetItem(query.value("POSTE").toString()));
+        ui->tableWidgetEmployes->setItem(row, 4, new QTableWidgetItem(query.value("SALAIRE").toString()));
+        ui->tableWidgetEmployes->setItem(row, 5, new QTableWidgetItem(query.value("DISPONIBILTE").toString()));
+        ui->tableWidgetEmployes->setItem(row, 6, new QTableWidgetItem(query.value("TELEPHONE").toString()));
+        ui->tableWidgetEmployes->setItem(row, 7, new QTableWidgetItem(query.value("EMAIL").toString()));
+        ui->tableWidgetEmployes->setItem(row, 8, new QTableWidgetItem(query.value("DATE_EMBAUCHE").toString()));
+        ui->tableWidgetEmployes->setItem(row, 9, new QTableWidgetItem(query.value("ADRESSE").toString()));
         row++;
     }
 }
@@ -470,4 +502,149 @@ void EmployeWidget::clearForm()
     ui->textEditAdresse->clear();
     currentEditId.clear();
     ui->btnConfirmerModification->setEnabled(false);
+}
+
+// ====== RENVoyer CODE ======
+void EmployeWidget::onRenvoyerCode()
+{
+    if (!ui->tableWidgetEmployes->currentItem()) {
+        QMessageBox::warning(this, "Erreur", "Sélectionne un employé.");
+        return;
+    }
+
+    int row = ui->tableWidgetEmployes->currentRow();
+    QString id = ui->tableWidgetEmployes->item(row, 0)->text();
+
+    QSqlQuery q;
+    q.prepare("SELECT NOM, EMAIL, CODE_ACCES FROM ATELIER.EMPLOYE WHERE ID_EMPLOYE = :id");
+    q.bindValue(":id", id);
+
+    if (!q.exec() || !q.next()) {
+        QMessageBox::warning(this, "Erreur", "Employé introuvable.");
+        return;
+    }
+
+    QString nom = q.value("NOM").toString();
+    QString email = q.value("EMAIL").toString();
+    QString code = q.value("CODE_ACCES").toString();
+
+    QString err;
+    bool sent = Mailer::sendMail(
+        email,
+        "Rappel de votre code d'accès",
+        "Bonjour " + nom + ",\n\n"
+        "Voici votre code d'accès : " + code + "\n\n"
+        "Cordialement,\nRH",
+        &err
+    );
+
+    if (sent) {
+        QMessageBox::information(this, "Succès", "Code d’accès envoyé.");
+    } else {
+        QMessageBox::warning(this, "Erreur", "Erreur SMTP:\n" + err);
+    }
+}
+
+// ====== ABSENCES ======
+void EmployeWidget::chargerAbsences()
+{
+    ui->tableWidgetAbsences->setRowCount(0);
+    ui->tableWidgetAbsences->setColumnCount(6);
+    ui->tableWidgetAbsences->setHorizontalHeaderLabels({
+        "ID Absence", "Nom", "Email", "Date", "Type", "Justification"
+    });
+
+    QSqlQuery q;
+    q.prepare(
+        "SELECT a.ID_ABSENCE, e.NOM, e.EMAIL, "
+        "a.DATE_ABSENCE, a.TYPE_ABSENCE, a.JUSTIF "
+        "FROM ATELIER.ABSENCE_EMPLOYE a "
+        "JOIN ATELIER.EMPLOYE e ON e.ID_EMPLOYE = a.ID_EMPLOYE "
+        "ORDER BY a.DATE_ABSENCE DESC"
+    );
+
+    if (!q.exec()) return;
+
+    int row = 0;
+    while (q.next()) {
+        ui->tableWidgetAbsences->insertRow(row);
+        ui->tableWidgetAbsences->setItem(row, 0, new QTableWidgetItem(q.value(0).toString()));
+        ui->tableWidgetAbsences->setItem(row, 1, new QTableWidgetItem(q.value(1).toString()));
+        ui->tableWidgetAbsences->setItem(row, 2, new QTableWidgetItem(q.value(2).toString()));
+        ui->tableWidgetAbsences->setItem(row, 3, new QTableWidgetItem(q.value(3).toString()));
+        ui->tableWidgetAbsences->setItem(row, 4, new QTableWidgetItem(q.value(4).toString()));
+        ui->tableWidgetAbsences->setItem(row, 5, new QTableWidgetItem(q.value(5).toString()));
+        row++;
+    }
+}
+
+void EmployeWidget::onActualiserAbsences()
+{
+    chargerAbsences();
+}
+
+void EmployeWidget::onExportAbsencesPDF()
+{
+    QString fileName = QFileDialog::getSaveFileName(this, "Exporter absences PDF", "", "PDF (*.pdf)");
+    if (fileName.isEmpty()) return;
+
+    QTextDocument doc;
+    QString html = "<h2>Historique des absences</h2><table border='1' cellspacing='0' cellpadding='4'>";
+    html += "<tr><th>Nom</th><th>Email</th><th>Date</th><th>Type</th><th>Justif</th></tr>";
+
+    for (int row = 0; row < ui->tableWidgetAbsences->rowCount(); ++row) {
+        html += "<tr>";
+        for (int col = 1; col <= 5; ++col) {
+            auto item = ui->tableWidgetAbsences->item(row, col);
+            html += "<td>" + (item ? item->text() : "") + "</td>";
+        }
+        html += "</tr>";
+    }
+    html += "</table>";
+    doc.setHtml(html);
+
+    QPrinter printer(QPrinter::PrinterResolution);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setOutputFileName(fileName);
+    doc.print(&printer);
+
+    QMessageBox::information(this, "Succès", "PDF absences exporté.");
+}
+
+// ✅ Double‑clic pour ajouter/éditer justification
+void EmployeWidget::onAbsenceDoubleClicked(int row, int)
+{
+    QString idAbs = ui->tableWidgetAbsences->item(row, 0)->text();
+    QString current = ui->tableWidgetAbsences->item(row, 5)->text();
+
+    bool ok = false;
+    QString justif = QInputDialog::getMultiLineText(
+        this,
+        "Justification d'absence",
+        "Saisir justification :",
+        current,
+        &ok
+    );
+
+    if (!ok) return;
+    if (justif.trimmed().isEmpty()) {
+        QMessageBox::warning(this, "Erreur", "Justification vide.");
+        return;
+    }
+
+    if (updateJustificationAbsence(idAbs, justif)) {
+        QMessageBox::information(this, "Succès", "Justification enregistrée.");
+        chargerAbsences();
+    } else {
+        QMessageBox::warning(this, "Erreur", "Échec enregistrement justification.");
+    }
+}
+
+bool EmployeWidget::updateJustificationAbsence(const QString& idAbsence, const QString& justif)
+{
+    QSqlQuery q;
+    q.prepare("UPDATE ATELIER.ABSENCE_EMPLOYE SET JUSTIF = :j WHERE ID_ABSENCE = :id");
+    q.bindValue(":j", justif);
+    q.bindValue(":id", idAbsence);
+    return q.exec();
 }

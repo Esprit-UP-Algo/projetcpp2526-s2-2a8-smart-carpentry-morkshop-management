@@ -8,7 +8,7 @@
 class Employe
 {
 public:
-    QString id; // still used for modifier/supprimer, but NOT filled by user
+    QString id;
     QString cin;
     QString nom;
     QString poste;
@@ -19,6 +19,9 @@ public:
     QDate dateEmbauche;
     QString adresse;
 
+    // ✅ nouveau
+    QString codeAcces;
+
     Employe() = default;
 
     bool ajouter() const;
@@ -27,6 +30,8 @@ public:
 
     static QSqlQuery getAll(const QString &orderBy = QString());
     static QSqlQuery rechercher(const QString &term);
+
+    static QString genererCodeAcces(int length = 6);
 };
 
 #endif // EMPLOYE_H

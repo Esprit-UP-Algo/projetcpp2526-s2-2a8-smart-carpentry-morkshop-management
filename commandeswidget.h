@@ -8,6 +8,9 @@ namespace Ui {
 class CommandesWidget;
 }
 
+class QComboBox;
+class QLabel;
+
 class CommandesWidget : public QWidget
 {
     Q_OBJECT
@@ -31,9 +34,12 @@ private slots:
 
 private:
     Ui::CommandesWidget *ui;
+    QComboBox *comboMateriau;
+    QLabel *labelPrixPrediction;
+    bool updatingPredictedPrice;
 
     void chargerTable(const QString &orderBy = QString());
-    void chargerTable(const QSqlQuery &query);
+    void chargerTable(QSqlQuery query);
     void remplirFormulaireDepuisTable(int row);
     void clearForm();
     QString buildDimensions() const;
@@ -41,7 +47,14 @@ private:
     void remplirComboFacture();
     void updateAlertes();
     void chargerResponsables();
-    void chargerResultats(const QSqlQuery &query);
+    void chargerResultats(QSqlQuery query);
+    void setupPredictionUi();
+    void remplirMateriaux();
+    void updatePricePrediction();
+    double predictPrixCommande() const;
+    static QString extractMaterialTag(const QString &details);
+    static QString stripMaterialTag(const QString &details);
+    QString composeDetailsWithMaterial() const;
 };
 
 #endif // COMMANDESWIDGET_H

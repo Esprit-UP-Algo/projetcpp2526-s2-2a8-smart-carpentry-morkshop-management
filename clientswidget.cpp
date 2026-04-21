@@ -2,6 +2,7 @@
 #include "ui_ClientsWidget.h"
 #include "client.h"
 
+#include <utility>
 #include <QMessageBox>
 #include <QSqlQuery>
 #include <QSqlError>
@@ -405,7 +406,7 @@ void ClientsWidget::onTrier()
               "ORDER BY NOM " + order);
     q.bindValue(":term", "%" + term.toLower() + "%");
     q.exec();
-    chargerTable(q);
+    chargerTable(std::move(q));
 }
 
 void ClientsWidget::onTableClicked(int row, int)
@@ -498,24 +499,23 @@ void ClientsWidget::onActualiserStats()
 void ClientsWidget::chargerTable(const QString &orderBy)
 {
     QSqlQuery query = Client::getAll(orderBy);
-    chargerTable(query);
+    chargerTable(std::move(query));
 }
 
-void ClientsWidget::chargerTable(const QSqlQuery &query)
+void ClientsWidget::chargerTable(QSqlQuery query)
 {
     ui->tableWidgetClients->setRowCount(0);
     int row = 0;
-    QSqlQuery q = query;
-    while (q.next()) {
+    while (query.next()) {
         ui->tableWidgetClients->insertRow(row);
-        ui->tableWidgetClients->setItem(row, 0, new QTableWidgetItem(q.value("ID_CLIENT").toString()));
-        ui->tableWidgetClients->setItem(row, 1, new QTableWidgetItem(q.value("NOM").toString()));
-        ui->tableWidgetClients->setItem(row, 2, new QTableWidgetItem(q.value("PRENOM").toString()));
-        ui->tableWidgetClients->setItem(row, 3, new QTableWidgetItem(q.value("N_CIN").toString()));
-        ui->tableWidgetClients->setItem(row, 4, new QTableWidgetItem(q.value("TELEPHONE").toString()));
-        ui->tableWidgetClients->setItem(row, 5, new QTableWidgetItem(q.value("EMAIL").toString()));
-        ui->tableWidgetClients->setItem(row, 6, new QTableWidgetItem(q.value("ADDRESSE").toString()));
-        ui->tableWidgetClients->setItem(row, 7, new QTableWidgetItem(q.value("MATRICULE_FISCALE").toString()));
+        ui->tableWidgetClients->setItem(row, 0, new QTableWidgetItem(query.value("ID_CLIENT").toString()));
+        ui->tableWidgetClients->setItem(row, 1, new QTableWidgetItem(query.value("NOM").toString()));
+        ui->tableWidgetClients->setItem(row, 2, new QTableWidgetItem(query.value("PRENOM").toString()));
+        ui->tableWidgetClients->setItem(row, 3, new QTableWidgetItem(query.value("N_CIN").toString()));
+        ui->tableWidgetClients->setItem(row, 4, new QTableWidgetItem(query.value("TELEPHONE").toString()));
+        ui->tableWidgetClients->setItem(row, 5, new QTableWidgetItem(query.value("EMAIL").toString()));
+        ui->tableWidgetClients->setItem(row, 6, new QTableWidgetItem(query.value("ADDRESSE").toString()));
+        ui->tableWidgetClients->setItem(row, 7, new QTableWidgetItem(query.value("MATRICULE_FISCALE").toString()));
         row++;
     }
 }

@@ -1,4 +1,4 @@
-QT       += core gui sql printsupport
+QT += core gui sql network printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -12,6 +12,7 @@ SOURCES += \
     commandeswidget.cpp \
     client.cpp \
     clientswidget.cpp \
+    mailer.cpp \
     main.cpp \
     mainwindow.cpp \
     atelierwidget.cpp \
@@ -27,6 +28,7 @@ HEADERS += \
     commandeswidget.h \
     client.h \
     clientswidget.h \
+    mailer.h \
     mainwindow.h \
     atelierwidget.h \
     dialogmachine.h \

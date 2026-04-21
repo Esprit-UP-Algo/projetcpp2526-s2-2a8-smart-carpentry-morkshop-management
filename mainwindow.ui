@@ -28,9 +28,11 @@
     QComboBox { font-size: 10pt; min-height: 28px; }
     QComboBox::drop-down { border: none; width: 20px; }
     QComboBox::down-arrow { image: none; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 4px solid #8B5A2B; margin-right: 6px; }
+
     QPushButton { background-color: #8B5A2B; color: #F5EBE0; border: none; border-radius: 5px; padding: 10px 20px; font-weight: bold; font-size: 10pt; }
     QPushButton:hover { background-color: #9B8068; }
     QPushButton:pressed { background-color: #5D4037; }
+
     QPushButton#btnAjouter { background-color: #8B9B6A; }
     QPushButton#btnAjouter:hover { background-color: #9BAB7A; }
     QPushButton#btnModifier { background-color: #8B5A2B; }
@@ -39,13 +41,31 @@
     QPushButton#btnSupprimer:hover { background-color: #6D4C41; }
     QPushButton#btnAnnuler, QPushButton#btnVider, QPushButton#btnAfficherTout, QPushButton#btnTrier, QPushButton#btnRechercher { background-color: #C9B59A; color: #3D2817; }
     QPushButton#btnAnnuler:hover, QPushButton#btnVider:hover, QPushButton#btnAfficherTout:hover, QPushButton#btnTrier:hover, QPushButton#btnRechercher:hover { background-color: #D9C5AA; }
+
     QTableWidget { background-color: #FFFFFF; alternate-background-color: #F5EBE0; border: 2px solid #C9B59A; border-radius: 5px; gridline-color: #C9B59A; color: #3D2817; }
     QTableWidget::item:selected { background-color: #8B5A2B; color: #F5EBE0; }
     QHeaderView::section { background-color: #8B5A2B; color: #F5EBE0; padding: 6px; border: none; font-weight: bold; font-size: 10pt; }
-    QPushButton#btnEmployes, QPushButton#btnClients, QPushButton#btnCommandes, QPushButton#btnStock, QPushButton#btnAtelier { background-color: #C9B59A; color: #3D2817; border: none; border-left: 0px solid #8B5A2B; border-radius: 0; padding: 20px 15px; font-size: 15pt; font-weight: bold; text-align: left; }
-    QPushButton#btnEmployes:hover, QPushButton#btnClients:hover, QPushButton#btnCommandes:hover, QPushButton#btnStock:hover, QPushButton#btnAtelier:hover { background-color: #9B8068; color: white; }
-    QPushButton#btnEmployes:checked, QPushButton#btnClients:checked, QPushButton#btnCommandes:checked, QPushButton#btnStock:checked, QPushButton#btnAtelier:checked { background-color: #8B5A2B; color: #F5EBE0; border-left: 6px solid #5D4037; }
-    QPushButton#btnEmployes:pressed, QPushButton#btnClients:pressed, QPushButton#btnCommandes:pressed, QPushButton#btnStock:pressed, QPushButton#btnAtelier:pressed { background-color: #5D4037; color: white; }
+
+    QPushButton#btnEmployes, QPushButton#btnClients, QPushButton#btnCommandes, QPushButton#btnStock, QPushButton#btnAtelier {
+      background-color: #C9B59A; color: #3D2817; border: none; border-left: 0px solid #8B5A2B;
+      border-radius: 0; padding: 20px 15px; font-size: 15pt; font-weight: bold; text-align: left;
+    }
+    QPushButton#btnEmployes:hover, QPushButton#btnClients:hover, QPushButton#btnCommandes:hover, QPushButton#btnStock:hover, QPushButton#btnAtelier:hover {
+      background-color: #9B8068; color: white;
+    }
+    QPushButton#btnEmployes:checked, QPushButton#btnClients:checked, QPushButton#btnCommandes:checked, QPushButton#btnStock:checked, QPushButton#btnAtelier:checked {
+      background-color: #8B5A2B; color: #F5EBE0; border-left: 6px solid #5D4037;
+    }
+    QPushButton#btnEmployes:pressed, QPushButton#btnClients:pressed, QPushButton#btnCommandes:pressed, QPushButton#btnStock:pressed, QPushButton#btnAtelier:pressed {
+      background-color: #5D4037; color: white;
+    }
+
+    /* ✅ Déconnexion rouge */
+    QPushButton#btnDeconnexion {
+      background-color: #C0392B; color: white; font-weight: bold;
+    }
+    QPushButton#btnDeconnexion:hover { background-color: #E74C3C; }
+    QPushButton#btnDeconnexion:pressed { background-color: #922B21; }
    </string>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -84,7 +104,7 @@
         <number>0</number>
        </property>
        <property name="bottomMargin">
-        <number>0</number>
+        <number>10</number>
        </property>
        <item alignment="Qt::AlignmentFlag::AlignHCenter">
         <widget class="QLabel" name="labelLogo">
@@ -195,10 +215,14 @@
          </property>
         </widget>
        </item>
+
        <item>
         <spacer name="verticalSpacerSidebar">
          <property name="orientation">
           <enum>Qt::Orientation::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Policy::Expanding</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -207,6 +231,15 @@
           </size>
          </property>
         </spacer>
+       </item>
+
+       <!-- Déconnexion -->
+       <item>
+        <widget class="QPushButton" name="btnDeconnexion">
+         <property name="text">
+          <string>Déconnexion</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

@@ -185,7 +185,10 @@
              <string>Valider</string>
             </property>
             <property name="styleSheet">
-             <string notr="true">background-color: #8B9B6A; color: white; font-weight: bold;</string>
+             <string notr="true">
+background-color: #8B9B6A; color: white; font-weight: bold;
+QPushButton#btnValider:hover { background-color: #9BAB7A; }
+             </string>
             </property>
            </widget>
           </item>
@@ -196,7 +199,10 @@
              <string>Confirmer modification</string>
             </property>
             <property name="styleSheet">
-             <string notr="true">background-color: #8B5A2B; color: white; font-weight: bold;</string>
+             <string notr="true">
+background-color: #8B5A2B; color: white; font-weight: bold;
+QPushButton#btnConfirmerModification:hover { background-color: #9B8068; }
+             </string>
             </property>
            </widget>
           </item>
@@ -290,16 +296,13 @@
           <item><widget class="QPushButton" name="btnSupprimer"><property name="text"><string>Supprimer</string></property></widget></item>
           <item><widget class="QPushButton" name="btnAfficherToutActions"><property name="text"><string>Afficher Tout</string></property></widget></item>
           <item><widget class="QPushButton" name="btnVider"><property name="text"><string>Vider</string></property></widget></item>
+          <item><widget class="QPushButton" name="btnRenvoyerCode"><property name="text"><string>Renvoyer code d'accès</string></property></widget></item>
          </layout>
         </widget>
        </item>
 
        <item>
-        <widget class="QTableWidget" name="tableWidgetEmployes">
-         <property name="editTriggers">
-          <set>QAbstractItemView::NoEditTriggers</set>
-         </property>
-        </widget>
+        <widget class="QTableWidget" name="tableWidgetEmployes"/>
        </item>
 
        <item>
@@ -309,15 +312,6 @@
          </property>
          <layout class="QVBoxLayout">
           <item><widget class="QPushButton" name="btnExportPDF"><property name="text"><string>Exporter en PDF</string></property></widget></item>
-          <item>
-           <widget class="QGroupBox" name="groupBoxExportOptions">
-            <property name="title"><string>Options d'exportation</string></property>
-            <layout class="QVBoxLayout">
-             <item><widget class="QCheckBox" name="checkBoxInclureEntete"><property name="text"><string>Inclure l'en-tête</string></property><property name="checked"><bool>true</bool></property></widget></item>
-             <item><widget class="QCheckBox" name="checkBoxDateExport"><property name="text"><string>Inclure la date d'exportation</string></property><property name="checked"><bool>true</bool></property></widget></item>
-            </layout>
-           </widget>
-          </item>
          </layout>
         </widget>
        </item>
@@ -354,16 +348,24 @@
           <item row="5" column="0"><widget class="QLabel" name="labelAbsentCount"><property name="text"><string>Absents :</string></property></widget></item>
           <item row="5" column="1"><widget class="QLabel" name="labelAbsentValeur"><property name="text"><string>0</string></property></widget></item>
 
-          <item row="6" column="0">
-           <widget class="QPushButton" name="btnActualiserStats">
-            <property name="text">
-             <string>Actualiser les statistiques</string>
-            </property>
-           </widget>
-          </item>
+          <item row="6" column="0"><widget class="QPushButton" name="btnActualiserStats"><property name="text"><string>Actualiser les statistiques</string></property></widget></item>
          </layout>
         </widget>
        </item>
+      </layout>
+     </widget>
+
+     <!-- TAB ABSENCES -->
+     <widget class="QWidget" name="tabAbsences">
+      <attribute name="title"><string>Absences</string></attribute>
+      <layout class="QVBoxLayout">
+       <item>
+        <layout class="QHBoxLayout">
+         <item><widget class="QPushButton" name="btnActualiserAbsences"><property name="text"><string>Actualiser absences</string></property></widget></item>
+         <item><widget class="QPushButton" name="btnExportAbsencesPDF"><property name="text"><string>Exporter absences PDF</string></property></widget></item>
+        </layout>
+       </item>
+       <item><widget class="QTableWidget" name="tableWidgetAbsences"/></item>
       </layout>
      </widget>
 

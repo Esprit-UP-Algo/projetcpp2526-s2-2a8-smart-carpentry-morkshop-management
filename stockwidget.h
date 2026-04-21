@@ -36,7 +36,7 @@ private:
     Connection m_connection;
 
     void chargerTable(const QString &orderBy = QString());
-    void chargerTable(const QSqlQuery &query);
+    void chargerTable(QSqlQuery query);
     void remplirFormulaireDepuisTable(const QString &id);
     void clearForm();
     void remplirStats();
