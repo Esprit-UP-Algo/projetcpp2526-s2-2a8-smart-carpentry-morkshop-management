@@ -14,7 +14,7 @@ DialogMachine::~DialogMachine()
 }
 
 QString DialogMachine::getID() const { return ""; }
-QString DialogMachine::getReference() const { return ui->lineEditReference->text(); }
+QString DialogMachine::getReference() const { return QString::number(ui->lineEditReference->value()); }
 QString DialogMachine::getNom() const { return ui->lineEditNom->text(); }
 QString DialogMachine::getType() const { return ui->comboBoxType->currentText(); }
 QString DialogMachine::getEtat() const { return ui->comboBoxEtat->currentText(); }
@@ -24,7 +24,7 @@ int DialogMachine::getQuantite() const { return ui->spinBoxQuantite->value(); }
 int DialogMachine::getIdEmploye() const { return ui->spinBoxIdEmploye->value(); }
 
 void DialogMachine::setID(const QString &id) { Q_UNUSED(id) }
-void DialogMachine::setReference(const QString &ref) { ui->lineEditReference->setText(ref); }
+void DialogMachine::setReference(const QString &ref) { ui->lineEditReference->setValue(ref.toInt()); }
 void DialogMachine::setNom(const QString &nom) { ui->lineEditNom->setText(nom); }
 void DialogMachine::setType(const QString &type) {
     int index = ui->comboBoxType->findText(type);

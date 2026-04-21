@@ -3,6 +3,8 @@
 
 #include <QWidget>
 
+class QChartView;
+
 namespace Ui {
 class AtelierWidget;
 }
@@ -32,6 +34,7 @@ private slots:
     void onPlanModifierStatut();
     void onPlanFiltreChanged();
     void onBtnExportCSVMachinesClicked();
+    void onBtnRechercherClicked();
 
 private:
     Ui::AtelierWidget *ui;
@@ -44,6 +47,10 @@ private:
     void highlighterDatesCommandes();
     void planRemplirCombos();
     void planChargerTaches();
+    void mettreAJourGraphiques();
+
+    QChartView *m_chartEtat   = nullptr;
+    QChartView *m_chartHeures = nullptr;
 };
 
 #endif // ATELIERWIDGET_H

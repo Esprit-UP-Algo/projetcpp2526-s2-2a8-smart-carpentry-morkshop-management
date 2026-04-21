@@ -14,6 +14,13 @@
 #include <QTextCharFormat>
 #include <QFont>
 #include <QInputDialog>
+#include <QVBoxLayout>
+#include <QtCharts/QChartView>
+#include <QtCharts/QPieSeries>
+#include <QtCharts/QBarSeries>
+#include <QtCharts/QBarSet>
+#include <QtCharts/QBarCategoryAxis>
+#include <QtCharts/QValueAxis>
 
 AtelierWidget::AtelierWidget(QWidget *parent)
     : QWidget(parent)
@@ -54,6 +61,7 @@ void AtelierWidget::connectSignals()
     connect(ui->btnDetecterCritiques, &QPushButton::clicked, this, &AtelierWidget::onBtnDetecterCritiquesClicked);
     connect(ui->btnAnalyserRisques, &QPushButton::clicked, this, &AtelierWidget::onBtnAnalyserRisquesClicked);
     connect(ui->btnExportCSVMachines, &QPushButton::clicked, this, &AtelierWidget::onBtnExportCSVMachinesClicked);
+    connect(ui->btnRechercher, &QPushButton::clicked, this, &AtelierWidget::onBtnRechercherClicked);
     connect(ui->calendarAtelier, &QCalendarWidget::selectionChanged, this, &AtelierWidget::onCalendrierDateChanged);
     connect(ui->calendarAtelier, &QCalendarWidget::currentPageChanged, this, &AtelierWidget::onCalendrierPageChanged);
 
@@ -146,6 +154,7 @@ void AtelierWidget::chargerDonnees()
 
     chargerMachinesCritiques();
     chargerMachinesSollicitees();
+    mettreAJourGraphiques();
 }
 
 void AtelierWidget::onBtnAjouterClicked()
@@ -166,7 +175,7 @@ void AtelierWidget::onBtnAjouterClicked()
             "(REFERENCE, TYPE, ETAT, DATE_DERNIERE_MAINTNANCE, HEURES_UTILISATION, QUANTITE, ID_EMPLOYE) "
             "VALUES (:ref, :type, :etat, :date, :heures, :qte, :idEmp)"
         );
-        query.bindValue(":ref", ref);
+        query.bindValue(":ref", dialog.getReference().toInt());
         query.bindValue(":type", dialog.getType());
         query.bindValue(":etat", dialog.getEtat());
         query.bindValue(":date", QDate::fromString(dialog.getDateMaintenance(), "dd/MM/yyyy"));
@@ -491,33 +500,34 @@ void AtelierWidget::onCalendrierDateChanged()
     const QDate date = ui->calendarAtelier->selectedDate();
     ui->lblDateSelectionnee->setText("📅 " + date.toString("dddd dd MMMM yyyy"));
 
-    // --- Machines dont la maintenance était ce jour ---
+    // Tâches planifiées ce jour via VUE_PLANIFICATION
     ui->tableCalMachines->setRowCount(0);
-    QSqlQuery qMac;
-    qMac.prepare(
-        "SELECT m.TYPE, m.ETAT, m.HEURES_UTILISATION, NVL(e.NOM, '—') AS NOM_EMP "
-        "FROM ATELIER.MACHINE m "
-        "LEFT JOIN ATELIER.EMPLOYE e ON m.ID_EMPLOYE = e.ID_EMPLOYE "
-        "WHERE TRUNC(m.DATE_DERNIERE_MAINTNANCE) = TO_DATE(:d, 'YYYY-MM-DD')"
+    QSqlQuery qPlan;
+    qPlan.prepare(
+        "SELECT NOM_EMPLOYE, DETAILS_COMMANDE, "
+        "       REF_MACHINE || ' ' || TYPE_MACHINE AS MACHINE, STATUT "
+        "FROM ATELIER.VUE_PLANIFICATION "
+        "WHERE TO_DATE(:d,'YYYY-MM-DD') BETWEEN TRUNC(DATE_DEBUT) AND TRUNC(DATE_FIN)"
     );
-    qMac.bindValue(":d", date.toString("yyyy-MM-dd"));
-    if (qMac.exec()) {
+    qPlan.bindValue(":d", date.toString("yyyy-MM-dd"));
+
+    if (qPlan.exec()) {
         int row = 0;
-        while (qMac.next()) {
+        while (qPlan.next()) {
             ui->tableCalMachines->insertRow(row);
-            ui->tableCalMachines->setItem(row, 0, new QTableWidgetItem(qMac.value("TYPE").toString()));
-            ui->tableCalMachines->setItem(row, 1, new QTableWidgetItem(qMac.value("ETAT").toString()));
-            ui->tableCalMachines->setItem(row, 2, new QTableWidgetItem(qMac.value("HEURES_UTILISATION").toString() + "h"));
-            ui->tableCalMachines->setItem(row, 3, new QTableWidgetItem(qMac.value("NOM_EMP").toString()));
+            ui->tableCalMachines->setItem(row, 0, new QTableWidgetItem(qPlan.value("NOM_EMPLOYE").toString()));
+            ui->tableCalMachines->setItem(row, 1, new QTableWidgetItem(qPlan.value("DETAILS_COMMANDE").toString()));
+            ui->tableCalMachines->setItem(row, 2, new QTableWidgetItem(qPlan.value("MACHINE").toString()));
+            ui->tableCalMachines->setItem(row, 3, new QTableWidgetItem(qPlan.value("STATUT").toString()));
             row++;
         }
     }
 
-    // --- Commandes passées ce jour (DATE_COMMANDE) ---
+    // Commandes passées ce jour
     ui->tableCalCommandes->setRowCount(0);
     QSqlQuery qCmd;
     qCmd.prepare(
-        "SELECT c.ID_COMMANDE, c.DETAILS_COMMANDE, c.DIMENSIONS, c.PRIX, c.ETAT "
+        "SELECT c.ID_COMMANDE, c.DETAILS_COMMANDE, c.PRIX, c.ETAT, c.DIMENSIONS "
         "FROM ATELIER.COMMANDE c "
         "WHERE TRUNC(c.DATE_COMMANDE) = TO_DATE(:d, 'YYYY-MM-DD') "
         "ORDER BY c.ID_COMMANDE"
@@ -529,14 +539,20 @@ void AtelierWidget::onCalendrierDateChanged()
             ui->tableCalCommandes->insertRow(row);
             ui->tableCalCommandes->setItem(row, 0, new QTableWidgetItem(qCmd.value("ID_COMMANDE").toString()));
             ui->tableCalCommandes->setItem(row, 1, new QTableWidgetItem(qCmd.value("DETAILS_COMMANDE").toString()));
-            ui->tableCalCommandes->setItem(row, 2, new QTableWidgetItem(qCmd.value("PRIX").toString() + " €"));
+            ui->tableCalCommandes->setItem(row, 2, new QTableWidgetItem(qCmd.value("PRIX").toString() + " TND"));
             ui->tableCalCommandes->setItem(row, 3, new QTableWidgetItem(qCmd.value("ETAT").toString()));
             ui->tableCalCommandes->setItem(row, 4, new QTableWidgetItem(qCmd.value("DIMENSIONS").toString()));
             row++;
         }
     }
 
-    // Mettre à jour le titre du groupe avec le nombre de commandes
+    int nbTaches = ui->tableCalMachines->rowCount();
+    ui->groupCalMachines->setTitle(
+        nbTaches > 0
+        ? QString(" ⚙️ Tâches planifiées ce jour (%1)").arg(nbTaches)
+        : " ⚙️ Tâches planifiées ce jour (aucune)"
+    );
+
     int nbCmd = ui->tableCalCommandes->rowCount();
     ui->groupCalCommandes->setTitle(
         nbCmd > 0
@@ -554,37 +570,46 @@ void AtelierWidget::onCalendrierPageChanged(int year, int month)
 
 void AtelierWidget::highlighterDatesCommandes()
 {
-    // Récupère toutes les dates avec au moins une commande ce mois
-    QTextCharFormat formatCommande;
-    formatCommande.setBackground(QColor("#D4E8C2"));       // vert clair
-    formatCommande.setForeground(QColor("#2E5E00"));
-    formatCommande.setFontWeight(QFont::Bold);
+    QTextCharFormat formatPlan;
+    formatPlan.setBackground(QColor("#D4E8C2"));
+    formatPlan.setForeground(QColor("#2E5E00"));
+    formatPlan.setFontWeight(QFont::Bold);
 
-    // Reset d'abord le format du mois affiché
+    QTextCharFormat formatFutur;
+    formatFutur.setBackground(QColor("#C2D4E8"));
+    formatFutur.setForeground(QColor("#003E5E"));
+    formatFutur.setFontWeight(QFont::Bold);
+
     const QDate premier(ui->calendarAtelier->yearShown(),
                         ui->calendarAtelier->monthShown(), 1);
     const QDate dernier = premier.addMonths(1).addDays(-1);
+    const QDate aujourd_hui = QDate::currentDate();
 
+    // Reset
     QTextCharFormat formatNormal;
     for (QDate d = premier; d <= dernier; d = d.addDays(1))
         ui->calendarAtelier->setDateTextFormat(d, formatNormal);
 
-    // Requête : dates distinctes avec commandes
+    // Dates avec tâches planifiées (DATE_DEBUT entre premier et dernier)
     QSqlQuery query;
     query.prepare(
-        "SELECT DISTINCT TRUNC(DATE_COMMANDE) AS JOUR "
-        "FROM ATELIER.COMMANDE "
-        "WHERE DATE_COMMANDE >= TO_DATE(:debut, 'YYYY-MM-DD') "
-        "  AND DATE_COMMANDE <  TO_DATE(:fin,   'YYYY-MM-DD')"
+        "SELECT DISTINCT TRUNC(p.DATE_DEBUT) AS JOUR "
+        "FROM ATELIER.PLANIFICATION p "
+        "WHERE p.DATE_DEBUT >= TO_DATE(:debut, 'YYYY-MM-DD') "
+        "  AND p.DATE_DEBUT <= TO_DATE(:fin, 'YYYY-MM-DD')"
     );
     query.bindValue(":debut", premier.toString("yyyy-MM-dd"));
-    query.bindValue(":fin",   dernier.addDays(1).toString("yyyy-MM-dd"));
+    query.bindValue(":fin",   dernier.toString("yyyy-MM-dd"));
 
     if (query.exec()) {
         while (query.next()) {
             QDate jour = query.value("JOUR").toDate();
-            if (jour.isValid())
-                ui->calendarAtelier->setDateTextFormat(jour, formatCommande);
+            if (jour.isValid()) {
+                if (jour >= aujourd_hui)
+                    ui->calendarAtelier->setDateTextFormat(jour, formatFutur);  // bleu = futur
+                else
+                    ui->calendarAtelier->setDateTextFormat(jour, formatPlan);   // vert = passé
+            }
         }
     }
 }
@@ -624,24 +649,17 @@ void AtelierWidget::planRemplirCombos()
 
 void AtelierWidget::planChargerTaches()
 {
-    QString sql =
-        "SELECT p.ID_TACHE, p.PRIORITE, e.NOM, c.DETAILS_COMMANDE, "
-        "       NVL(TO_CHAR(m.ID_MACHINE),'—'), p.DATE_DEBUT, p.DATE_FIN, p.STATUT, NVL(p.NOTES,'') "
-        "FROM ATELIER.PLANIFICATION p "
-        "JOIN ATELIER.COMMANDE c ON p.ID_COMMANDE = c.ID_COMMANDE "
-        "JOIN ATELIER.EMPLOYE  e ON p.ID_EMPLOYE  = e.ID_EMPLOYE "
-        "LEFT JOIN ATELIER.MACHINE m ON p.ID_MACHINE = m.ID_MACHINE "
-        "WHERE 1=1 ";
+    QString sql = "SELECT * FROM ATELIER.VUE_PLANIFICATION WHERE 1=1 ";
 
     QString filtreStatut = ui->comboPlanFiltreStatut->currentText();
     if (filtreStatut != "-- Tous --")
-        sql += "AND p.STATUT = '" + filtreStatut + "' ";
+        sql += "AND STATUT = '" + filtreStatut + "' ";
 
     QVariant filtreEmp = ui->comboPlanFiltreEmploye->currentData();
     if (filtreEmp.isValid())
-        sql += "AND p.ID_EMPLOYE = " + filtreEmp.toString() + " ";
+        sql += "AND ID_EMPLOYE = " + filtreEmp.toString() + " ";
 
-    sql += "ORDER BY p.DATE_DEBUT, p.PRIORITE";
+    sql += "ORDER BY DATE_DEBUT, PRIORITE";
 
     QSqlQuery q;
     q.prepare(sql);
@@ -651,25 +669,25 @@ void AtelierWidget::planChargerTaches()
     int row = 0;
     while (q.next()) {
         ui->tablePlanTaches->insertRow(row);
-        ui->tablePlanTaches->setItem(row, 0, new QTableWidgetItem(q.value(0).toString()));
+        ui->tablePlanTaches->setItem(row, 0, new QTableWidgetItem(q.value("ID_TACHE").toString()));
 
-        int prio = q.value(1).toInt();
+        int prio = q.value("PRIORITE").toInt();
         QString prioStr = prio == 1 ? "🔴 Haute" : (prio == 3 ? "🟢 Basse" : "🟡 Normale");
         ui->tablePlanTaches->setItem(row, 1, new QTableWidgetItem(prioStr));
-        ui->tablePlanTaches->setItem(row, 2, new QTableWidgetItem(q.value(2).toString()));
-        ui->tablePlanTaches->setItem(row, 3, new QTableWidgetItem(q.value(3).toString()));
-        ui->tablePlanTaches->setItem(row, 4, new QTableWidgetItem(q.value(4).toString()));
-        ui->tablePlanTaches->setItem(row, 5, new QTableWidgetItem(q.value(5).toDate().toString("dd/MM/yyyy")));
-        ui->tablePlanTaches->setItem(row, 6, new QTableWidgetItem(q.value(6).toDate().toString("dd/MM/yyyy")));
+        ui->tablePlanTaches->setItem(row, 2, new QTableWidgetItem(q.value("NOM_EMPLOYE").toString()));
+        ui->tablePlanTaches->setItem(row, 3, new QTableWidgetItem(q.value("DETAILS_COMMANDE").toString()));
+        ui->tablePlanTaches->setItem(row, 4, new QTableWidgetItem(q.value("REF_MACHINE").toString() + " " + q.value("TYPE_MACHINE").toString()));
+        ui->tablePlanTaches->setItem(row, 5, new QTableWidgetItem(q.value("DATE_DEBUT").toDate().toString("dd/MM/yyyy")));
+        ui->tablePlanTaches->setItem(row, 6, new QTableWidgetItem(q.value("DATE_FIN").toDate().toString("dd/MM/yyyy")));
 
-        QString statut = q.value(7).toString();
+        QString statut = q.value("STATUT").toString();
         auto *itemStatut = new QTableWidgetItem(statut);
-        if (statut == "En cours")   itemStatut->setBackground(QColor("#C8E6C9"));
+        if (statut == "En cours")        itemStatut->setBackground(QColor("#C8E6C9"));
         else if (statut == "En attente") itemStatut->setBackground(QColor("#FFF9C4"));
         else if (statut == "En retard")  itemStatut->setBackground(QColor("#FFCDD2"));
         else if (statut == "Terminee")   itemStatut->setBackground(QColor("#E0E0E0"));
         ui->tablePlanTaches->setItem(row, 7, itemStatut);
-        ui->tablePlanTaches->setItem(row, 8, new QTableWidgetItem(q.value(8).toString()));
+        ui->tablePlanTaches->setItem(row, 8, new QTableWidgetItem(q.value("NOTES").toString()));
         row++;
     }
 }
@@ -694,7 +712,7 @@ void AtelierWidget::onPlanAjouter()
     q.bindValue(":cmd",   ui->comboPlanCommande->currentData().toInt());
     q.bindValue(":emp",   ui->comboPlanEmploye->currentData().toInt());
     QVariant mac = ui->comboPlanMachine->currentData();
-    q.bindValue(":mac",   mac.isValid() ? mac : QVariant(QVariant::Int));
+    q.bindValue(":mac",   mac.isValid() ? mac : QVariant(QMetaType(QMetaType::Int)));
     q.bindValue(":debut", ui->planDateDebut->date());
     q.bindValue(":fin",   ui->planDateFin->date());
     q.bindValue(":prio",  ui->comboPlanPriorite->currentIndex() + 1);
@@ -796,4 +814,128 @@ void AtelierWidget::onBtnExportCSVMachinesClicked()
     QMessageBox::information(this, "Export réussi",
         QString("✅ %1 machines exportées.\n⚠️ %2 machine(s) critique(s) détectée(s).\n\nFichier : %3")
         .arg(total).arg(critiques).arg(fileName));
+}
+
+void AtelierWidget::onBtnRechercherClicked()
+{
+    const QString terme = ui->lineRechercheTexte->text().trimmed();
+    const QString type  = ui->comboRechercheType->currentText();
+    const QString etat  = ui->comboRechercheEtat->currentText();
+
+    QString sql = "SELECT * FROM ATELIER.MACHINE WHERE 1=1 ";
+
+    if (!terme.isEmpty())
+        sql += "AND (TO_CHAR(REFERENCE) LIKE '%" + terme + "%' OR TYPE LIKE '%" + terme + "%') ";
+
+    if (type != "-- Tous les types --")
+        sql += "AND TYPE = '" + type + "' ";
+
+    if (etat != "-- Tous les états --")
+        sql += "AND ETAT = '" + etat + "' ";
+
+    sql += "ORDER BY ID_MACHINE";
+
+    QSqlQuery query;
+    query.prepare(sql);
+    if (!query.exec()) {
+        QMessageBox::warning(this, "Erreur SQL", query.lastError().text());
+        return;
+    }
+
+    ui->tableMachines->setRowCount(0);
+    int row = 0;
+    while (query.next()) {
+        ui->tableMachines->insertRow(row);
+        ui->tableMachines->setItem(row, 0, new QTableWidgetItem(query.value("ID_MACHINE").toString()));
+        ui->tableMachines->setItem(row, 1, new QTableWidgetItem(query.value("REFERENCE").toString()));
+        ui->tableMachines->setItem(row, 2, new QTableWidgetItem(query.value("TYPE").toString()));
+        ui->tableMachines->setItem(row, 3, new QTableWidgetItem(query.value("ETAT").toString()));
+        ui->tableMachines->setItem(row, 4, new QTableWidgetItem(query.value("DATE_DERNIERE_MAINTNANCE").toString()));
+        ui->tableMachines->setItem(row, 5, new QTableWidgetItem(query.value("HEURES_UTILISATION").toString()));
+        ui->tableMachines->setItem(row, 6, new QTableWidgetItem(query.value("QUANTITE").toString()));
+        row++;
+    }
+}
+
+void AtelierWidget::mettreAJourGraphiques()
+{
+    // ── Graphique 1 : Camembert répartition par état ──────────────────────────
+    QPieSeries *pieSeries = new QPieSeries();
+
+    QSqlQuery qEtat("SELECT ETAT, COUNT(*) AS NB FROM ATELIER.MACHINE GROUP BY ETAT");
+    while (qEtat.next()) {
+        QString etat = qEtat.value("ETAT").toString();
+        int nb = qEtat.value("NB").toInt();
+        QPieSlice *slice = pieSeries->append(etat + " (" + QString::number(nb) + ")", nb);
+        slice->setLabelVisible(true);
+        if (etat == "Disponible")      slice->setColor(QColor("#6B7B3E"));
+        else if (etat == "En maintenance") slice->setColor(QColor("#B8860B"));
+        else slice->setColor(QColor("#A0522D"));
+    }
+
+    QChart *chartEtat = new QChart();
+    chartEtat->addSeries(pieSeries);
+    chartEtat->setTitle("Répartition par État");
+    chartEtat->setTitleFont(QFont("Segoe UI", 11, QFont::Bold));
+    chartEtat->legend()->setVisible(true);
+    chartEtat->legend()->setAlignment(Qt::AlignBottom);
+    chartEtat->setBackgroundBrush(QColor("#FAF8F3"));
+
+    if (m_chartEtat) delete m_chartEtat;
+    m_chartEtat = new QChartView(chartEtat);
+    m_chartEtat->setRenderHint(QPainter::Antialiasing);
+
+    QLayout *layoutEtat = ui->widgetChartEtat->layout();
+    if (!layoutEtat) {
+        layoutEtat = new QVBoxLayout(ui->widgetChartEtat);
+        layoutEtat->setContentsMargins(0,0,0,0);
+    }
+    while (layoutEtat->count()) delete layoutEtat->takeAt(0)->widget();
+    layoutEtat->addWidget(m_chartEtat);
+
+    // ── Graphique 2 : Barres Top 5 heures utilisation ────────────────────────
+    QBarSet *barSet = new QBarSet("Heures");
+    barSet->setColor(QColor("#6B4423"));
+    QStringList categories;
+
+    QSqlQuery qHeures(
+        "SELECT TYPE, HEURES_UTILISATION FROM ATELIER.MACHINE "
+        "ORDER BY HEURES_UTILISATION DESC FETCH FIRST 5 ROWS ONLY");
+    while (qHeures.next()) {
+        *barSet << qHeures.value("HEURES_UTILISATION").toDouble();
+        categories << qHeures.value("TYPE").toString();
+    }
+
+    QBarSeries *barSeries = new QBarSeries();
+    barSeries->append(barSet);
+
+    QChart *chartHeures = new QChart();
+    chartHeures->addSeries(barSeries);
+    chartHeures->setTitle("Top 5 — Heures d'utilisation");
+    chartHeures->setTitleFont(QFont("Segoe UI", 11, QFont::Bold));
+    chartHeures->setBackgroundBrush(QColor("#FAF8F3"));
+
+    QBarCategoryAxis *axisX = new QBarCategoryAxis();
+    axisX->append(categories);
+    chartHeures->addAxis(axisX, Qt::AlignBottom);
+    barSeries->attachAxis(axisX);
+
+    QValueAxis *axisY = new QValueAxis();
+    axisY->setTitleText("Heures");
+    chartHeures->addAxis(axisY, Qt::AlignLeft);
+    barSeries->attachAxis(axisY);
+
+    chartHeures->legend()->setVisible(false);
+
+    if (m_chartHeures) delete m_chartHeures;
+    m_chartHeures = new QChartView(chartHeures);
+    m_chartHeures->setRenderHint(QPainter::Antialiasing);
+
+    QLayout *layoutHeures = ui->widgetChartHeures->layout();
+    if (!layoutHeures) {
+        layoutHeures = new QVBoxLayout(ui->widgetChartHeures);
+        layoutHeures->setContentsMargins(0,0,0,0);
+    }
+    while (layoutHeures->count()) delete layoutHeures->takeAt(0)->widget();
+    layoutHeures->addWidget(m_chartHeures);
 }

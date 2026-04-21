@@ -385,6 +385,8 @@ QTabBar::tab:selected {
               <property name="spacing">
                <number>10</number>
               </property>
+              <item><widget class="QLineEdit" name="lineRechercheTexte"><property name="placeholderText"><string>Rechercher par référence ou type...</string></property></widget></item>
+              <item><widget class="QPushButton" name="btnRechercher"><property name="text"><string>🔍 Rechercher</string></property></widget></item>
               <item><widget class="QPushButton" name="btnAppliquerTri"><property name="text"><string>Appliquer Tri</string></property></widget></item>
               <item><widget class="QPushButton" name="btnReinitialiser"><property name="text"><string>Réinitialiser</string></property></widget></item>
              </layout>
@@ -714,6 +716,30 @@ QTabBar::tab:selected {
             </widget>
            </item>
 
+           <!-- Graphiques -->
+           <item>
+            <layout class="QHBoxLayout" name="chartsLayout">
+             <item>
+              <widget class="QGroupBox" name="groupChartEtat">
+               <property name="title"><string> 🥧 Répartition par État</string></property>
+               <property name="minimumHeight"><number>280</number></property>
+               <layout class="QVBoxLayout" name="layoutChartEtat">
+                <item><widget class="QWidget" name="widgetChartEtat"><property name="minimumHeight"><number>250</number></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="groupChartHeures">
+               <property name="title"><string> 📊 Top 5 — Heures d'utilisation</string></property>
+               <property name="minimumHeight"><number>280</number></property>
+               <layout class="QVBoxLayout" name="layoutChartHeures">
+                <item><widget class="QWidget" name="widgetChartHeures"><property name="minimumHeight"><number>250</number></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </item>
+
           </layout>
          </widget>
         </widget>
@@ -747,16 +773,16 @@ QTabBar::tab:selected {
          </item>
          <item>
           <widget class="QGroupBox" name="groupCalMachines">
-           <property name="title"><string> ⚙️ Machines — Maintenance ce jour</string></property>
+           <property name="title"><string> ⚙️ Tâches planifiées ce jour</string></property>
            <layout class="QVBoxLayout">
             <item>
              <widget class="QTableWidget" name="tableCalMachines">
               <property name="alternatingRowColors"><bool>true</bool></property>
               <property name="selectionBehavior"><enum>QAbstractItemView::SelectRows</enum></property>
-              <column><property name="text"><string>Type</string></property></column>
-              <column><property name="text"><string>État</string></property></column>
-              <column><property name="text"><string>Heures</string></property></column>
-              <column><property name="text"><string>Employé Responsable</string></property></column>
+              <column><property name="text"><string>Employé</string></property></column>
+              <column><property name="text"><string>Commande</string></property></column>
+              <column><property name="text"><string>Machine</string></property></column>
+              <column><property name="text"><string>Statut</string></property></column>
              </widget>
             </item>
            </layout>
