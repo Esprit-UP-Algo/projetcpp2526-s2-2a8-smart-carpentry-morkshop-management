@@ -1,0 +1,69 @@
+<<<<<<< HEAD
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
+
+#include <QMainWindow>
+
+QT_BEGIN_NAMESPACE
+namespace Ui {
+class MainWindow;
+}
+QT_END_NAMESPACE
+
+class MainWindow : public QMainWindow
+{
+    Q_OBJECT
+
+public:
+    MainWindow(QWidget *parent = nullptr);
+    ~MainWindow();
+
+private:
+    Ui::MainWindow *ui;
+};
+#endif // MAINWINDOW_H
+=======
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
+
+#include <QMainWindow>
+#include <QButtonGroup>
+#include <QStackedWidget>
+
+QT_BEGIN_NAMESPACE
+namespace Ui { 
+    class MainWindow;
+    class ClientsWidget;
+    class CommandesWidget;
+    class StockWidget;
+    class AtelierWidget;
+}
+QT_END_NAMESPACE
+
+class MainWindow : public QMainWindow
+{
+    Q_OBJECT
+
+public:
+    MainWindow(QWidget *parent = nullptr);
+    ~MainWindow();
+
+private:
+    Ui::MainWindow *ui;
+    QButtonGroup *navigationButtonGroup;
+    QStackedWidget *stackedWidget;
+
+    // Module widgets
+    QWidget *clientsWidget;
+    QWidget *commandesWidget;
+    QWidget *stockWidget;
+    QWidget *atelierWidget;
+    
+    // UI objects for module widgets
+    Ui::ClientsWidget *clientsUi;
+    Ui::CommandesWidget *commandesUi;
+    Ui::StockWidget *stockUi;
+    Ui::AtelierWidget *atelierUi;
+};
+#endif // MAINWINDOW_H
+>>>>>>> 2ddb708 (Ajout interface gestion atelier)

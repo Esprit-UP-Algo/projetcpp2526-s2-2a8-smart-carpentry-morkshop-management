@@ -1,0 +1,13 @@
+<<<<<<< HEAD
+<RCC>
+    <qresource prefix="/images">
+        <file>logo.jpeg</file>
+    </qresource>
+</RCC>
+=======
+<RCC>
+    <qresource prefix="/images">
+        <file>logo.jpeg</file>
+    </qresource>
+</RCC>
+>>>>>>> 2ddb708 (Ajout interface gestion atelier)
